@@ -3,6 +3,7 @@
 
 
 #include <QPair>
+
 #include "../models/User.h"
 
 class LoginException : public std::exception {

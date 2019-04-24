@@ -5,6 +5,7 @@
 #include <QDialog>
 #include <QLineEdit>
 #include <QPushButton>
+
 #include "models/User.h"
 
 class LoginWindow : public QDialog {

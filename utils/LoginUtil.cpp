@@ -6,13 +6,14 @@
 #include <QJsonObject>
 #include <QDebug>
 #include <QtCore/QUrlQuery>
+
 #include "LoginUtil.h"
 
 
 const User LoginUtil::logIn(const QString &login, const QString &password) noexcept(false) {
     qDebug() << "logging into " + login + " " + password;
 
-    auto loginUrl = QUrl("http://165.22.64.118:8080/login");
+    auto loginUrl = QUrl("http://165.22.64.118:80/login");
 
     QUrlQuery postData;
     postData.addQueryItem("login", login);

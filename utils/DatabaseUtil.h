@@ -3,6 +3,7 @@
 
 
 #include <QtSql/QSqlDatabase>
+
 #include "../models/User.h"
 
 class DatabaseUtil {

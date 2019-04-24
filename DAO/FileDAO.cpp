@@ -5,16 +5,15 @@
 QList<shared_ptr<File>> FileDAO::getAll() {
     QSqlQuery query;
     QList<shared_ptr<File>> result;
-    query.exec("SELECT id, name, path, content, created, modified, package_id FROM files");
+    query.exec("SELECT id, name, path, created, modified, package_id FROM files");
     while (query.next()) {
         result.append(make_shared<File>(
                 query.value(0).toUInt(),
                 query.value(1).toString(),
                 query.value(2).toString(),
-                query.value(3).toByteArray(),
+                query.value(3).toDateTime(),
                 query.value(4).toDateTime(),
-                query.value(5).toDateTime(),
-                query.value(6).toInt()
+                query.value(5).toInt()
                 ));
     }
     return result;
@@ -22,7 +21,7 @@ QList<shared_ptr<File>> FileDAO::getAll() {
 
 shared_ptr<File> FileDAO::find(uint id) {
     QSqlQuery query;
-    query.prepare("SELECT id, name, path, content, created, modified, package_id FROM files WHERE id = ?");
+    query.prepare("SELECT id, name, path, created, modified, package_id FROM files WHERE id = ?");
     query.addBindValue(id);
     query.exec();
     while (query.next()) {
@@ -30,7 +29,6 @@ shared_ptr<File> FileDAO::find(uint id) {
                 query.value(0).toUInt(),
                 query.value(1).toString(),
                 query.value(2).toString(),
-                query.value(3).toByteArray(),
                 query.value(4).toDateTime(),
                 query.value(5).toDateTime(),
                 query.value(6).toInt()
