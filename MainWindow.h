@@ -18,12 +18,18 @@ public:
 
 private:
     User user;
+    QTabWidget *tabWidget;
     void initUI();
-    void initFiles();
-    void updateFiles();
 
     QSqlRelationalTableModel *filesModel;
     QTreeView *filesTree;
+    void initFiles();
+    void updateFiles();
+
+    QSqlRelationalTableModel *packagesModel;
+    QTreeView *packagesTree;
+    void initPackages();
+    void updatePackages();
 
 public slots:
     void showUser(User user);
