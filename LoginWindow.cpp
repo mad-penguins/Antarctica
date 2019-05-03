@@ -65,3 +65,4 @@ void LoginWindow::logInClicked() {
         QMessageBox::critical(this, "Login error", text);
     }
 }
+

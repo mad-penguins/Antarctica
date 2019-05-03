@@ -11,42 +11,34 @@
 #include "models/User.h"
 
 class MainWindow : public QMainWindow {
-    Q_OBJECT
+Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget* parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
 
 private:
     User user;
     QTabWidget *tabWidget;
+
     void initUI();
 
     QSqlRelationalTableModel *filesModel;
     QTreeView *filesTree;
+
     void initFiles();
+
     void updateFiles();
 
     QSqlRelationalTableModel *packagesModel;
     QTreeView *packagesTree;
+
     void initPackages();
+
     void updatePackages();
 
 public slots:
+
     void showUser(User user);
-
-signals:
-    void closed();
-
-protected:
-    void closeEvent(QCloseEvent* event) override {
-        QMainWindow::closeEvent(event);
-
-        if (event->isAccepted()) {
-            emit closed();
-        }
-    }
-
 };
-
 
 #endif //ANTARCTICA_MAINWINDOW_H

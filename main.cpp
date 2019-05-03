@@ -11,7 +11,8 @@ int main(int argc, char** argv) {
     QObject::connect(&loginWindow, &LoginWindow::loggedIn, &QDialog::close);
     QObject::connect(&loginWindow, &LoginWindow::loggedIn, &mainWindow, &MainWindow::showUser);
 
-    QObject::connect(&mainWindow, &MainWindow::closed, &app, &QCoreApplication::quit);
+    QObject::connect(&loginWindow, &LoginWindow::rejected, &app, &QCoreApplication::quit);
+    QObject::connect(&app, &QApplication::lastWindowClosed, &app, &QCoreApplication::quit);
 
     loginWindow.show();
     return QApplication::exec();
