@@ -6,11 +6,12 @@
 
 #include "../models/User.h"
 
-class LoginException : public std::exception {
+using namespace std;
+
+class LoginException : public exception {
 public:
     enum Kind {
-        WRONG_LOGIN,
-        WRONG_PASSWORD,
+        WRONG_LOGIN_DATA,
         WRONG_RESPONSE,
         UNKNOWN_ERROR
     } kind;
