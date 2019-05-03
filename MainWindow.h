@@ -1,12 +1,11 @@
 #ifndef ANTARCTICA_MAINWINDOW_H
 #define ANTARCTICA_MAINWINDOW_H
 
-
-#include <QMainWindow>
-#include <QPushButton>
-#include <QCloseEvent>
-#include <QtSql/QSqlRelationalTableModel>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QPushButton>
+#include <QtGui/QCloseEvent>
 #include <QtWidgets/QTreeView>
+#include <QtWidgets/QTableView>
 
 #include "models/User.h"
 
@@ -22,22 +21,22 @@ private:
 
     void initUI();
 
-    QSqlRelationalTableModel *filesModel;
-    QTreeView *filesTree;
+    QAbstractTableModel *filesModel;
+    QTableView *filesTree;
 
     void initFiles();
 
     void updateFiles();
 
-    QSqlRelationalTableModel *packagesModel;
-    QTreeView *packagesTree;
+    QAbstractTableModel *packagesModel;
+    QTableView *packagesTree;
 
     void initPackages();
 
     void updatePackages();
 
 public slots:
-
+  
     void showUser(User user);
 };
 

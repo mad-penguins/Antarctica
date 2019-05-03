@@ -19,7 +19,7 @@ const User LoginUtil::logIn(const QString &login, const QString &password) noexc
     postData.addQueryItem("login", login);
     postData.addQueryItem("password", password);
 
-    auto manager  = new QNetworkAccessManager;
+    auto manager = new QNetworkAccessManager;
 
     QNetworkRequest request(loginUrl);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
@@ -30,7 +30,7 @@ const User LoginUtil::logIn(const QString &login, const QString &password) noexc
     }
 
     QByteArray buffer = reply->readAll();
-    auto json  = QJsonDocument::fromJson(buffer);
+    auto json = QJsonDocument::fromJson(buffer);
     reply->deleteLater();
 
     QJsonObject jsonReply = json.object();
