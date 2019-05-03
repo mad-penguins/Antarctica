@@ -2,7 +2,7 @@
 #define ANTARCTICA_LOGINUTIL_H
 
 
-#include <QPair>
+#include <QtCore/QPair>
 
 #include "../models/User.h"
 
@@ -22,7 +22,7 @@ public:
 
 class LoginUtil {
 public:
-    static const User logIn(const QString& login, const QString& password) noexcept(false);
+    static const User logIn(const QString &login, const QString &password) noexcept(false);
 };
 
 

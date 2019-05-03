@@ -2,32 +2,35 @@
 #define ANTARCTICA_LOGINWINDOW_H
 
 
-#include <QDialog>
-#include <QLineEdit>
-#include <QPushButton>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QPushButton>
 
 #include "models/User.h"
 
 class LoginWindow : public QDialog {
-    Q_OBJECT
+Q_OBJECT
 
 public:
     LoginWindow();
 
 private:
-    QLineEdit* loginField;
-    QLineEdit* passwordField;
+    QLineEdit *loginField;
+    QLineEdit *passwordField;
 
-    QPushButton* registerButton;
-    QPushButton* logInButton;
+    QPushButton *registerButton;
+    QPushButton *logInButton;
 
     void initUI();
 
 signals:
+
     void loggedIn(User user);
 
 public slots:
+
     void logInClicked();
+
     void registerClicked();
 
 };

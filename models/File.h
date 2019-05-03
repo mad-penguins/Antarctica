@@ -21,8 +21,8 @@ public:
               created(std::move(created)), modified(std::move(modified)), package_id(packageId) {}
 
     File(int id, QString name, QString path, QByteArray content, QDateTime created, QDateTime modified, uint packageId)
-    : id(id), name(std::move(name)), path(std::move(path)), content(std::move(content)),
-      created(std::move(created)), modified(std::move(modified)), package_id(packageId) {}
+            : id(id), name(std::move(name)), path(std::move(path)), content(std::move(content)),
+              created(std::move(created)), modified(std::move(modified)), package_id(packageId) {}
 };
 
 

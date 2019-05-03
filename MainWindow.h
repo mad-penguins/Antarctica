@@ -1,44 +1,50 @@
 #ifndef ANTARCTICA_MAINWINDOW_H
 #define ANTARCTICA_MAINWINDOW_H
 
-
-#include <QMainWindow>
-#include <QPushButton>
-#include <QCloseEvent>
-#include <QtSql/QSqlRelationalTableModel>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QPushButton>
+#include <QtGui/QCloseEvent>
 #include <QtWidgets/QTreeView>
+#include <QtWidgets/QTableView>
 
 #include "models/User.h"
 
 class MainWindow : public QMainWindow {
-    Q_OBJECT
+Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget* parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
 
 private:
     User user;
     QTabWidget *tabWidget;
+
     void initUI();
 
-    QSqlRelationalTableModel *filesModel;
-    QTreeView *filesTree;
+    QAbstractTableModel *filesModel;
+    QTableView *filesTree;
+
     void initFiles();
+
     void updateFiles();
 
-    QSqlRelationalTableModel *packagesModel;
-    QTreeView *packagesTree;
+    QAbstractTableModel *packagesModel;
+    QTableView *packagesTree;
+
     void initPackages();
+
     void updatePackages();
 
 public slots:
+
     void showUser(User user);
 
 signals:
+
     void closed();
 
 protected:
-    void closeEvent(QCloseEvent* event) override {
+    void closeEvent(QCloseEvent *event) override {
         QMainWindow::closeEvent(event);
 
         if (event->isAccepted()) {
