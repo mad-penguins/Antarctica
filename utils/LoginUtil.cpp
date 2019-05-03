@@ -13,7 +13,7 @@
 const User LoginUtil::logIn(const QString &login, const QString &password) noexcept(false) {
     qDebug() << "logging into " + login + " " + password;
 
-    auto loginUrl = QUrl("http://165.22.64.118:80/login");
+    auto loginUrl = QUrl("http://165.22.64.118:80/api/login");
 
     QUrlQuery postData;
     postData.addQueryItem("login", login);
