@@ -52,10 +52,7 @@ void LoginWindow::logInClicked() {
     } catch (LoginException &e) {
         QString text;
         switch (e.kind) {
-            case LoginException::WRONG_LOGIN:
-                text = "Wrong login or password";
-                break;
-            case LoginException::WRONG_PASSWORD:
+            case LoginException::WRONG_LOGIN_DATA:
                 text = "Wrong login or password";
                 break;
             case LoginException::WRONG_RESPONSE:
@@ -65,6 +62,6 @@ void LoginWindow::logInClicked() {
                 text = "Something went wrong";
                 break;
         }
-        QMessageBox::critical(this, "LoginUtil error", text);
+        QMessageBox::critical(this, "Login error", text);
     }
 }

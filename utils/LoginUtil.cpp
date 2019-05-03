@@ -37,9 +37,8 @@ const User LoginUtil::logIn(const QString &login, const QString &password) noexc
     if (jsonReply.contains("error")) {
         switch (jsonReply["error"].toString().toInt()) {
             case -1:
-                throw LoginException(LoginException::WRONG_LOGIN);
             case -2:
-                throw LoginException(LoginException::WRONG_PASSWORD);
+                throw LoginException(LoginException::WRONG_LOGIN_DATA);
             default:
                 break;
         }
