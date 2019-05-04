@@ -12,7 +12,7 @@ using namespace std;
 
 class File {
 public:
-    uint id;
+    unsigned id;
     QString name;
     QString path;
     QByteArray content;

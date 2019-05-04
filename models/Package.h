@@ -9,7 +9,7 @@ using namespace std;
 
 class Package {
 public:
-    uint id;
+    unsigned id;
     QString name;
     uint repo_id;
     Repository *repository;

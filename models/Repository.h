@@ -8,7 +8,7 @@ using namespace std;
 
 class Repository {
 public:
-    uint id;
+    unsigned id;
     QString name;
     QString url;
     QString manager;

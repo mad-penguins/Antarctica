@@ -5,14 +5,16 @@
 #include <utility>
 #include <QtCore/QString>
 
+using namespace std;
+
 class User {
 public:
-    User(uint id, QString login, QString password, QString displayName)
-            : id(id), login(std::move(login)), password(std::move(password)), displayName(std::move(displayName)) {}
+    User(unsigned id, QString login, QString password, QString displayName)
+            : id(id), login(move(login)), password(move(password)), displayName(move(displayName)) {}
 
-    User() {}
+    User() = default;
 
-    uint id;
+    unsigned id;
     QString login;
     QString displayName;
     QString password;
