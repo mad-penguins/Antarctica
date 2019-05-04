@@ -2,13 +2,14 @@
 #define ANTARCTICA_LOGINWINDOW_H
 
 
-#include <QtWidgets/QDialog>
+#include <QtWidgets/QWidget>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
-
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QLabel>
 #include "models/User.h"
 
-class LoginWindow : public QDialog {
+class LoginWindow : public QWidget {
 Q_OBJECT
 
 public:
@@ -21,7 +22,13 @@ private:
     QPushButton *registerButton;
     QPushButton *logInButton;
 
+    QGridLayout *layout;
+    QLabel *loginLabel;
+    QLabel *passwordLabel;
+
     void initUI();
+    void createElements();
+    void placeElements();
 
 signals:
 

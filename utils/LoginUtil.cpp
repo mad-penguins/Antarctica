@@ -6,7 +6,6 @@
 #include <QJsonObject>
 #include <QDebug>
 #include <QtCore/QUrlQuery>
-
 #include "LoginUtil.h"
 
 
@@ -36,7 +35,7 @@ const User LoginUtil::logIn(const QString &login, const QString &password) noexc
     QJsonObject jsonReply = json.object();
     if (jsonReply.contains("error")) {
         switch (jsonReply["error"].toString().toInt()) {
-            case -1:
+            case -1: // WTF?
             case -2:
                 throw LoginException(LoginException::WRONG_LOGIN_DATA);
             default:

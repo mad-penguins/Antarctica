@@ -1,5 +1,3 @@
-#include <QGridLayout>
-#include <QLabel>
 #include <QDebug>
 #include <QMessageBox>
 
@@ -16,9 +14,19 @@ LoginWindow::LoginWindow() {
 void LoginWindow::initUI() {
     this->setWindowTitle("Antarctica login");
 
-    auto layout = new QGridLayout;
-    auto loginLabel = new QLabel("Username");
-    auto passwordLabel = new QLabel("Password");
+    createElements();
+    placeElements();
+
+    connect(registerButton, &QPushButton::clicked, this, &LoginWindow::registerClicked);
+    connect(logInButton, &QPushButton::clicked, this, &LoginWindow::logInClicked);
+
+    this->setLayout(layout);
+}
+
+void LoginWindow::createElements() {
+    layout = new QGridLayout;
+    loginLabel = new QLabel("Username");
+    passwordLabel = new QLabel("Password");
 
     loginField = new QLineEdit;
     passwordField = new QLineEdit;
@@ -27,18 +35,15 @@ void LoginWindow::initUI() {
     registerButton = new QPushButton("Register");
     logInButton = new QPushButton("Log in");
     logInButton->setDefault(true);
+}
 
-    connect(registerButton, &QPushButton::clicked, this, &LoginWindow::registerClicked);
-    connect(logInButton, &QPushButton::clicked, this, &LoginWindow::logInClicked);
-
+void LoginWindow::placeElements() {
     layout->addWidget(registerButton, 3, 1);
     layout->addWidget(logInButton, 3, 2);
     layout->addWidget(loginLabel, 1, 1);
     layout->addWidget(passwordLabel, 2, 1);
     layout->addWidget(loginField, 1, 2);
     layout->addWidget(passwordField, 2, 2);
-
-    this->setLayout(layout);
 }
 
 void LoginWindow::registerClicked() {
