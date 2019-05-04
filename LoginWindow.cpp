@@ -25,6 +25,15 @@ void LoginWindow::initUI() {
 
 void LoginWindow::createElements() {
     layout = new QGridLayout;
+
+    //Stretch for scalability
+    layout->setColumnStretch(0, 1);
+    layout->setColumnStretch(3, 1);
+    layout->setColumnStretch(1, 1);
+    layout->setColumnStretch(2, 3);
+    layout->setRowStretch(0, 1);
+    layout->setRowStretch(4, 1);
+
     loginLabel = new QLabel("Username");
     passwordLabel = new QLabel("Password");
 
@@ -34,7 +43,6 @@ void LoginWindow::createElements() {
 
     registerButton = new QPushButton("Register");
     logInButton = new QPushButton("Log in");
-    logInButton->setDefault(true);
 }
 
 void LoginWindow::placeElements() {

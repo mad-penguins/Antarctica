@@ -47,5 +47,5 @@ const User LoginUtil::logIn(const QString &login, const QString &password) noexc
         throw LoginException(LoginException::Kind::WRONG_RESPONSE);
     }
 
-    return User(jsonReply["id"].toInt(), login, password, jsonReply["name"].toString());
+    return User{jsonReply["id"].toInt(), login, password, jsonReply["name"].toString()};
 }

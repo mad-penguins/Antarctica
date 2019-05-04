@@ -7,12 +7,7 @@
 
 class User {
 public:
-    User(uint id, QString login, QString password, QString displayName)
-            : id(id), login(std::move(login)), password(std::move(password)), displayName(std::move(displayName)) {}
-
-    User() {}
-
-    uint id;
+    int id;
     QString login;
     QString displayName;
     QString password;
