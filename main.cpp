@@ -9,9 +9,10 @@ int main(int argc, char **argv) {
     MainWindow mainWindow;
 
     QObject::connect(&loginWindow, &LoginWindow::loggedIn,
-                     &QDialog::close); // TODO fix hanging process after login window closing
+                     &QDialog::close);
     QObject::connect(&loginWindow, &LoginWindow::loggedIn, &mainWindow, &MainWindow::showUser);
 
+    QObject::connect(&loginWindow, &LoginWindow::closedWithoutLogin, &app, &QCoreApplication::quit);
     QObject::connect(&mainWindow, &MainWindow::closed, &app, &QCoreApplication::quit);
 
     loginWindow.show();
