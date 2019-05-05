@@ -26,7 +26,7 @@
  *
  * @section DESCRIPTION
  *
- * The API wrapper utilities implemenattion
+ * The API wrapper utilities implementation
  */
 
 #include <QtCore/QUrl>
@@ -41,14 +41,86 @@
 unsigned APIWrapper::userId = 0;
 QString APIWrapper::accessToken = "";
 
-/**
- * Method that executes GET or DELETE HTTP request on API server
- *
- * @param requestUrl is a prepared request URL
- * @param type is a kind of request to execute (GET or DELETE)
- *
- * @return JSON response from API server wrapped into QJsonDocument object
- */
+// init specified static fields
+template<> QString APIWrapper::Section<File>::prefix = "file";
+template<> QString APIWrapper::Section<Package>::prefix = "pkg";
+template<> QString APIWrapper::Section<Repository>::prefix = "repo";
+
+// tell the compiler to "implement" methods from super class
+template
+class APIWrapper::Section<File>;
+
+template
+class APIWrapper::Section<Package>;
+
+template
+class APIWrapper::Section<Repository>;
+
+
+template<class Entity>
+QList<Entity *> APIWrapper::Section<Entity>::getAll() {
+    auto getUrl = QUrl(
+            QString("http://antarctica-server.tk/api/user/%1/%2s/%3").arg(
+                    QString::number(userId),
+                    prefix,
+                    accessToken)
+    );
+    auto json = Utils::execute(getUrl, Utils::GET);
+
+    auto respJson = json.array();
+    QList<Entity *> objects;
+            foreach (QJsonValue val, respJson) {
+            if (val.isObject()) {
+                auto fileJson = val.toObject();
+                objects << new Entity(fileJson);
+            }
+        }
+
+    return objects;
+}
+
+template<class Entity>
+Entity *APIWrapper::Section<Entity>::get(unsigned id) {
+    auto getUrl = QUrl(
+            QString("http://antarctica-server.tk/api/user/%1/%2/%3/%4").arg(
+                    QString::number(userId),
+                    prefix,
+                    QString::number(id),
+                    accessToken
+            )
+    );
+    auto json = Utils::execute(getUrl, Utils::GET);
+
+    auto respJson = json.object();
+    return new Entity(respJson);
+}
+
+template<class Entity>
+bool APIWrapper::Section<Entity>::upload(const Entity &entity) { // TODO: implement
+    return false;
+}
+
+template<class Entity>
+bool APIWrapper::Section<Entity>::update(const Entity &entity) { // TODO: implement
+    return false;
+}
+
+template<class Entity>
+bool APIWrapper::Section<Entity>::remove(unsigned id) {
+    auto deleteFileUrl = QUrl(
+            QString("http://antarctica-server.tk/api/user/%1/%2/%3/%4").arg(
+                    QString::number(userId),
+                    prefix,
+                    QString::number(id),
+                    accessToken
+            )
+    );
+    auto json = Utils::execute(deleteFileUrl, Utils::DELETE);
+
+    auto respJson = json.object();
+    return true; // TODO: implement return status on the server
+}
+
 QJsonDocument APIWrapper::Utils::execute(const QUrl &requestUrl, RequestType type) {
     qDebug() << "Executing " + requestUrl.toString();
 
@@ -75,5 +147,35 @@ QJsonDocument APIWrapper::Utils::execute(const QUrl &requestUrl, RequestType typ
     reply->deleteLater();
     return json;
 }
+
+QJsonDocument
+APIWrapper::Utils::executeForm(const QUrl &requestUrl, QHttpMultiPart *formData, APIWrapper::Utils::RequestType type) {
+    qDebug() << "Executing " + requestUrl.toString();
+
+    auto manager = new QNetworkAccessManager;
+
+    QNetworkRequest request(requestUrl);
+    QNetworkReply *reply;
+    switch (type) {
+        case POST:
+            reply = manager->post(request, formData);
+            break;
+        case PUT:
+            reply = manager->put(request, formData);
+            break;
+        default:
+            return QJsonDocument();
+    }
+    while (!reply->isFinished()) { // make thread not blocked by waiting for response
+        qApp->processEvents();
+    }
+
+    QByteArray buffer = reply->readAll();
+    auto json = QJsonDocument::fromJson(buffer);
+    reply->deleteLater();
+    return json;
+}
+
+
 
 

@@ -41,7 +41,8 @@ using namespace std;
 class User {
 public:
     User(unsigned id, QString login, QString password, QString displayName, QString accessToken)
-            : id(id), login(move(login)), password(move(password)), displayName(move(displayName)), accessToken(move(accessToken)) {}
+            : id(id), login(move(login)), password(move(password)), displayName(move(displayName)),
+              accessToken(move(accessToken)) {}
 
     User() = default;
 
