@@ -66,7 +66,7 @@ public:
      */
     template<class Entity>
     class Section {
-    public:
+    protected:
         static QString prefix;
     public:
         /*!
