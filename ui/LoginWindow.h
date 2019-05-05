@@ -1,8 +1,9 @@
-/**
- * @file
- * @author  Nikita Mironov <nickfrom22nd@gmail.com>
+/*!
+ * \file ui/LoginWindow.h
+ * \author Nikita Mironov <nickfrom22nd@gmail.com>
+ * \brief The login window class
  *
- * @section LICENSE
+ * \section LICENSE
  *
  * Copyright (c) 2019 Penguins of Madagascar
 
@@ -23,10 +24,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
- * @section DESCRIPTION
- *
- * The logging in window class
  */
 
 #ifndef ANTARCTICA_LOGINWINDOW_H

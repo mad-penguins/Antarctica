@@ -1,8 +1,9 @@
-/**
- * @file
- * @author  Nikita Mironov <nickfrom22nd@gmail.com>
+/*!
+ * \file ui/LoginWindow.cpp
+ * \author Nikita Mironov <nickfrom22nd@gmail.com>
+ * \brief The login window implementation
  *
- * @section LICENSE
+ * \section LICENSE
  *
  * Copyright (c) 2019 Penguins of Madagascar
 
@@ -23,11 +24,8 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
- * @section DESCRIPTION
- *
- * The implementation of logging in window
  */
+
 
 #include <QGridLayout>
 #include <QLabel>

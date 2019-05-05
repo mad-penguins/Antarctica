@@ -1,7 +1,8 @@
 /*!
  * \file utils/api/APIWrapper.h
- * \author  Nikita Mironov <nickfrom22nd@gmail.com>
+ * \author Nikita Mironov <nickfrom22nd@gmail.com>
  * \brief The API wrapper class
+ *
  * \section LICENSE
  *
  * Copyright (c) 2019 Penguins of Madagascar

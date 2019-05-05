@@ -1,8 +1,9 @@
-/**
- * @file
- * @author  Nikita Mironov <nickfrom22nd@gmail.com>
+/*!
+ * \file util/LoginUtil.cpp
+ * \author Nikita Mironov <nickfrom22nd@gmail.com>
+ * \brief The login utility implementation
  *
- * @section LICENSE
+ * \section LICENSE
  *
  * Copyright (c) 2019 Penguins of Madagascar
 
@@ -23,10 +24,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
- * @section DESCRIPTION
- *
- * The login process implementation
  */
 
 #include <QUrl>
