@@ -31,6 +31,7 @@
 #include <QLabel>
 #include <QDebug>
 #include <QMessageBox>
+#include <QDesktopServices>
 
 #include "LoginWindow.h"
 #include "../models/User.h"
@@ -72,7 +73,7 @@ void LoginWindow::initUI() {
 }
 
 void LoginWindow::registerClicked() {
-
+    QDesktopServices::openUrl(QUrl("http://antarctica-server.tk/register"));
 }
 
 void LoginWindow::logInClicked() {
