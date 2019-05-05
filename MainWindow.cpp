@@ -123,3 +123,11 @@ void MainWindow::showUser(User user) {
     this->initUI();
     this->show();
 }
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+    QMainWindow::closeEvent(event);
+
+    if (event->isAccepted()) {
+        emit closed();
+    }
+}

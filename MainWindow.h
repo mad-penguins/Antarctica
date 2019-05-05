@@ -75,13 +75,7 @@ signals:
     void closed();
 
 protected:
-    void closeEvent(QCloseEvent *event) override {
-        QMainWindow::closeEvent(event);
-
-        if (event->isAccepted()) {
-            emit closed();
-        }
-    }
+    void closeEvent(QCloseEvent *event) override;
 
 };
 
