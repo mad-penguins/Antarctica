@@ -39,7 +39,6 @@
 #include "MainWindow.h"
 #include "utils/api/APIWrapper.h"
 
-
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
 }

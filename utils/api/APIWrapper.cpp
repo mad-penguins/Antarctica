@@ -46,17 +46,6 @@ template<> QString APIWrapper::Section<File>::prefix = "file";
 template<> QString APIWrapper::Section<Package>::prefix = "pkg";
 template<> QString APIWrapper::Section<Repository>::prefix = "repo";
 
-// tell the compiler to "implement" methods from super class
-template
-class APIWrapper::Section<File>;
-
-template
-class APIWrapper::Section<Package>;
-
-template
-class APIWrapper::Section<Repository>;
-
-
 template<class Entity>
 QList<Entity *> APIWrapper::Section<Entity>::getAll() {
     auto getUrl = QUrl(
@@ -176,6 +165,12 @@ APIWrapper::Utils::executeForm(const QUrl &requestUrl, QHttpMultiPart *formData,
     return json;
 }
 
+// tell the compiler to "implement" methods from super class
+template
+class APIWrapper::Section<File>;
 
+template
+class APIWrapper::Section<Package>;
 
-
+template
+class APIWrapper::Section<Repository>;
