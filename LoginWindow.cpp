@@ -41,6 +41,7 @@
 
 
 LoginWindow::LoginWindow() {
+    isLodggedIn = false;
     initUI();
 }
 
@@ -79,6 +80,7 @@ void LoginWindow::registerClicked() {
 void LoginWindow::logInClicked() {
     try {
         User user = LoginUtil::logIn(loginField->text(), passwordField->text());
+        isLodggedIn = true;
         emit loggedIn(user);
     } catch (LoginException &e) {
         QString text;
@@ -94,5 +96,13 @@ void LoginWindow::logInClicked() {
                 break;
         }
         QMessageBox::critical(this, "Login error", text);
+    }
+}
+
+void LoginWindow::closeEvent(QCloseEvent *event) {
+    QDialog::closeEvent(event);
+
+    if (event->isAccepted() && !isLodggedIn) {
+        emit closedWithoutLogin();
     }
 }

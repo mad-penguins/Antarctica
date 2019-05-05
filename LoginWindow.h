@@ -52,17 +52,23 @@ private:
     QPushButton *registerButton;
     QPushButton *logInButton;
 
+    bool isLodggedIn;
+
     void initUI();
 
 signals:
 
     void loggedIn(User user);
+    void closedWithoutLogin();
 
 public slots:
 
     void logInClicked();
 
     void registerClicked();
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
 
 };
 
