@@ -45,7 +45,7 @@ public:
     QString manager;
 
     Repository(int id, QString name, QString url, QString manager)
-        : id(id), name(move(name)), url(move(url)), manager(move(manager)) {}
+            : id(id), name(move(name)), url(move(url)), manager(move(manager)) {}
 
     explicit Repository(QJsonObject repoJson) {
         id = repoJson["id"].toInt();

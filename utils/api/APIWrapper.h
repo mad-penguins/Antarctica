@@ -1,8 +1,8 @@
-/**
- * @file
- * @author  Nikita Mironov <nickfrom22nd@gmail.com>
- *
- * @section LICENSE
+/*!
+ * \file utils/api/APIWrapper.h
+ * \author  Nikita Mironov <nickfrom22nd@gmail.com>
+ * \brief The API wrapper class
+ * \section LICENSE
  *
  * Copyright (c) 2019 Penguins of Madagascar
 
@@ -23,10 +23,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
- * @section DESCRIPTION
- *
- * The API wrapper class
  */
 
 #ifndef ANTARCTICA_APIWRAPPER_H
@@ -34,6 +30,9 @@
 
 
 #include <QtCore/QString>
+#include <QtCore/QJsonArray>
+#include <QtNetwork/QHttpMultiPart>
+#include <QtCore/QJsonDocument>
 
 #include "../../models/File.h"
 #include "../../models/Package.h"
@@ -41,78 +40,134 @@
 
 using namespace std;
 
+/*!
+ * \class APIWrapper
+ * \brief Wrapper for server REST API
+ *
+ * Class APIWrapper is a wrapper for server REST API and contains 3 subclasses:
+ * Files, Packages and Repositories for interaction with specified API sections.
+*/
 class APIWrapper {
 public:
+    /*!
+     * \brief Set authentication data to static storage
+     * \param id
+     * \param token
+     */
     static void setUserData(unsigned id, QString token) {
         userId = id;
         accessToken = move(token);
     }
 
-    class Files {
-        APIWrapper *parent;
+    /*!
+     * \class APIWrapper::Section
+     * \brief An abstraction to implement wrapper for API section
+     * \tparam Entity Entity type: File, Package or Repository
+     */
+    template<class Entity>
+    class Section {
     public:
-        //explicit Files(APIWrapper *parent) : parent(parent) {}
+        static QString prefix;
+    public:
+        /*!
+        * \brief Wrapper for get all API methods (GET request to "files", "pkgs" or "repos")
+        * \tparam Entity Entity type: File, Package or Repository
+        * \return List of found entities
+        */
+        static QList<Entity *> getAll();
 
-        static QList<File *> getAll();
+        /*!
+        * \brief Wrapper for get API methods (GET request to "file/{id}", "pkg/{id}" or "repo/{id}")
+        * \tparam Entity
+        * \param id ID of entity to search
+        * \return Found entity
+        */
+        static Entity *get(unsigned id);
 
-        static File *get(unsigned id);
+        /*!
+        * \brief Wrapper for upload API methods (POST request to "files", "pkgs" or "repos")
+        * \tparam Entity Entity type: File, Package or Repository
+        * \param entity An entity to upload
+        * \return Request status: ok or failed
+        */
+        static bool upload(const Entity &entity);
 
-        static bool upload(const File &);
+        /*!
+        * \brief Wrapper for udate API methods (PUT request to "files", "pkgs" or "repos")
+        * \tparam Entity Entity type: File, Package or Repository
+        * \param entity An entity to update
+        * \return Request status: ok or failed
+        */
+        static bool update(const Entity &entity);
 
-        static bool update(const File &);
-
+        /*!
+        * \brief Wrapper for delete API methods (DELETE request to "file/{id}", "pkg/{id}" or "repo/{id}")
+        * \tparam Entity
+        * \param id ID of entity to delete
+        * \return Request status ok or failed
+        */
         static bool remove(unsigned id);
     };
 
-    class Packages {
-        APIWrapper *parent;
-    public:
-        //explicit Packages(APIWrapper *parent) : parent(parent) {}
-
-        static QList<Package *> getAll();
-
-        static Package *get(unsigned id);
-
-        static bool upload(const Package &);
-
-        static bool update(const Package &);
-
-        static bool remove(unsigned id);
+    /*!
+    * \class APIWrapper::Files
+    * \brief Wrapper for files API section
+    */
+    class Files : public Section<File> {
     };
 
-    class Repositories {
-        APIWrapper *parent;
-    public:
-        //explicit Repositories(APIWrapper *parent) : parent(parent) {}
+    /*!
+    * \class APIWrapper::Packages
+    * \brief Wrapper for packages API section
+    */
+    class Packages : public Section<Package> {
+    };
 
-        static QList<Repository *> getAll();
 
-        static Repository *get(unsigned id);
-
-        static bool upload(const Repository &);
-
-        static bool update(const Repository &);
-
-        static bool remove(unsigned id);
+    /*!
+    * \class APIWrapper::Repositories
+    * \brief Wrapper for repositories API section
+    */
+    class Repositories : public Section<Repository> {
     };
 
 private:
-    static unsigned userId;
-    static QString accessToken;
+    static unsigned userId; /**< User id needed for API accessing */
+    static QString accessToken; /**< Session access token needed for API authentication */
 
-    Files filesWrapper;
-    Packages packagesWrapper;
-    Repositories repositories;
-
+    /*!
+     * \class APIWrapper::Utils
+     * \brief Class with some some utilities for accessing REST API
+     */
     class Utils {
     public:
+        /*!
+         * \brief HTTP Request type enum
+         * RequestType enum contains HTTP request types needed for calling of methods
+         * APIWrapper::Utils::execute(const QUrl &, RequestType)
+         * and APIWrapper::Utils::executeForm(const QUrl &, QHttpMultipart *, RequestType)
+         */
         enum RequestType {
             GET, POST, PUT, DELETE
         };
-        static QJsonDocument execute(const QUrl &requestUrl, RequestType type);
-    };
 
-    //APIWrapper() : filesWrapper(this), packagesWrapper(this), repositories(this) {}
+        /*!
+         * \brief Execute an API request without form via GET or DELETE HTTP requests
+         * \param requestUrl Prepared API request URL
+         * \param type Type of HTTP request: GET or DELETE
+         * \return JSON response
+         */
+        static QJsonDocument execute(const QUrl &requestUrl, RequestType type);
+
+        /*!
+         * \brief Execute an API request with a form via POST or PUT HTTP requests
+         * \param requestUrl Prepared API request URL
+         * \param formData Multipart form data
+         * \param type Type of HTTP request: POST or PUT
+         * \return JSON response
+         */
+        static QJsonDocument executeForm(const QUrl &requestUrl, QHttpMultiPart *formData, RequestType type);
+    };
 
 };
 

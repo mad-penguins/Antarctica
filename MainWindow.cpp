@@ -61,9 +61,10 @@ void MainWindow::initUI() {
     this->setCentralWidget(tabWidget);
 
     APIWrapper::setUserData(user.id, user.accessToken);
-    foreach(File *file, APIWrapper::Files::getAll()) {
-        qDebug() << file->path + "/" + file->name + " from " + file->package->repository->name + "@" + file->package->name;
-    }
+            foreach(File *file, APIWrapper::Files::getAll()) {
+            qDebug() << file->path + "/" + file->name + " from " + file->package->repository->name + "@" +
+                        file->package->name;
+        }
 }
 
 void MainWindow::initFiles() {
