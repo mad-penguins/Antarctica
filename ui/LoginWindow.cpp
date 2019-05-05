@@ -35,8 +35,8 @@
 #include <QMessageBox>
 
 #include "LoginWindow.h"
-#include "models/User.h"
-#include "utils/LoginUtil.h"
+#include "../models/User.h"
+#include "../utils/LoginUtil.h"
 #include "MainWindow.h"
 
 

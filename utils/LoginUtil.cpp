@@ -44,7 +44,7 @@
 const User LoginUtil::logIn(const QString &login, const QString &password) noexcept(false) {
     qDebug() << "logging into " + login + " " + password;
 
-    auto loginUrl = QUrl("http://165.22.64.118:80/api/login");
+    auto loginUrl = QUrl("http://antarctica-server.tk/api/login");
 
     QUrlQuery postData;
     postData.addQueryItem("login", login);
@@ -80,5 +80,5 @@ const User LoginUtil::logIn(const QString &login, const QString &password) noexc
         throw LoginException(LoginException::Kind::WRONG_RESPONSE);
     }
 
-    return User(jsonReply["id"].toInt(), login, password, jsonReply["name"].toString(), jsonReply["token"].toString());
+    return User(jsonReply);
 }

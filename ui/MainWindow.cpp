@@ -37,7 +37,7 @@
 #include <QtCore/QFileInfo>
 
 #include "MainWindow.h"
-#include "utils/api/APIWrapper.h"
+#include "../utils/api/APIWrapper.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 

@@ -3,7 +3,7 @@ project(antarctica)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCE_FILES main.cpp MainWindow.cpp MainWindow.h LoginWindow.cpp LoginWindow.h utils/LoginUtil.cpp utils/LoginUtil.h models/User.h models/File.h models/Package.h models/Repository.h utils/api/APIWrapper.h utils/api/APIWrapper.cpp)
+set(SOURCE_FILES main.cpp ui/MainWindow.cpp ui/MainWindow.h ui/LoginWindow.cpp ui/LoginWindow.h utils/LoginUtil.cpp utils/LoginUtil.h models/User.h models/File.h models/Package.h models/Repository.h utils/api/APIWrapper.h utils/api/APIWrapper.cpp)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Network REQUIRED)

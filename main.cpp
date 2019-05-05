@@ -1,6 +1,6 @@
 #include <QApplication>
-#include "LoginWindow.h"
-#include "MainWindow.h"
+#include "ui/LoginWindow.h"
+#include "ui/MainWindow.h"
 
 int main(int argc, char **argv) {
     QApplication app(argc, argv);

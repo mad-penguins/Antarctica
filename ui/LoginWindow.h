@@ -26,53 +26,46 @@
  *
  * @section DESCRIPTION
  *
- * The main window class
+ * The logging in window class
  */
 
-#ifndef ANTARCTICA_MAINWINDOW_H
-#define ANTARCTICA_MAINWINDOW_H
+#ifndef ANTARCTICA_LOGINWINDOW_H
+#define ANTARCTICA_LOGINWINDOW_H
 
-#include <QtWidgets/QMainWindow>
+
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
-#include <QtGui/QCloseEvent>
-#include <QtWidgets/QTreeView>
-#include <QtWidgets/QTableView>
 
-#include "models/User.h"
+#include "../models/User.h"
 
-class MainWindow : public QMainWindow {
+class LoginWindow : public QDialog {
 Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    LoginWindow();
 
 private:
-    User user;
-    QTabWidget *tabWidget;
+    QLineEdit *loginField;
+    QLineEdit *passwordField;
+
+    QPushButton *registerButton;
+    QPushButton *logInButton;
+
+    bool isLodggedIn;
 
     void initUI();
 
-    QAbstractTableModel *filesModel;
-    QTableView *filesTree;
+signals:
 
-    void initFiles();
-
-    void updateFiles();
-
-    QAbstractTableModel *packagesModel;
-    QTableView *packagesTree;
-
-    void initPackages();
-
-    void updatePackages();
+    void loggedIn(User user);
+    void closedWithoutLogin();
 
 public slots:
 
-    void showUser(User user);
+    void logInClicked();
 
-signals:
-
-    void closed();
+    void registerClicked();
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -80,4 +73,4 @@ protected:
 };
 
 
-#endif //ANTARCTICA_MAINWINDOW_H
+#endif //ANTARCTICA_LOGINWINDOW_H

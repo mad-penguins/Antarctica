@@ -35,21 +35,24 @@
 
 #include <utility>
 #include <QtCore/QString>
+#include <QtCore/QJsonObject>
 
 using namespace std;
 
 class User {
 public:
-    User(unsigned id, QString login, QString password, QString displayName, QString accessToken)
-            : id(id), login(move(login)), password(move(password)), displayName(move(displayName)),
-              accessToken(move(accessToken)) {}
+    explicit User (QJsonObject userJson) {
+        id = userJson["id"].toInt();
+        login = userJson["login"].toString();
+        displayName = userJson["name"].toString();
+        accessToken = userJson["token"].toString();
+    }
 
     User() = default;
 
-    unsigned id;
+    unsigned id{};
     QString login;
     QString displayName;
-    QString password;
     QString accessToken;
 };
 
