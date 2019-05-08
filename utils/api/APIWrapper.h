@@ -91,7 +91,7 @@ public:
         * \param entity An entity to upload
         * \return Request status: ok or failed
         */
-        static bool upload(const Entity &entity);
+        static bool upload(const Entity *entity);
 
         /*!
         * \brief Wrapper for udate API methods (PUT request to "files", "pkgs" or "repos")
@@ -99,7 +99,7 @@ public:
         * \param entity An entity to update
         * \return Request status: ok or failed
         */
-        static bool update(const Entity &entity);
+        static bool update(const Entity *entity);
 
         /*!
         * \brief Wrapper for delete API methods (DELETE request to "file/{id}", "pkg/{id}" or "repo/{id}")
@@ -168,6 +168,8 @@ private:
          * \return JSON response
          */
         static QJsonDocument executeForm(const QUrl &requestUrl, QHttpMultiPart *formData, RequestType type);
+
+        static QJsonDocument executeForm(const QUrl &requestUrl, QUrlQuery &formData, RequestType type);
     };
 
 };

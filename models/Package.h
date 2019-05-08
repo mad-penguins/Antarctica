@@ -39,10 +39,9 @@ class Package {
 public:
     unsigned id;
     QString name;
-    unsigned repo_id;
     Repository *repository;
 
-    Package(int id, QString name, uint repoId) : id(id), name(move(name)), repo_id(repoId) {}
+    Package(int id, QString name, uint repoId) : id(id), name(move(name)) {}
 
     explicit Package(QJsonObject pkgJson) {
         id = pkgJson["id"].toInt();
