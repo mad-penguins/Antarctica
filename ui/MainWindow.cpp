@@ -33,6 +33,7 @@
 #include <QtCore/QUrl>
 #include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
+#include <QDesktopWidget>
 
 #include "MainWindow.h"
 #include "../utils/api/APIWrapper.h"
@@ -45,6 +46,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 void MainWindow::initUI() {
     setWindowTitle(this->user.displayName + " - Antarctica");
     this->setFixedSize(600, 300);
+
+    QDesktopWidget dw;
+    QRect rc = dw.screenGeometry(this);
+    move((rc.width() - width())/2, (rc.height() - height())/2-20);
 
     initFiles();
     updateFiles();
