@@ -32,6 +32,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QDesktopServices>
+#include <QTimer>
 
 #include "LoginWindow.h"
 #include "../models/User.h"
@@ -52,6 +53,7 @@ void LoginWindow::initUI() {
     auto passwordLabel = new QLabel("Password");
 
     loginField = new QLineEdit;
+    QTimer::singleShot(0, loginField, SLOT(setFocus()));
     passwordField = new QLineEdit;
     passwordField->setEchoMode(QLineEdit::Password);
 
