@@ -47,6 +47,7 @@ LoginWindow::LoginWindow() {
 
 void LoginWindow::initUI() {
     this->setWindowTitle("Antarctica login");
+    this->setFixedSize(280, 150);
 
     auto layout = new QGridLayout;
     auto loginLabel = new QLabel("Username");
@@ -70,6 +71,9 @@ void LoginWindow::initUI() {
     layout->addWidget(passwordLabel, 2, 1);
     layout->addWidget(loginField, 1, 2);
     layout->addWidget(passwordField, 2, 2);
+
+    layout->setAlignment(loginLabel, Qt::AlignHCenter);
+    layout->setAlignment(passwordLabel, Qt::AlignHCenter);
 
     this->setLayout(layout);
 }
