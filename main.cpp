@@ -33,6 +33,7 @@
 int main(int argc, char **argv) {
     QApplication app(argc, argv);
     QApplication::setQuitOnLastWindowClosed(false);
+    
     LoginWindow loginWindow;
     MainWindow mainWindow;
 
@@ -44,5 +45,6 @@ int main(int argc, char **argv) {
     QObject::connect(&mainWindow, &MainWindow::closed, &app, &QCoreApplication::quit);
 
     loginWindow.show();
+    
     return QApplication::exec();
 }
