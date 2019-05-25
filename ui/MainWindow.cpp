@@ -45,7 +45,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
 void MainWindow::initUI() {
     setWindowTitle(this->user.displayName + " - Antarctica");
-    this->setFixedSize(600, 300);
 
     QDesktopWidget dw;
     QRect rc = dw.screenGeometry(this);
