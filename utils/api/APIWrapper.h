@@ -38,6 +38,7 @@
 #include "../../models/File.h"
 #include "../../models/Package.h"
 #include "../../models/Repository.h"
+#include "../../models/Response.hpp"
 
 using namespace std;
 
@@ -170,6 +171,14 @@ private:
         static QJsonDocument executeForm(const QUrl &requestUrl, QHttpMultiPart *formData, RequestType type);
 
         static QJsonDocument executeForm(const QUrl &requestUrl, QUrlQuery &formData, RequestType type);
+
+        static bool checkResponse(Response resp) {
+            if (!resp.ok) {
+                qDebug() << "Error code " << resp.error.code << ": " << resp.error.text;
+                return false;
+            }
+            return true;
+        }
     };
 
 };

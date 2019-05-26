@@ -37,6 +37,7 @@
 #include <QtCore/QMimeDatabase>
 
 #include "APIWrapper.h"
+#include "../../models/Response.hpp"
 
 unsigned APIWrapper::userId = 0;
 QString APIWrapper::accessToken = "";
@@ -56,15 +57,16 @@ QList<Entity *> APIWrapper::Section<Entity>::getAll() {
     );
     auto json = Utils::execute(getUrl, Utils::GET);
 
-    auto respJson = json.array();
     QList<Entity *> objects;
-            foreach (QJsonValue val, respJson) {
-            if (val.isObject()) {
-                auto fileJson = val.toObject();
-                objects << new Entity(fileJson);
+    if (Utils::checkResponse(Response(json.object()))) {
+        auto respJson = json[prefix + "s"].toArray();
+                foreach (QJsonValue val, respJson) {
+                if (val.isObject()) {
+                    auto fileJson = val.toObject();
+                    objects << new Entity(fileJson);
+                }
             }
-        }
-
+    }
     return objects;
 }
 
@@ -79,9 +81,12 @@ Entity *APIWrapper::Section<Entity>::get(unsigned id) {
             )
     );
     auto json = Utils::execute(getUrl, Utils::GET);
-
-    auto respJson = json.object();
+    if (!Utils::checkResponse(Response(json.object()))) {
+        return nullptr;
+    }
+    auto respJson = json[prefix].toObject();
     return new Entity(respJson);
+
 }
 
 template<>
@@ -100,20 +105,19 @@ bool APIWrapper::Section<File>::upload(const File *file) {
             QNetworkRequest::ContentDispositionHeader,
             QString(
                     R"(form-data; name="%1"; path="%2"; created="%3"; modified="%4"; package_id="%5")").arg(
-                            file->name,
-                            file->path,
-                            QString::number(file->created.toSecsSinceEpoch()),
-                            QString::number(file->modified.toSecsSinceEpoch()),
-                            QString::number(file->package->id)
-                            )
-                    );
+                    file->name,
+                    file->path,
+                    QString::number(file->created.toSecsSinceEpoch()),
+                    QString::number(file->modified.toSecsSinceEpoch()),
+                    QString::number(file->package->id)
+            )
+    );
     contentPart.setHeader(QNetworkRequest::ContentTypeHeader, QMimeDatabase().mimeTypeForData(file->content).name());
     contentPart.setBody(file->content);
     multiPart->append(contentPart);
 
     auto json = Utils::executeForm(uploadUrl, multiPart, Utils::POST);
-    auto respJson = json.object();
-    return true; // TODO: implement return status on the server
+    return Utils::checkResponse(Response(json.object()));
 }
 
 template<>
@@ -132,8 +136,7 @@ bool APIWrapper::Section<Package>::upload(const Package *pkg) { // TODO: impleme
     formData.addQueryItem("repo_id", QString::number(pkg->repository->id));
 
     auto json = Utils::executeForm(updateUrl, formData, Utils::POST);
-    auto respJson = json.object();
-    return true; // TODO: implement return status on the server
+    return Utils::checkResponse(Response(json.object()));
 }
 
 template<>
@@ -153,8 +156,7 @@ bool APIWrapper::Section<Repository>::upload(const Repository *repo) {
     formData.addQueryItem("manager", repo->manager);
 
     auto json = Utils::executeForm(updateUrl, formData, Utils::POST);
-    auto respJson = json.object();
-    return true; // TODO: implement return status on the server
+    return Utils::checkResponse(Response(json.object()));
 }
 
 template<>
@@ -185,8 +187,7 @@ bool APIWrapper::Section<File>::update(const File *file) {
     multiPart->append(contentPart);
 
     auto json = Utils::executeForm(uploadUrl, multiPart, Utils::PUT);
-    auto respJson = json.object();
-    return true; // TODO: implement return status on the server
+    return Utils::checkResponse(Response(json.object()));
 }
 
 template<>
@@ -204,8 +205,7 @@ bool APIWrapper::Section<Package>::update(const Package *pkg) {
     formData.addQueryItem("repo_id", QString::number(pkg->repository->id));
 
     auto json = Utils::executeForm(updateUrl, formData, Utils::PUT);
-    auto respJson = json.object();
-    return true; // TODO: implement return status on the server
+    return Utils::checkResponse(Response(json.object()));
 }
 
 template<>
@@ -224,8 +224,7 @@ bool APIWrapper::Section<Repository>::update(const Repository *repo) { // TODO: 
     formData.addQueryItem("manager", repo->manager);
 
     auto json = Utils::executeForm(updateUrl, formData, Utils::PUT);
-    auto respJson = json.object();
-    return true; // TODO: implement return status on the server
+    return Utils::checkResponse(Response(json.object()));
 }
 
 template<class Entity>
@@ -239,97 +238,8 @@ bool APIWrapper::Section<Entity>::remove(unsigned id) {
             )
     );
     auto json = Utils::execute(deleteFileUrl, Utils::DELETE);
-
-    auto respJson = json.object();
-    return true; // TODO: implement return status on the server
+    return Utils::checkResponse(Response(json.object()));
 }
-
-QJsonDocument APIWrapper::Utils::execute(const QUrl &requestUrl, RequestType type) {
-    qDebug() << "Executing " + requestUrl.toString();
-
-    auto manager = new QNetworkAccessManager;
-
-    QNetworkRequest request(requestUrl);
-    QNetworkReply *reply;
-    switch (type) {
-        case GET:
-            reply = manager->get(request);
-            break;
-        case DELETE:
-            reply = manager->deleteResource(request);
-            break;
-        default:
-            return QJsonDocument();
-    }
-    while (!reply->isFinished()) { // make thread not blocked by waiting for response
-        qApp->processEvents();
-    }
-
-    QByteArray buffer = reply->readAll();
-    auto json = QJsonDocument::fromJson(buffer);
-    reply->deleteLater();
-    return json;
-}
-
-QJsonDocument
-APIWrapper::Utils::executeForm(const QUrl &requestUrl, QHttpMultiPart *formData, APIWrapper::Utils::RequestType type) {
-    qDebug() << "Executing " + requestUrl.toString();
-
-    auto manager = new QNetworkAccessManager;
-
-    QNetworkRequest request(requestUrl);
-    QNetworkReply *reply;
-    switch (type) {
-        case POST:
-            reply = manager->post(request, formData);
-            break;
-        case PUT:
-            reply = manager->put(request, formData);
-            break;
-        default:
-            return QJsonDocument();
-    }
-    while (!reply->isFinished()) { // make thread not blocked by waiting for response
-        qApp->processEvents();
-    }
-
-    QByteArray buffer = reply->readAll();
-    qDebug() << buffer;
-    auto json = QJsonDocument::fromJson(buffer);
-    reply->deleteLater();
-    return json;
-}
-
-QJsonDocument
-APIWrapper::Utils::executeForm(const QUrl &requestUrl, QUrlQuery &formData, APIWrapper::Utils::RequestType type) {
-    qDebug() << "Executing " + requestUrl.toString();
-
-    auto manager = new QNetworkAccessManager;
-
-    QNetworkRequest request(requestUrl);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-    QNetworkReply *reply;
-    switch (type) {
-        case POST:
-            reply = manager->post(request, formData.toString(QUrl::FullyEncoded).toUtf8());
-            break;
-        case PUT:
-            reply = manager->put(request, formData.toString(QUrl::FullyEncoded).toUtf8());
-            break;
-        default:
-            return QJsonDocument();
-    }
-    while (!reply->isFinished()) { // make thread not blocked by waiting for response
-        qApp->processEvents();
-    }
-
-    QByteArray buffer = reply->readAll();
-    qDebug() << buffer;
-    auto json = QJsonDocument::fromJson(buffer);
-    reply->deleteLater();
-    return json;
-}
-
 
 // tell the compiler to "implement" methods from super class
 template
