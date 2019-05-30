@@ -35,7 +35,7 @@
 #include <QTimer>
 
 #include "LoginWindow.h"
-#include "../models/User.h"
+#include "../api/models/User.h"
 #include "../utils/LoginUtil.h"
 #include "MainWindow.h"
 

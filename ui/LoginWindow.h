@@ -34,7 +34,7 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 
-#include "../models/User.h"
+#include "../api/models/User.h"
 
 class LoginWindow : public QDialog {
 Q_OBJECT

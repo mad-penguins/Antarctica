@@ -37,7 +37,7 @@
 #include <QtCore/QMimeDatabase>
 
 #include "APIWrapper.h"
-#include "../../models/Response.hpp"
+#include "models/Response.hpp"
 
 unsigned APIWrapper::userId = 0;
 QString APIWrapper::accessToken = "";

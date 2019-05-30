@@ -35,10 +35,10 @@
 #include <QtNetwork/QHttpMultiPart>
 #include <QtCore/QJsonDocument>
 
-#include "../../models/File.h"
-#include "../../models/Package.h"
-#include "../../models/Repository.h"
-#include "../../models/Response.hpp"
+#include "models/File.h"
+#include "models/Package.h"
+#include "models/Repository.h"
+#include "models/Response.hpp"
 
 using namespace std;
 

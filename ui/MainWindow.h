@@ -36,7 +36,7 @@
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QTableView>
 
-#include "../models/User.h"
+#include "../api/models/User.h"
 
 class MainWindow : public QMainWindow {
 Q_OBJECT
