@@ -32,7 +32,7 @@
 
 #include <QtCore/QPair>
 
-#include "../api/models/User.h"
+#include "../api/include/models/User.h"
 
 using namespace std;
 

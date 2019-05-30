@@ -36,7 +36,7 @@
 #include <QDesktopWidget>
 
 #include "MainWindow.h"
-#include "../api/APIWrapper.h"
+#include "../api/include/APIWrapper.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
