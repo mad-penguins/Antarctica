@@ -89,7 +89,6 @@ void LoginWindow::registerClicked() {
 void LoginWindow::logInClicked() {
     try {
         auto user = LoginUtil::logIn(loginField->text(), passwordField->text());
-        isLodggedIn = true;
         emit loggedIn(user);
         this->hide();
     } catch (LoginException &e) {
