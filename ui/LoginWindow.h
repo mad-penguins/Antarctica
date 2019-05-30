@@ -33,8 +33,8 @@
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
+#include <api/models/User.h>
 
-#include "../models/User.h"
 
 class LoginWindow : public QWidget {
 Q_OBJECT

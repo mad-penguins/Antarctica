@@ -35,8 +35,8 @@
 #include <QtGui/QCloseEvent>
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QTableView>
+#include <api/models/User.h>
 
-#include "../models/User.h"
 
 class MainWindow : public QMainWindow {
 Q_OBJECT

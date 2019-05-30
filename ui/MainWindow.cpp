@@ -34,9 +34,9 @@
 #include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 #include <QDesktopWidget>
+#include <api/Wrapper.h>
 
 #include "MainWindow.h"
-#include "../utils/api/APIWrapper.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
@@ -61,10 +61,12 @@ void MainWindow::initUI() {
     tabWidget->addTab(packagesTree, "Packages");
     this->setCentralWidget(tabWidget);
 
-    APIWrapper::setUserData(user.id, user.accessToken);
-            foreach(File *file, APIWrapper::Files::getAll()) {
+    Wrapper::setUserData(user.id, user.accessToken);
+            foreach(File *file, Wrapper::Files::getAll()) {
             qDebug() << file->path + "/" + file->name + " from " + file->package->repository->name + "@" +
                         file->package->name;
+            file->name += "____";
+            Wrapper::Files::update(file);
         }
 }
 
