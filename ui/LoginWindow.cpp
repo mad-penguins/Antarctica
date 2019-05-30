@@ -35,7 +35,6 @@
 #include <QTimer>
 
 #include "LoginWindow.h"
-#include "../api/include/models/User.h"
 #include "../utils/LoginUtil.h"
 #include "MainWindow.h"
 
@@ -84,7 +83,7 @@ void LoginWindow::registerClicked() {
 
 void LoginWindow::logInClicked() {
     try {
-        User user = LoginUtil::logIn(loginField->text(), passwordField->text());
+        auto user = LoginUtil::logIn(loginField->text(), passwordField->text());
         isLodggedIn = true;
         emit loggedIn(user);
     } catch (LoginException &e) {

@@ -31,8 +31,7 @@
 
 
 #include <QtCore/QPair>
-
-#include "../api/include/models/User.h"
+#include <api/models/User.h>
 
 using namespace std;
 

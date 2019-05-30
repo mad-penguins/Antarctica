@@ -12,8 +12,6 @@ add_subdirectory(api)
 
 set(CMAKE_AUTOMOC ON)
 
-include_directories(icebreaker)
-
 add_executable(antarctica ${SOURCE_FILES})
 
 target_link_libraries(antarctica icebreaker Qt5::Core Qt5::Widgets Qt5::Network)
