@@ -99,7 +99,7 @@ void LoginWindow::logInClicked() {
                 text = "Wrong login or password";
                 break;
             case LoginException::WRONG_RESPONSE:
-                text = "Couldn't connect to server";
+                text = "Wrong server response";
                 break;
             case LoginException::UNKNOWN_ERROR:
                 text = "Something went wrong";
