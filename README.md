@@ -35,7 +35,7 @@ Features (work still in progress):
 Roadmap ~~can~~ will be extended in the future.
 
 Antarctica server is at the moment under development too. Code of server is closed and it's now unstable.
-Public remote server is being tested now. Open API will be opened in the future.
+Public remote server is being tested now. Open API will be ~~opened~~ documented in the future. There's already present an early preview of [Qt API wrapper](https://github.com/mad-penguins/IcebreakerQt).
 
 You can help us to rent a server and also support the development:
 - WebMoney: R710781308549
