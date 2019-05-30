@@ -30,13 +30,13 @@
 #define ANTARCTICA_LOGINWINDOW_H
 
 
-#include <QtWidgets/QDialog>
+#include <QtWidgets/QWidget>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <api/models/User.h>
 
 
-class LoginWindow : public QDialog {
+class LoginWindow : public QWidget {
 Q_OBJECT
 
 public:
@@ -49,23 +49,17 @@ private:
     QPushButton *registerButton;
     QPushButton *logInButton;
 
-    bool isLodggedIn;
-
     void initUI();
 
 signals:
 
     void loggedIn(User user);
-    void closedWithoutLogin();
 
 public slots:
 
     void logInClicked();
 
     void registerClicked();
-
-protected:
-    void closeEvent(QCloseEvent *event) override;
 
 };
 

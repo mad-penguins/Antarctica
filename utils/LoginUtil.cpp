@@ -52,7 +52,8 @@ const User LoginUtil::logIn(const QString &login, const QString &password) noexc
     QNetworkRequest request(loginUrl);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 
-    auto reply = manager->post(request, postData.toString(QUrl::FullyEncoded).toUtf8());
+    auto reply = manager->post(request,
+            postData.toString(QUrl::FullyEncoded).toUtf8());
     while (!reply->isFinished()) {
         qApp->processEvents();
     }
@@ -72,8 +73,10 @@ const User LoginUtil::logIn(const QString &login, const QString &password) noexc
         }
     }
 
-    if (!jsonReply.keys().contains("id") && !jsonReply.keys().contains("login")
-        && !jsonReply.keys().contains("name") && !jsonReply.keys().contains("token")) {
+    if (!jsonReply.keys().contains("id")
+        && !jsonReply.keys().contains("login")
+        && !jsonReply.keys().contains("name")
+        && !jsonReply.keys().contains("token")) {
         throw LoginException(LoginException::Kind::WRONG_RESPONSE);
     }
 

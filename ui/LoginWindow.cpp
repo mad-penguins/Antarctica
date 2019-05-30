@@ -40,13 +40,11 @@
 
 
 LoginWindow::LoginWindow() {
-    isLodggedIn = false;
     initUI();
 }
 
 void LoginWindow::initUI() {
     this->setWindowTitle("Antarctica login");
-    this->setFixedSize(280, 150);
 
     auto layout = new QGridLayout;
     auto loginLabel = new QLabel("Username");
@@ -71,6 +69,13 @@ void LoginWindow::initUI() {
     layout->addWidget(loginField, 1, 2);
     layout->addWidget(passwordField, 2, 2);
 
+    layout->setRowStretch(0, 2);
+    layout->setRowStretch(4, 2);
+    layout->setColumnStretch(0, 1);
+    layout->setColumnStretch(1, 1);
+    layout->setColumnStretch(2, 2);
+    layout->setColumnStretch(3, 1);
+
     layout->setAlignment(loginLabel, Qt::AlignHCenter);
     layout->setAlignment(passwordLabel, Qt::AlignHCenter);
 
@@ -86,6 +91,7 @@ void LoginWindow::logInClicked() {
         auto user = LoginUtil::logIn(loginField->text(), passwordField->text());
         isLodggedIn = true;
         emit loggedIn(user);
+        this->hide();
     } catch (LoginException &e) {
         QString text;
         switch (e.kind) {
@@ -93,7 +99,7 @@ void LoginWindow::logInClicked() {
                 text = "Wrong login or password";
                 break;
             case LoginException::WRONG_RESPONSE:
-                text = "Wrong response from login server";
+                text = "Couldn't connect to server";
                 break;
             case LoginException::UNKNOWN_ERROR:
                 text = "Something went wrong";
@@ -103,10 +109,3 @@ void LoginWindow::logInClicked() {
     }
 }
 
-void LoginWindow::closeEvent(QCloseEvent *event) {
-    QDialog::closeEvent(event);
-
-    if (event->isAccepted() && !isLodggedIn) {
-        emit closedWithoutLogin();
-    }
-}
