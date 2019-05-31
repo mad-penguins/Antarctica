@@ -50,14 +50,12 @@ private:
 
     void initUI();
 
-    QAbstractTableModel *filesModel;
     QTableView *filesTree;
 
     void initFiles();
 
     void updateFiles();
 
-    QAbstractTableModel *packagesModel;
     QTableView *packagesTree;
 
     void initPackages();
@@ -66,7 +64,7 @@ private:
 
 public slots:
 
-    void showUser(User user);
+    void showUser(User usr);
 
 signals:
 
