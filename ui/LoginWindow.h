@@ -31,6 +31,7 @@
 
 
 #include <QtWidgets/QWidget>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <api/models/User.h>
@@ -43,6 +44,8 @@ public:
     LoginWindow();
 
 private:
+    QLabel *logoLabel;
+
     QLineEdit *loginField;
     QLineEdit *passwordField;
 
@@ -50,6 +53,10 @@ private:
     QPushButton *logInButton;
 
     void initUI();
+
+protected:
+
+    virtual void resizeEvent(QResizeEvent *);
 
 signals:
 

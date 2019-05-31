@@ -1,5 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
     <qresource>
         <file>certs/cert.pem</file>
+        <file>img/logo.png</file>
     </qresource>
 </RCC>

@@ -47,43 +47,49 @@ void LoginWindow::initUI() {
     this->setWindowTitle("Antarctica login");
 
     auto layout = new QGridLayout;
+
+    logoLabel = new QLabel();
+    logoLabel->setAlignment(Qt::AlignCenter);
+    logoLabel->setPixmap(QPixmap(":/img/logo.png").scaledToHeight(static_cast<int>(this->height()/1.5)));
+    layout->addWidget(logoLabel, 1, 1, 1, 2);
+
     auto loginLabel = new QLabel("Username");
     auto passwordLabel = new QLabel("Password");
+    layout->addWidget(loginLabel, 3, 1);
+    layout->addWidget(passwordLabel, 4, 1);
+    layout->setAlignment(loginLabel, Qt::AlignHCenter);
+    layout->setAlignment(passwordLabel, Qt::AlignHCenter);
 
     loginField = new QLineEdit;
     QTimer::singleShot(0, loginField, SLOT(setFocus()));
     passwordField = new QLineEdit;
     passwordField->setEchoMode(QLineEdit::Password);
+    layout->addWidget(loginField, 3, 2);
+    layout->addWidget(passwordField, 4, 2);
 
     registerButton = new QPushButton("Register");
     logInButton = new QPushButton("Log in");
     logInButton->setDefault(true);
+    layout->addWidget(registerButton, 5, 1);
+    layout->addWidget(logInButton, 5, 2);
 
     connect(registerButton, &QPushButton::clicked, this, &LoginWindow::registerClicked);
     connect(logInButton, &QPushButton::clicked, this, &LoginWindow::logInClicked);
 
-    layout->addWidget(registerButton, 3, 1);
-    layout->addWidget(logInButton, 3, 2);
-    layout->addWidget(loginLabel, 1, 1);
-    layout->addWidget(passwordLabel, 2, 1);
-    layout->addWidget(loginField, 1, 2);
-    layout->addWidget(passwordField, 2, 2);
-
     layout->setRowStretch(0, 2);
-    layout->setRowStretch(4, 2);
+    layout->setRowStretch(2, 1);
+    layout->setRowStretch(6, 2);
+
     layout->setColumnStretch(0, 1);
     layout->setColumnStretch(1, 1);
     layout->setColumnStretch(2, 2);
     layout->setColumnStretch(3, 1);
 
-    layout->setAlignment(loginLabel, Qt::AlignHCenter);
-    layout->setAlignment(passwordLabel, Qt::AlignHCenter);
-
     this->setLayout(layout);
 }
 
 void LoginWindow::registerClicked() {
-    QDesktopServices::openUrl(QUrl("http://antarctica-server.tk/register"));
+    QDesktopServices::openUrl(QUrl("https://antarctica-server.tk/register"));
 }
 
 void LoginWindow::logInClicked() {
@@ -106,5 +112,9 @@ void LoginWindow::logInClicked() {
         }
         QMessageBox::critical(this, "Login error", text);
     }
+}
+
+void LoginWindow::resizeEvent(QResizeEvent *e) {
+    this->logoLabel->setPixmap(QPixmap(":/img/logo.png").scaledToHeight(static_cast<int>(e->size().height()/1.5)));
 }
 
