@@ -34,22 +34,25 @@
 #include <QJsonObject>
 #include <QDebug>
 #include <QtCore/QUrlQuery>
+#include <QtWidgets/QMessageBox>
+#include <QtNetwork/QSslSocket>
 
 #include "LoginUtil.h"
+#include "SSLUtil.hpp"
 
 
 const User LoginUtil::logIn(const QString &login, const QString &password) noexcept(false) {
     qDebug() << "logging into " + login + " " + password;
 
-    auto loginUrl = QUrl("http://antarctica-server.tk/api/login");
+    auto loginUrl = QUrl("https://antarctica-server.tk/api/login");
 
     QUrlQuery postData;
     postData.addQueryItem("login", login);
     postData.addQueryItem("password", password);
 
     auto manager = new QNetworkAccessManager;
-
     QNetworkRequest request(loginUrl);
+    request.setSslConfiguration(SSLUtil::getSSLConfig());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 
     auto reply = manager->post(request,
@@ -77,6 +80,7 @@ const User LoginUtil::logIn(const QString &login, const QString &password) noexc
         && !jsonReply.keys().contains("login")
         && !jsonReply.keys().contains("name")
         && !jsonReply.keys().contains("token")) {
+        qDebug() << buffer;
         throw LoginException(LoginException::Kind::WRONG_RESPONSE);
     }
 
