@@ -28,9 +28,9 @@ Features (work still in progress):
     - [ ] Settings
     - [ ] Custom design
  - [ ] Under the hood
-    - [ ] Security
-        - [ ] Login and registration through HTTPS
-        - [ ] Database connection through TLS
+    - [x] Security
+        - [x] Connection through HTTPS
+    - [ ] Real-time files' states changes monitoring
 
 Roadmap ~~can~~ will be extended in the future.
 
