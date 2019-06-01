@@ -63,12 +63,12 @@ void MainWindow::initUI() {
     this->setCentralWidget(tabWidget);
 
     Wrapper::init(user.id, user.accessToken, SSLUtil::getSSLConfig());
-            foreach(File *file, Wrapper::Files::getAll()) {
-            qDebug() << file->path + "/" + file->name + " from " + file->package->repository->name + "@" +
-                        file->package->name;
-            file->name += "____";
-            Wrapper::Files::update(file);
-        }
+    for (auto &&file : Wrapper::Files::getAll()) {
+        qDebug() << file->path + "/" + file->name + " from " + file->package->repository->name + "@" +
+                    file->package->name;
+        file->name += "____";
+        Wrapper::Files::update(file);
+    }
 }
 
 void MainWindow::initFiles() {
@@ -91,12 +91,4 @@ void MainWindow::showUser(User usr) {
     this->user = std::move(usr);
     this->initUI();
     this->show();
-}
-
-void MainWindow::closeEvent(QCloseEvent *event) {
-    QMainWindow::closeEvent(event);
-
-    if (event->isAccepted()) {
-        emit closed();
-    }
 }

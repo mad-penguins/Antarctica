@@ -33,12 +33,13 @@
 int main(int argc, char **argv) {
     QApplication app(argc, argv);
 
-    LoginWindow loginWindow;
-    MainWindow mainWindow;
+    auto loginWindow = new LoginWindow;
+    auto mainWindow = new MainWindow;
+    loginWindow->setAttribute(Qt::WA_DeleteOnClose);
 
-    QObject::connect(&loginWindow, &LoginWindow::loggedIn, &mainWindow, &MainWindow::showUser);
+    QObject::connect(loginWindow, &LoginWindow::loggedIn, mainWindow, &MainWindow::showUser);
 
-    loginWindow.show();
+    loginWindow->show();
     
     return QApplication::exec();
 }

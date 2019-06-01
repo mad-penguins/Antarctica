@@ -96,7 +96,7 @@ void LoginWindow::logInClicked() {
     try {
         auto user = LoginUtil::logIn(loginField->text(), passwordField->text());
         emit loggedIn(user);
-        this->hide();
+        this->close();
     } catch (LoginException &e) {
         QString text;
         switch (e.kind) {

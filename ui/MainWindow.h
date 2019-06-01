@@ -66,13 +66,6 @@ public slots:
 
     void showUser(User usr);
 
-signals:
-
-    void closed();
-
-protected:
-    void closeEvent(QCloseEvent *event) override;
-
 };
 
 
