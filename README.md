@@ -1,4 +1,6 @@
 # Antarctica
+![screenshot of sample](http://mad-penguins.tk/img/Antarctica_logo_mini_200.png)
+
 Antarctica is an open-source project aiming to perform comfortable in-cloud backup of user files, installed packages list and dotfiles.
 
 Current edition is a port of archived [Kotlin version](https://github.com/mad-penguins/AntarcticaKt) to C++/Qt.
