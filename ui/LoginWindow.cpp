@@ -32,6 +32,8 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QDesktopServices>
+#include <QDesktopWidget>
+
 #include <api/Wrapper.h>
 
 #include "LoginWindow.h"
@@ -48,6 +50,12 @@ void LoginWindow::initUI() {
     this->setWindowTitle("Antarctica login");
 
     this->setWindowIcon(QIcon(QPixmap(":/img/icon.png")));
+
+    setGeometry(0,0,320,500);
+
+    QDesktopWidget dw;
+    QRect rc = dw.screenGeometry(this);
+    move((rc.width() - width()) / 2, (rc.height() - height()) / 2 - 20);
 
     auto layout = new QGridLayout;
 

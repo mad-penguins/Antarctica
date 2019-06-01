@@ -34,6 +34,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 #include <QDesktopWidget>
+
 #include <api/Wrapper.h>
 
 #include "MainWindow.h"
@@ -48,6 +49,8 @@ void MainWindow::initUI() {
     setWindowTitle(this->user.displayName + " - Antarctica");
 
     setWindowIcon(QIcon(QPixmap(":/img/icon.png")));
+
+    setGeometry(0,0,900, 500);
 
     QDesktopWidget dw;
     QRect rc = dw.screenGeometry(this);
