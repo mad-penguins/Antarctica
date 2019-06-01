@@ -34,7 +34,7 @@
 #include <QDesktopServices>
 
 #include "LoginWindow.h"
-#include "utils/LoginUtil.h"
+#include "utils/Login.h"
 #include "MainWindow.h"
 
 
@@ -92,7 +92,7 @@ void LoginWindow::registerClicked() {
 
 void LoginWindow::logInClicked() {
     try {
-        auto user = LoginUtil::logIn(loginField->text(), passwordField->text());
+        auto user = Login::logIn(loginField->text(), passwordField->text());
         emit loggedIn(user);
         this->close();
     } catch (LoginException &e) {

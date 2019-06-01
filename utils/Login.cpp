@@ -1,5 +1,5 @@
 /*!
- * \file util/LoginUtil.cpp
+ * \file util/Login.cpp
  * \author Nikita Mironov <nickfrom22nd@gmail.com>
  * \brief The login utility implementation
  *
@@ -37,11 +37,11 @@
 #include <QtWidgets/QMessageBox>
 #include <QtNetwork/QSslSocket>
 
-#include "LoginUtil.h"
-#include "SSLUtil.hpp"
+#include "Login.h"
+#include "SSL.hpp"
 
 
-const User LoginUtil::logIn(const QString &login, const QString &password) noexcept(false) {
+const User Login::logIn(const QString &login, const QString &password) noexcept(false) {
     qDebug() << "logging into " + login + " " + password;
 
     auto loginUrl = QUrl("https://antarctica-server.tk/api/login");
@@ -52,7 +52,7 @@ const User LoginUtil::logIn(const QString &login, const QString &password) noexc
 
     auto manager = new QNetworkAccessManager;
     QNetworkRequest request(loginUrl);
-    request.setSslConfiguration(SSLUtil::getSSLConfig());
+    request.setSslConfiguration(SSL::getConfig());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 
     auto reply = manager->post(request,

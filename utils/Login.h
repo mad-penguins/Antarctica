@@ -1,5 +1,5 @@
 /*!
- * \file util/LoginUtil.h
+ * \file util/Login.h
  * \author Nikita Mironov <nickfrom22nd@gmail.com>
  * \brief The login utility class
  *
@@ -26,8 +26,8 @@
  * SOFTWARE.
  */
 
-#ifndef ANTARCTICA_LOGINUTIL_H
-#define ANTARCTICA_LOGINUTIL_H
+#ifndef ANTARCTICA_LOGIN_H
+#define ANTARCTICA_LOGIN_H
 
 
 #include <QtCore/QPair>
@@ -47,10 +47,10 @@ public:
 
 };
 
-class LoginUtil {
+class Login {
 public:
     static const User logIn(const QString &login, const QString &password) noexcept(false);
 };
 
 
-#endif //ANTARCTICA_LOGINUTIL_H
+#endif //ANTARCTICA_LOGIN_H

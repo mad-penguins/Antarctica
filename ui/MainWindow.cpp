@@ -37,7 +37,7 @@
 #include <api/Wrapper.h>
 
 #include "MainWindow.h"
-#include "utils/SSLUtil.hpp"
+#include "utils/SSL.hpp"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
@@ -62,7 +62,7 @@ void MainWindow::initUI() {
     tabWidget->addTab(packagesTree, "Packages");
     this->setCentralWidget(tabWidget);
 
-    Wrapper::init(user.id, user.accessToken, SSLUtil::getSSLConfig());
+    Wrapper::init(user.id, user.accessToken, SSL::getConfig());
     for (auto &&file : Wrapper::Files::getAll()) {
         qDebug() << file->path + "/" + file->name + " from " + file->package->repository->name + "@" +
                     file->package->name;
