@@ -37,7 +37,7 @@
 #include <api/Wrapper.h>
 
 #include "MainWindow.h"
-#include "../utils/SSLUtil.hpp"
+#include "utils/SSLUtil.hpp"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
@@ -49,7 +49,7 @@ void MainWindow::initUI() {
 
     QDesktopWidget dw;
     QRect rc = dw.screenGeometry(this);
-    move((rc.width() - width())/2, (rc.height() - height())/2-20);
+    move((rc.width() - width()) / 2, (rc.height() - height()) / 2 - 20);
 
     initFiles();
     updateFiles();

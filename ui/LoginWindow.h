@@ -56,7 +56,9 @@ private:
 
 protected:
 
-    virtual void resizeEvent(QResizeEvent *);
+    void resizeEvent(QResizeEvent *) override;
+
+    void keyReleaseEvent(QKeyEvent *) override;
 
 signals:
 

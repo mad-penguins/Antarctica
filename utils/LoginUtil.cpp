@@ -56,7 +56,7 @@ const User LoginUtil::logIn(const QString &login, const QString &password) noexc
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 
     auto reply = manager->post(request,
-            postData.toString(QUrl::FullyEncoded).toUtf8());
+                               postData.toString(QUrl::FullyEncoded).toUtf8());
     while (!reply->isFinished()) {
         qApp->processEvents();
     }

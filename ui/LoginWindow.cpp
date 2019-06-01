@@ -32,10 +32,9 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QDesktopServices>
-#include <QTimer>
 
 #include "LoginWindow.h"
-#include "../utils/LoginUtil.h"
+#include "utils/LoginUtil.h"
 #include "MainWindow.h"
 
 
@@ -50,7 +49,7 @@ void LoginWindow::initUI() {
 
     logoLabel = new QLabel();
     logoLabel->setAlignment(Qt::AlignCenter);
-    logoLabel->setPixmap(QPixmap(":/img/logo.png").scaledToHeight(static_cast<int>(this->height()/1.5)));
+    logoLabel->setPixmap(QPixmap(":/img/logo.png").scaledToHeight(static_cast<int>(this->height() / 1.5)));
     layout->addWidget(logoLabel, 1, 1, 1, 2);
 
     auto loginLabel = new QLabel("Username");
@@ -61,7 +60,6 @@ void LoginWindow::initUI() {
     layout->setAlignment(passwordLabel, Qt::AlignHCenter);
 
     loginField = new QLineEdit;
-    QTimer::singleShot(0, loginField, SLOT(setFocus()));
     passwordField = new QLineEdit;
     passwordField->setEchoMode(QLineEdit::Password);
     layout->addWidget(loginField, 3, 2);
@@ -115,6 +113,11 @@ void LoginWindow::logInClicked() {
 }
 
 void LoginWindow::resizeEvent(QResizeEvent *e) {
-    this->logoLabel->setPixmap(QPixmap(":/img/logo.png").scaledToHeight(static_cast<int>(e->size().height()/1.5)));
+    this->logoLabel->setPixmap(QPixmap(":/img/logo.png").scaledToHeight(static_cast<int>(e->size().height() / 1.5)));
 }
 
+void LoginWindow::keyReleaseEvent(QKeyEvent *e) {
+    if (e->key() == Qt::Key_Enter || e->key() == Qt::Key_Return) {
+        logInClicked();
+    }
+}
