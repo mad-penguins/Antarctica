@@ -62,7 +62,6 @@ void MainWindow::initUI() {
     tabWidget->addTab(packagesTree, "Packages");
     this->setCentralWidget(tabWidget);
 
-    Wrapper::init(user.id, user.accessToken, SSL::getConfig());
     for (auto &&file : Wrapper::Files::getAll()) {
         qDebug() << file->path + "/" + file->name + " from " + file->package->repository->name + "@" +
                     file->package->name;

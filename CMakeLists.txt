@@ -3,7 +3,7 @@ project(antarctica)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCE_FILES main.cpp ui/MainWindow.cpp ui/MainWindow.h ui/LoginWindow.cpp ui/LoginWindow.h utils/Login.cpp utils/Login.h utils/SSL.hpp)
+set(SOURCE_FILES main.cpp ui/MainWindow.cpp ui/MainWindow.h ui/LoginWindow.cpp ui/LoginWindow.h utils/SSL.hpp)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(Qt5Core REQUIRED)

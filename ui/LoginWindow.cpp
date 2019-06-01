@@ -32,13 +32,15 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QDesktopServices>
+#include <api/Wrapper.h>
 
 #include "LoginWindow.h"
-#include "utils/Login.h"
+#include "utils/SSL.hpp"
 #include "MainWindow.h"
 
 
 LoginWindow::LoginWindow() {
+    Wrapper::init(SSL::getConfig());
     initUI();
 }
 
@@ -92,20 +94,19 @@ void LoginWindow::registerClicked() {
 
 void LoginWindow::logInClicked() {
     try {
-        auto user = Login::logIn(loginField->text(), passwordField->text());
+        auto user = Wrapper::authorize(loginField->text(), passwordField->text());
         emit loggedIn(user);
         this->close();
-    } catch (LoginException &e) {
+    } catch (Response::Exception &e) {
         QString text;
-        switch (e.kind) {
-            case LoginException::WRONG_LOGIN_DATA:
+        switch (e.code) {
+            case Response::Error::WrongLogin:
                 text = "Wrong login or password";
                 break;
-            case LoginException::WRONG_RESPONSE:
+            case Response::Error::MissingFields:
                 text = "Wrong server response";
                 break;
-            case LoginException::UNKNOWN_ERROR:
-                text = "Something went wrong";
+            default:
                 break;
         }
         QMessageBox::critical(this, "Login error", text);
