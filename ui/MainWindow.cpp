@@ -47,6 +47,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 void MainWindow::initUI() {
     setWindowTitle(this->user.displayName + " - Antarctica");
 
+    setWindowIcon(QIcon(QPixmap(":/img/icon.png")));
+
     QDesktopWidget dw;
     QRect rc = dw.screenGeometry(this);
     move((rc.width() - width()) / 2, (rc.height() - height()) / 2 - 20);

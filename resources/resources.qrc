@@ -2,5 +2,6 @@
     <qresource>
         <file>certs/cert.pem</file>
         <file>img/logo.png</file>
+        <file>img/icon.png</file>
     </qresource>
 </RCC>

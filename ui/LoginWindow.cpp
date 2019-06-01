@@ -47,6 +47,8 @@ LoginWindow::LoginWindow() {
 void LoginWindow::initUI() {
     this->setWindowTitle("Antarctica login");
 
+    this->setWindowIcon(QIcon(QPixmap(":/img/icon.png")));
+
     auto layout = new QGridLayout;
 
     logoLabel = new QLabel();
