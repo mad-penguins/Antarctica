@@ -34,6 +34,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 #include <QDesktopWidget>
+#include <QMessageBox>
 
 #include <api/Wrapper.h>
 
@@ -62,10 +63,27 @@ void MainWindow::initUI() {
     initPackages();
     updatePackages();
 
+    hBoxLayout = new QHBoxLayout();
+    hBoxLayout->setContentsMargins(0,0,0,0);
+
+    createToolbars();
+    auto *vBoxLayout = new QVBoxLayout;
+    vBoxLayout->addWidget(toolBarUp);
+    vBoxLayout->addStretch();
+    vBoxLayout->addWidget(toolBarDown);
+    vBoxLayout->setContentsMargins(0,0,0,0);
+    hBoxLayout->addLayout(vBoxLayout);
+
     tabWidget = new QTabWidget;
     tabWidget->addTab(filesTree, "Files");
     tabWidget->addTab(packagesTree, "Packages");
-    this->setCentralWidget(tabWidget);
+    hBoxLayout->addWidget(tabWidget);
+
+    hBoxLayout->setSpacing(0);
+
+    auto *ui_area = new QWidget;
+    ui_area->setLayout(hBoxLayout);
+    this->setCentralWidget(ui_area);
 
     for (auto &&file : Wrapper::Files::getAll()) {
         qDebug() << file->path + "/" + file->name + " from " + file->package->repository->name + "@" +
@@ -95,4 +113,34 @@ void MainWindow::showUser(User usr) {
     this->user = std::move(usr);
     this->initUI();
     this->show();
+}
+
+void MainWindow::createToolbars() {
+    toolBarUp = new QToolBar;
+    toolBarUp->setStyleSheet("QToolButton\n"
+                           "    {\n"
+                           "        height: 40px;\n"
+                           "        width: 40px;\n"
+                           "    }");
+    toolBarUp->setIconSize(QSize(50,50));
+    toolBarUp->setOrientation(Qt::Vertical);
+    toolBarUp->addAction(QIcon(":/img/menu.png"), "test", this, SLOT(testSlot()));
+    toolBarUp->addAction(QIcon(":/img/add.png"), "test", this, SLOT(testSlot()));
+    toolBarUp->addAction(QIcon(":/img/update.png"), "test", this, SLOT(testSlot()));
+
+    toolBarDown = new QToolBar;
+    toolBarDown->setStyleSheet("QToolButton\n"
+                             "    {\n"
+                             "        height: 40px;\n"
+                             "        width: 40px;\n"
+                             "    }");
+    toolBarDown->setIconSize(QSize(50,50));
+    toolBarDown->setOrientation(Qt::Vertical);
+    toolBarDown->addSeparator();
+    toolBarDown->addAction(QIcon(":/img/settings.png"), "test", this, SLOT(testSlot()));
+    toolBarDown->addAction(QIcon(":/img/sign_out.png"), "test", this, SLOT(testSlot()));
+}
+
+void MainWindow::testSlot() {
+    QMessageBox::information(0, "Message", "Not implemented");
 }
