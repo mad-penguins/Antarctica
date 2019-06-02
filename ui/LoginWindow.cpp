@@ -49,7 +49,7 @@ LoginWindow::LoginWindow() {
 void LoginWindow::initUI() {
     this->setWindowTitle("Antarctica login");
 
-    this->setWindowIcon(QIcon(QPixmap(":/img/icon.png")));
+    this->setWindowIcon(QIcon(":/img/icon.png"));
 
     setGeometry(0,0,320,500);
 

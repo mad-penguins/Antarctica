@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 void MainWindow::initUI() {
     setWindowTitle(this->user.displayName + " - Antarctica");
 
-    setWindowIcon(QIcon(QPixmap(":/img/icon.png")));
+    setWindowIcon(QIcon(":/img/icon.png"));
 
     setGeometry(0,0,900, 500);
 
