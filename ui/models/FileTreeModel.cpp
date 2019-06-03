@@ -1,6 +1,7 @@
 #include <api/models/File.h>
 #include <QtCore/QStack>
 #include <QtCore/QDebug>
+#include <QtCore/QCollator>
 
 #include "FileTreeModel.h"
 
@@ -189,16 +190,25 @@ void FileTreeModel::createDirs(QStringList dirsList, FileTreeItem *parent) {
 }
 
 void FileTreeModel::setupModelData(const QList<File *> &files, FileTreeItem *parent) {
+    QCollator collator; // TODO: implement server-side sorting?
+    QList<File *> sortedFiles(files);
+    std::sort(sortedFiles.begin(), sortedFiles.end(), [&collator] (File *file1, File *file2) {
+        return collator.compare(
+                file1->path + "/" + file1->name,
+                file2->path + "/" + file2->name
+                ) < 0;
+    });
+
     parent->insertChildren(parent->childCount(), 1, 1);
     auto root = parent->child(parent->childCount() - 1);
     root->setData(0, "/");
 
-    for (auto &&file : files) {
+    for (auto &&file : sortedFiles) {
         QStringList dirsList = file->path.split('/');
         createDirs(dirsList, root);
 
         auto dir = lastDir;
         dir->insertChildren(dir->childCount(), 1, 1);
-        dir->child(dir->childCount() - 1)->setData(dir->childCount() - 1, file->name);
+        dir->child(dir->childCount() - 1)->setData(0, file->name);
     }
 }
