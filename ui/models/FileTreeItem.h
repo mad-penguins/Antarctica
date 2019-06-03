@@ -30,6 +30,8 @@ public:
 
     bool insertChildren(int position, int count, int columns);
 
+    bool appendChild(const QVector<QVariant> &data);
+
     bool insertColumns(int position, int columns);
 
     inline FileTreeItem *parent() {

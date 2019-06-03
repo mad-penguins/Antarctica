@@ -98,3 +98,15 @@ FileTreeItem *FileTreeItem::findName(const QString &name) {
             });
     return iter == childItems.end() ? nullptr : *iter;
 }
+
+bool FileTreeItem::appendChild(const QVector<QVariant> &data) {
+    if (insertChildren(childCount(), 1, data.size())) {
+        for (int i = 0; i < data.size(); ++i) {
+            if (!child(childCount()-1)->setData(i, data.at(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
+}
