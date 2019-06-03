@@ -189,12 +189,13 @@ void FileTreeModel::createDirs(QStringList dirsList, FileTreeItem *parent) {
 }
 
 void FileTreeModel::setupModelData(const QList<File *> &files, FileTreeItem *parent) {
-    parent->insertChildren(parent->childCount() - 1, 1, 1);
-    parent->setData(parent->childCount() - 1, "/");
+    parent->insertChildren(parent->childCount(), 1, 1);
+    auto root = parent->child(parent->childCount() - 1);
+    root->setData(0, "/");
 
     for (auto &&file : files) {
         QStringList dirsList = file->path.split('/');
-        createDirs(dirsList, parent);
+        createDirs(dirsList, root);
 
         auto dir = lastDir;
         dir->insertChildren(dir->childCount(), 1, 1);
