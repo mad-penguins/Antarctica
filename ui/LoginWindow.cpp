@@ -51,7 +51,7 @@ void LoginWindow::initUI() {
 
     this->setWindowIcon(QIcon(QPixmap(":/img/icon.png")));
 
-    setGeometry(0,0,320,500);
+    setGeometry(0, 0, 320, 500);
 
     QDesktopWidget dw;
     QRect rc = dw.screenGeometry(this);

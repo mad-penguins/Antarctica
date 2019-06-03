@@ -34,8 +34,8 @@
 #include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
 #include <QDesktopWidget>
-
 #include <api/Wrapper.h>
+#include <ui/models/FileTreeModel.h>
 
 #include "MainWindow.h"
 #include "utils/SSL.hpp"
@@ -47,52 +47,42 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
 void MainWindow::initUI() {
     setWindowTitle(this->user.displayName + " - Antarctica");
-
     setWindowIcon(QIcon(QPixmap(":/img/icon.png")));
+    moveToCenter();
 
-    setGeometry(0,0,900, 500);
-
-    QDesktopWidget dw;
-    QRect rc = dw.screenGeometry(this);
-    move((rc.width() - width()) / 2, (rc.height() - height()) / 2 - 20);
-
-    initFiles();
-    updateFiles();
-
-    initPackages();
-    updatePackages();
+    filesTree = new QTreeView;
+    packagesTree = new QTreeView;
 
     tabWidget = new QTabWidget;
     tabWidget->addTab(filesTree, "Files");
     tabWidget->addTab(packagesTree, "Packages");
-    this->setCentralWidget(tabWidget);
+    setCentralWidget(tabWidget);
 
-    for (auto &&file : Wrapper::Files::getAll()) {
-        qDebug() << file->path + "/" + file->name + " from " + file->package->repository->name + "@" +
-                    file->package->name;
-        file->name += "____";
-        Wrapper::Files::update(file);
-    }
-}
-
-void MainWindow::initFiles() {
-
+    updateFiles();
+    updatePackages();
 }
 
 void MainWindow::updateFiles() {
-    filesTree = new QTableView;
-}
-
-void MainWindow::initPackages() {
-
+    QStringList headers;
+    headers << tr("Name");
+    FileTreeModel *model = new FileTreeModel(headers, Wrapper::Files::getAll());
+    filesTree->setModel(model);
 }
 
 void MainWindow::updatePackages() {
-    packagesTree = new QTableView;
+
 }
 
 void MainWindow::showUser(User usr) {
     this->user = std::move(usr);
     this->initUI();
     this->show();
+}
+
+void MainWindow::moveToCenter() {
+    setGeometry(0, 0, 900, 500);
+
+    QDesktopWidget dw;
+    QRect rc = dw.screenGeometry(this);
+    move((rc.width() - width()) / 2, (rc.height() - height()) / 2 - 20);
 }

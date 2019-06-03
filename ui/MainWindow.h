@@ -46,19 +46,17 @@ public:
 
 private:
     User user;
-    QTabWidget *tabWidget;
+    QTabWidget *tabWidget{};
 
     void initUI();
 
-    QTableView *filesTree;
+    void moveToCenter();
 
-    void initFiles();
+    QTreeView *filesTree{};
 
     void updateFiles();
 
-    QTableView *packagesTree;
-
-    void initPackages();
+    QTreeView *packagesTree{};
 
     void updatePackages();
 
