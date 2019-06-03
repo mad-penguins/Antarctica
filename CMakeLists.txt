@@ -3,7 +3,7 @@ project(antarctica)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCE_FILES main.cpp ui/MainWindow.cpp ui/MainWindow.h ui/LoginWindow.cpp ui/LoginWindow.h utils/SSL.hpp ui/models/FileTreeItem.cpp ui/models/FileTreeItem.h ui/models/FileTreeModel.cpp ui/models/FileTreeModel.h)
+set(SOURCE_FILES main.cpp ui/MainWindow.cpp ui/MainWindow.h ui/LoginWindow.cpp ui/LoginWindow.h utils/SSL.hpp ui/models/FileTreeItem.cpp ui/models/FileTreeItem.h ui/models/FileTreeModel.cpp ui/models/FileTreeModel.h ui/models/PackageTreeItem.cpp ui/models/PackageTreeItem.h ui/models/PackageTreeModel.cpp ui/models/PackageTreeModel.h)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(Qt5Core REQUIRED)

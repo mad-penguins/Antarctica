@@ -1,18 +1,18 @@
-#ifndef ANTARCTICA_FILETREEMODEL_H
-#define ANTARCTICA_FILETREEMODEL_H
+#ifndef ANTARCTICA_PACKAGETREEMODEL_H
+#define ANTARCTICA_PACKAGETREEMODEL_H
 
 
 #include <QtCore/QAbstractItemModel>
 
-#include "FileTreeItem.h"
+#include "PackageTreeItem.h"
 
-class FileTreeModel : public QAbstractItemModel {
+class PackageTreeModel : public QAbstractItemModel {
 Q_OBJECT
 
 public:
-    FileTreeModel(const QStringList &headers, const QList<File *> &data, QObject *parent = nullptr);
+    PackageTreeModel(const QStringList &headers, const QList<Package *> &data, QObject *parent = nullptr);
 
-    ~FileTreeModel() override;
+    ~PackageTreeModel() override;
 
     QVariant data(const QModelIndex &index, int role) const override;
 
@@ -44,16 +44,13 @@ public:
     bool removeRows(int position, int rows, const QModelIndex &parent = QModelIndex()) override;
 
 private:
-    void setupModelData(const QList<File *> &files, FileTreeItem *parent);
+    void setupModelData(const QList<Package *> &packages, PackageTreeItem *parent);
 
-    FileTreeItem *getItem(const QModelIndex &index) const;
+    PackageTreeItem *getItem(const QModelIndex &index) const;
 
-    FileTreeItem *rootItem;
+    PackageTreeItem *rootItem;
 
-    void createDirs(QStringList dirsList, FileTreeItem *parent);
-
-    FileTreeItem *lastDir{};
 };
 
 
-#endif //ANTARCTICA_FILETREEMODEL_H
+#endif //ANTARCTICA_PACKAGETREEMODEL_H

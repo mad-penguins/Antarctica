@@ -1,40 +1,40 @@
+#include <QtCore/QVector>
 #include <QtCore/QCollator>
-#include "FileTreeItem.h"
 
-#include <QDebug>
+#include "PackageTreeItem.h"
 
-FileTreeItem::FileTreeItem(const QVector<QVariant> &data, FileTreeItem *parent) {
+PackageTreeItem::PackageTreeItem(const QVector<QVariant> &data, PackageTreeItem *parent) {
     parentItem = parent;
     itemData = data;
-    file = nullptr;
+    package = nullptr;
 }
 
-FileTreeItem::~FileTreeItem() {
+PackageTreeItem::~PackageTreeItem() {
     qDeleteAll(childItems);
 }
 
-int FileTreeItem::childNumber() const {
+int PackageTreeItem::childNumber() const {
     if (parentItem) {
-        return parentItem->childItems.indexOf(const_cast<FileTreeItem *>(this));
+        return parentItem->childItems.indexOf(const_cast<PackageTreeItem *>(this));
     }
     return 0;
 }
 
-bool FileTreeItem::insertChildren(int position, int count, int columns) {
+bool PackageTreeItem::insertChildren(int position, int count, int columns) {
     if (position < 0 || position > childItems.size()) {
         return false;
     }
 
     for (int row = 0; row < count; ++row) {
         QVector<QVariant> data(columns);
-        auto *item = new FileTreeItem(data, this);
+        auto *item = new PackageTreeItem(data, this);
         childItems.insert(position, item);
     }
 
     return true;
 }
 
-bool FileTreeItem::insertColumns(int position, int columns) {
+bool PackageTreeItem::insertColumns(int position, int columns) {
     if (position < 0 || position > itemData.size()) {
         return false;
     }
@@ -50,7 +50,7 @@ bool FileTreeItem::insertColumns(int position, int columns) {
     return true;
 }
 
-bool FileTreeItem::removeChildren(int position, int count) {
+bool PackageTreeItem::removeChildren(int position, int count) {
     if (position < 0 || position + count > childItems.size()) {
         return false;
     }
@@ -62,7 +62,7 @@ bool FileTreeItem::removeChildren(int position, int count) {
     return true;
 }
 
-bool FileTreeItem::removeColumns(int position, int columns) {
+bool PackageTreeItem::removeColumns(int position, int columns) {
     if (position < 0 || position + columns > itemData.size()) {
         return false;
     }
@@ -78,7 +78,7 @@ bool FileTreeItem::removeColumns(int position, int columns) {
     return true;
 }
 
-bool FileTreeItem::setData(int column, const QVariant &value) {
+bool PackageTreeItem::setData(int column, const QVariant &value) {
     if (column < 0 || column >= itemData.size()) {
         return false;
     }
@@ -87,19 +87,19 @@ bool FileTreeItem::setData(int column, const QVariant &value) {
     return true;
 }
 
-FileTreeItem *FileTreeItem::findName(const QString &name) {
+PackageTreeItem *PackageTreeItem::findName(const QString &name) {
     QCollator collator;
     auto iter = std::lower_bound(
             childItems.begin(),
             childItems.end(),
-            FileTreeItem(QVector<QVariant>() << name),
-            [&collator](FileTreeItem *f, const FileTreeItem &n) {
+            PackageTreeItem(QVector<QVariant>() << name),
+            [&collator](PackageTreeItem *f, const PackageTreeItem &n) {
                 return collator.compare(f->data(0).toString(), n.data(0).toString()) < 0;
             });
     return iter == childItems.end() ? nullptr : *iter;
 }
 
-bool FileTreeItem::appendChild(const QVector<QVariant> &data) {
+bool PackageTreeItem::appendChild(const QVector<QVariant> &data) {
     if (insertChildren(childCount(), 1, data.size())) {
         for (int i = 0; i < data.size(); ++i) {
             if (!child(childCount() - 1)->setData(i, data.at(i))) {

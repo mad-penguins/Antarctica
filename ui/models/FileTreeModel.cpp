@@ -190,11 +190,11 @@ void FileTreeModel::createDirs(QStringList dirsList, FileTreeItem *parent) {
 void FileTreeModel::setupModelData(const QList<File *> &files, FileTreeItem *parent) {
     QCollator collator; // TODO: implement server-side sorting?
     QList<File *> sortedFiles(files);
-    std::sort(sortedFiles.begin(), sortedFiles.end(), [&collator] (File *file1, File *file2) {
+    std::sort(sortedFiles.begin(), sortedFiles.end(), [&collator](File *file1, File *file2) {
         return collator.compare(
                 file1->path + "/" + file1->name,
                 file2->path + "/" + file2->name
-                ) < 0;
+        ) < 0;
     });
 
     parent->appendChild(QVector<QVariant>() << "/");

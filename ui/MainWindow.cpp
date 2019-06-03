@@ -35,10 +35,10 @@
 #include <QtCore/QFileInfo>
 #include <QDesktopWidget>
 #include <api/Wrapper.h>
-#include <ui/models/FileTreeModel.h>
 
 #include "MainWindow.h"
-#include "utils/SSL.hpp"
+#include "ui/models/FileTreeModel.h"
+#include "ui/models/PackageTreeModel.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
@@ -70,7 +70,10 @@ void MainWindow::updateFiles() {
 }
 
 void MainWindow::updatePackages() {
-
+    QStringList headers;
+    headers << tr("Name");
+    PackageTreeModel *model = new PackageTreeModel(headers, Wrapper::Packages::getAll());
+    packagesTree->setModel(model);
 }
 
 void MainWindow::showUser(User usr) {
