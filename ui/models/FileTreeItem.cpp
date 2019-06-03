@@ -1,4 +1,7 @@
+#include <QtCore/QCollator>
 #include "FileTreeItem.h"
+
+#include <QDebug>
 
 FileTreeItem::FileTreeItem(const QVector<QVariant> &data, FileTreeItem *parent) {
     parentItem = parent;
@@ -85,10 +88,13 @@ bool FileTreeItem::setData(int column, const QVariant &value) {
 }
 
 FileTreeItem *FileTreeItem::findName(const QString &name) {
-    for (int i = 0; i < childCount(); ++i) { // TODO: implement binary or any other more efficient search algorithm
-        if (child(i)->data(0) == name) {
-            return child(i);
-        }
-    }
-    return nullptr;
+    QCollator collator;
+    auto iter = std::lower_bound(
+            childItems.begin(),
+            childItems.end(),
+            FileTreeItem(QVector<QVariant>() << name),
+            [&collator] (FileTreeItem *f, const FileTreeItem &n) {
+                return collator.compare(f->data(0).toString(), n.data(0).toString()) < 0;
+            });
+    return iter == childItems.end() ? nullptr : *iter;
 }
