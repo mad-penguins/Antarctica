@@ -119,26 +119,26 @@ void MainWindow::createToolbars() {
     toolBarUp = new QToolBar;
     toolBarUp->setStyleSheet("QToolButton\n"
                            "    {\n"
-                           "        height: 40px;\n"
-                           "        width: 40px;\n"
+                           "        height: 48px;\n"
+                           "        width: 48px;\n"
                            "    }");
     toolBarUp->setIconSize(QSize(50,50));
     toolBarUp->setOrientation(Qt::Vertical);
-    toolBarUp->addAction(QIcon(":/img/menu.png"), "test", this, SLOT(testSlot()));
-    toolBarUp->addAction(QIcon(":/img/add.png"), "test", this, SLOT(testSlot()));
-    toolBarUp->addAction(QIcon(":/img/update.png"), "test", this, SLOT(testSlot()));
+    toolBarUp->addAction(QIcon(":/img/add_green.png"), "test", this, SLOT(testSlot()));
+    toolBarUp->addAction(QIcon(":/img/remove_green.png"), "test", this, SLOT(testSlot()));
+    toolBarUp->addAction(QIcon(":/img/update_green.png"), "test", this, SLOT(testSlot()));
 
     toolBarDown = new QToolBar;
     toolBarDown->setStyleSheet("QToolButton\n"
                              "    {\n"
-                             "        height: 40px;\n"
-                             "        width: 40px;\n"
+                             "        height: 48px;\n"
+                             "        width: 48px;\n"
                              "    }");
     toolBarDown->setIconSize(QSize(50,50));
     toolBarDown->setOrientation(Qt::Vertical);
     toolBarDown->addSeparator();
-    toolBarDown->addAction(QIcon(":/img/settings.png"), "test", this, SLOT(testSlot()));
-    toolBarDown->addAction(QIcon(":/img/sign_out.png"), "test", this, SLOT(testSlot()));
+    toolBarDown->addAction(QIcon(":/img/menu_green.png"), "test", this, SLOT(testSlot()));
+    toolBarDown->addAction(QIcon(":/img/settings_green.png"), "test", this, SLOT(testSlot()));
 }
 
 void MainWindow::testSlot() {
