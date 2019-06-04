@@ -61,7 +61,7 @@ void LoginWindow::initUI() {
 
     logoLabel = new QLabel();
     logoLabel->setAlignment(Qt::AlignCenter);
-    logoLabel->setPixmap(QPixmap(":/img/logo.png").scaledToHeight(static_cast<int>(this->height() / 1.5)));
+    logoLabel->setPixmap(QPixmap(":/img/logo.png").scaledToHeight(static_cast<int>(this->height() / 1.5), Qt::SmoothTransformation));
     layout->addWidget(logoLabel, 1, 1, 1, 2);
 
     auto loginLabel = new QLabel("Username");
@@ -124,7 +124,7 @@ void LoginWindow::logInClicked() {
 }
 
 void LoginWindow::resizeEvent(QResizeEvent *e) {
-    this->logoLabel->setPixmap(QPixmap(":/img/logo.png").scaledToHeight(static_cast<int>(e->size().height() / 1.5)));
+    this->logoLabel->setPixmap(QPixmap(":/img/logo.png").scaledToHeight(static_cast<int>(e->size().height() / 1.5), Qt::SmoothTransformation));
 }
 
 void LoginWindow::keyReleaseEvent(QKeyEvent *e) {
