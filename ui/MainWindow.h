@@ -37,6 +37,7 @@
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QToolBar>
+#include <QtWidgets/QToolButton>
 
 #include <api/models/User.h>
 
@@ -54,6 +55,8 @@ private:
     QTabWidget *tabWidget{};
     QToolBar *toolBarTop{};
     QToolBar *toolBarBottom{};
+    QToolButton *toolButtonOther{};
+
 
     QAction *addAction{};
     QAction *removeAction{};

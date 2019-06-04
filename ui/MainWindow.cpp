@@ -35,6 +35,8 @@
 #include <QtCore/QFileInfo>
 #include <QDesktopWidget>
 #include <QMessageBox>
+
+#include <QMenu>
 #include <api/Wrapper.h>
 
 #include "MainWindow.h"
@@ -120,9 +122,9 @@ void MainWindow::createToolBars() {
     toolBarTop->setStyleSheet(style);
     toolBarTop->setOrientation(Qt::Vertical);
 
-    addAction = new QAction(QIcon::fromTheme("list-add"), "Add", toolBarTop);
-    removeAction = new QAction(QIcon::fromTheme("list-remove"), "Remove", toolBarTop);
-    refreshAction = new QAction(QIcon::fromTheme("view-refresh"), "Refresh", toolBarTop);
+    addAction = new QAction(QIcon(":/main_icons/light/add.png"), "Add", toolBarTop);
+    removeAction = new QAction(QIcon(":/main_icons/light/remove.png"), "Remove", toolBarTop);
+    refreshAction = new QAction(QIcon(":/main_icons/light/refresh.png"), "Refresh", toolBarTop);
 
     connect(addAction, &QAction::triggered, this, &MainWindow::addSlot);
     connect(removeAction, &QAction::triggered, this, &MainWindow::removeSlot);
@@ -138,13 +140,26 @@ void MainWindow::createToolBars() {
     toolBarBottom->setOrientation(Qt::Vertical);
     toolBarBottom->addSeparator();
 
-    otherAction = new QAction(QIcon::fromTheme("preferences-other"), "Other", toolBarBottom);
-    settingsAction = new QAction(QIcon::fromTheme("preferences-system"), "Settings", toolBarBottom);
+    toolButtonOther = new QToolButton;
+    toolButtonOther->setPopupMode(QToolButton::InstantPopup);
+    toolButtonOther->setIcon(QIcon(":/main_icons/light/menu.png"));
+    toolButtonOther->setFocusPolicy(Qt::NoFocus);
 
-    connect(otherAction, &QAction::triggered, this, &MainWindow::otherSlot);
+    auto *menuOther = new QMenu;
+    menuOther->addAction("Not implemented");
+    menuOther->addAction("Not implemented");
+    menuOther->addAction("Not implemented");
+    menuOther->addSeparator();
+    menuOther->addAction("Not implemented");
+    toolButtonOther->setMenu(menuOther);
+
+    //otherAction = new QAction("Other", menuOther);
+    settingsAction = new QAction(QIcon(":/main_icons/light/settings.png"), "Settings", toolBarBottom);
+
+    //connect(otherAction, &QAction::triggered, this, &MainWindow::otherSlot);
     connect(settingsAction, &QAction::triggered, this, &MainWindow::settingsSlot);
 
-    toolBarBottom->addAction(otherAction);
+    toolBarBottom->addWidget(toolButtonOther);
     toolBarBottom->addAction(settingsAction);
 }
 
