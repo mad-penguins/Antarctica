@@ -44,6 +44,11 @@ void FileTreeModel::createDirs(QStringList dirsList, TreeItem *parent) {
 }
 
 void FileTreeModel::setupModelData(const QList<Entity *> &files, TreeItem *parent) {
+    if (files.isEmpty()) {
+        parent->appendChild(QVector<QVariant>() << "No files yet :(");
+        return;
+    }
+
     QCollator collator; // TODO: implement server-side sorting?
     QList<File *> sortedFiles;
     for (auto &&file : files) {

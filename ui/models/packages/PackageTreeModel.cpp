@@ -24,10 +24,18 @@ PackageTreeModel::~PackageTreeModel() {
 }
 
 void PackageTreeModel::setupModelData(const QList<Entity *> &packages, TreeItem *parent) {
+    if (packages.size() <= 1) { // there's a special package for files that aren't a package config
+        parent->appendChild(QVector<QVariant>() << "No packages yet :(");
+        return;
+    }
+
     QCollator collator; // TODO: implement server-side sorting?
     QList<Package *> sortedPackages;
     for (auto &&pkg : packages) {
-        sortedPackages.append(const_cast<Package *>(reinterpret_cast<const Package *>(pkg)));
+        auto casted = const_cast<Package *>(reinterpret_cast<const Package *>(pkg));
+        if (casted->id != 1) {
+            sortedPackages.append(casted);
+        }
     }
     std::sort(sortedPackages.begin(), sortedPackages.end(), [&collator](Package *pkg1, Package *pkg2) {
         return collator.compare(
