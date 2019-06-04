@@ -64,7 +64,7 @@ QModelIndex PackageTreeModel::index(int row, int column, const QModelIndex &pare
 
     PackageTreeItem *parentItem = getItem(parent);
 
-    PackageTreeItem *childItem = parentItem->child(row);
+    PackageTreeItem *childItem = (PackageTreeItem *) parentItem->child(row);
     if (childItem) {
         return createIndex(row, column, childItem);
     } else {
@@ -99,7 +99,7 @@ QModelIndex PackageTreeModel::parent(const QModelIndex &index) const {
     }
 
     PackageTreeItem *childItem = getItem(index);
-    PackageTreeItem *parentItem = childItem->parent();
+    PackageTreeItem *parentItem = (PackageTreeItem *) childItem->parent();
 
     if (parentItem == rootItem) {
         return {};
@@ -181,7 +181,7 @@ void PackageTreeModel::setupModelData(const QList<Package *> &packages, PackageT
     for (auto &&pkg : sortedPackages) {
         if (!repos.keys().contains(pkg->repository->name)) {
             parent->appendChild(QVector<QVariant>() << pkg->repository->name);
-            repos.insert(pkg->repository->name, parent->child(parent->childCount() - 1));
+            repos.insert(pkg->repository->name, (PackageTreeItem *) parent->child(parent->childCount() - 1));
         }
         repos[pkg->repository->name]->appendChild(QVector<QVariant>() << pkg->name);
     }

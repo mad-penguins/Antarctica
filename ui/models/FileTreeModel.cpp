@@ -66,7 +66,7 @@ QModelIndex FileTreeModel::index(int row, int column, const QModelIndex &parent)
 
     FileTreeItem *parentItem = getItem(parent);
 
-    FileTreeItem *childItem = parentItem->child(row);
+    FileTreeItem *childItem = (FileTreeItem *) parentItem->child(row);
     if (childItem) {
         return createIndex(row, column, childItem);
     } else {
@@ -101,7 +101,7 @@ QModelIndex FileTreeModel::parent(const QModelIndex &index) const {
     }
 
     FileTreeItem *childItem = getItem(index);
-    FileTreeItem *parentItem = childItem->parent();
+    FileTreeItem *parentItem = (FileTreeItem *) childItem->parent();
 
     if (parentItem == rootItem) {
         return {};
@@ -178,10 +178,10 @@ void FileTreeModel::createDirs(QStringList dirsList, FileTreeItem *parent) {
     dirsList.pop_front();
 
     if (auto searchResult = parent->findName(dir)) {
-        lastDir = searchResult;
+        lastDir = (FileTreeItem *) searchResult;
     } else {
         parent->appendChild(QVector<QVariant>() << dir);
-        lastDir = parent->child(parent->childCount() - 1);
+        lastDir = (FileTreeItem *) parent->child(parent->childCount() - 1);
     }
 
     createDirs(dirsList, lastDir);
@@ -202,7 +202,7 @@ void FileTreeModel::setupModelData(const QList<File *> &files, FileTreeItem *par
 
     for (auto &&file : sortedFiles) {
         QStringList dirsList = file->path.split('/');
-        createDirs(dirsList, root);
+        createDirs(dirsList, (FileTreeItem *) root);
 
         lastDir->appendChild(QVector<QVariant>() << file->name);
     }
