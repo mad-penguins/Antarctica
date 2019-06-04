@@ -122,9 +122,9 @@ void MainWindow::createToolBars() {
     toolBarTop->setStyleSheet(style);
     toolBarTop->setOrientation(Qt::Vertical);
 
-    addAction = new QAction(QIcon(":/main_icons/light/add.png"), "Add", toolBarTop);
-    removeAction = new QAction(QIcon(":/main_icons/light/remove.png"), "Remove", toolBarTop);
-    refreshAction = new QAction(QIcon(":/main_icons/light/refresh.png"), "Refresh", toolBarTop);
+    addAction = new QAction(QIcon(":/main_icons/orange/add.png"), "Add", toolBarTop);
+    removeAction = new QAction(QIcon(":/main_icons/orange/remove.png"), "Remove", toolBarTop);
+    refreshAction = new QAction(QIcon(":/main_icons/orange/refresh.png"), "Refresh", toolBarTop);
 
     connect(addAction, &QAction::triggered, this, &MainWindow::addSlot);
     connect(removeAction, &QAction::triggered, this, &MainWindow::removeSlot);
@@ -142,7 +142,7 @@ void MainWindow::createToolBars() {
 
     toolButtonOther = new QToolButton;
     toolButtonOther->setPopupMode(QToolButton::InstantPopup);
-    toolButtonOther->setIcon(QIcon(":/main_icons/light/menu.png"));
+    toolButtonOther->setIcon(QIcon(":/main_icons/orange/menu.png"));
     toolButtonOther->setFocusPolicy(Qt::NoFocus);
 
     auto *menuOther = new QMenu;
@@ -154,7 +154,7 @@ void MainWindow::createToolBars() {
     toolButtonOther->setMenu(menuOther);
 
     //otherAction = new QAction("Other", menuOther);
-    settingsAction = new QAction(QIcon(":/main_icons/light/settings.png"), "Settings", toolBarBottom);
+    settingsAction = new QAction(QIcon(":/main_icons/orange/settings.png"), "Settings", toolBarBottom);
 
     //connect(otherAction, &QAction::triggered, this, &MainWindow::otherSlot);
     connect(settingsAction, &QAction::triggered, this, &MainWindow::settingsSlot);
