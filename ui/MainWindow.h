@@ -50,10 +50,16 @@ public:
 private:
     User user;
 
-    QHBoxLayout *hBoxLayout{};
+    QHBoxLayout *mainLay{};
     QTabWidget *tabWidget{};
-    QToolBar *toolBarUp{};
-    QToolBar *toolBarDown{};
+    QToolBar *toolBarTop{};
+    QToolBar *toolBarBottom{};
+
+    QAction *addAction{};
+    QAction *removeAction{};
+    QAction *refreshAction{};
+    QAction *otherAction{};
+    QAction *settingsAction{};
 
     void initUI();
 
@@ -67,11 +73,31 @@ private:
 
     void updatePackages();
 
-    void createToolbars();
+    void createToolBars();
+
+    void addFile();
+
+    void addPkg();
+
+    void removeFile();
+
+    void removePkg();
 
 public slots:
 
     void showUser(User usr);
+
+private slots:
+
+    void addSlot();
+
+    void removeSlot();
+
+    void refreshSlot();
+
+    void otherSlot();
+
+    void settingsSlot();
 
     static void testSlot();
 

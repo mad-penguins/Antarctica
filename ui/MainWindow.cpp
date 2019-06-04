@@ -48,37 +48,36 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
 void MainWindow::initUI() {
     setWindowTitle(this->user.displayName + " - Antarctica");
-
     setWindowIcon(QIcon(":/img/icon.png"));
     moveToCenter();
 
-    filesTree = new QTreeView;
-    packagesTree = new QTreeView;
+    mainLay = new QHBoxLayout;
+    mainLay->setContentsMargins(0, 0, 0, 0);
+    mainLay->setSpacing(0);
 
-    hBoxLayout = new QHBoxLayout();
-    hBoxLayout->setContentsMargins(0, 0, 0, 0);
+    // init toolbars
+    createToolBars();
+    auto *toolBarLay = new QVBoxLayout;
+    toolBarLay->addWidget(toolBarTop);
+    toolBarLay->addStretch();
+    toolBarLay->addWidget(toolBarBottom);
+    toolBarLay->setContentsMargins(0, 0, 0, 0);
+    mainLay->addLayout(toolBarLay);
 
-    createToolbars();
-    auto *vBoxLayout = new QVBoxLayout;
-    vBoxLayout->addWidget(toolBarUp);
-    vBoxLayout->addStretch();
-    vBoxLayout->addWidget(toolBarDown);
-    vBoxLayout->setContentsMargins(0, 0, 0, 0);
-    hBoxLayout->addLayout(vBoxLayout);
-
-    tabWidget = new QTabWidget;
+    // init tabs
+    tabWidget = new QTabWidget(this);
+    filesTree = new QTreeView(tabWidget);
+    packagesTree = new QTreeView(tabWidget);
     tabWidget->addTab(filesTree, "Files");
     tabWidget->addTab(packagesTree, "Packages");
-
-    hBoxLayout->addWidget(tabWidget);
-    hBoxLayout->setSpacing(0);
-
-    auto *ui_area = new QWidget;
-    ui_area->setLayout(hBoxLayout);
-    this->setCentralWidget(ui_area);
-
     updateFiles();
     updatePackages();
+    mainLay->addWidget(tabWidget);
+
+    // display all the widgets
+    auto ui_area = new QWidget(this);
+    ui_area->setLayout(mainLay);
+    this->setCentralWidget(ui_area);
 }
 
 void MainWindow::updateFiles() {
@@ -114,24 +113,104 @@ void MainWindow::moveToCenter() {
     move((rc.width() - width()) / 2, (rc.height() - height()) / 2 - 20);
 }
 
-void MainWindow::createToolbars() {
+void MainWindow::createToolBars() {
     const QString style = "QToolButton { height: 30px; width: 30px; }";
 
-    toolBarUp = new QToolBar;
-    toolBarUp->setStyleSheet(style);
-    toolBarUp->setOrientation(Qt::Vertical);
-    toolBarUp->addAction(QIcon::fromTheme("list-add"), "Add", this, SLOT(testSlot()));
-    toolBarUp->addAction(QIcon::fromTheme("list-remove"), "Remove", this, SLOT(testSlot()));
-    toolBarUp->addAction(QIcon::fromTheme("view-refresh"), "Refresh", this, SLOT(testSlot()));
+    toolBarTop = new QToolBar(this);
+    toolBarTop->setStyleSheet(style);
+    toolBarTop->setOrientation(Qt::Vertical);
 
-    toolBarDown = new QToolBar;
-    toolBarDown->setStyleSheet(style);
-    toolBarDown->setOrientation(Qt::Vertical);
-    toolBarDown->addSeparator();
-    toolBarDown->addAction(QIcon::fromTheme("preferences-other"), "Other", this, SLOT(testSlot()));
-    toolBarDown->addAction(QIcon::fromTheme("preferences-system"), "Settings", this, SLOT(testSlot()));
+    addAction = new QAction(QIcon::fromTheme("list-add"), "Add", toolBarTop);
+    removeAction = new QAction(QIcon::fromTheme("list-remove"), "Remove", toolBarTop);
+    refreshAction = new QAction(QIcon::fromTheme("view-refresh"), "Refresh", toolBarTop);
+
+    connect(addAction, &QAction::triggered, this, &MainWindow::addSlot);
+    connect(removeAction, &QAction::triggered, this, &MainWindow::removeSlot);
+    connect(refreshAction, &QAction::triggered, this, &MainWindow::refreshSlot);
+
+    toolBarTop->addAction(addAction);
+    toolBarTop->addAction(removeAction);
+    toolBarTop->addAction(refreshAction);
+
+
+    toolBarBottom = new QToolBar(this);
+    toolBarBottom->setStyleSheet(style);
+    toolBarBottom->setOrientation(Qt::Vertical);
+    toolBarBottom->addSeparator();
+
+    otherAction = new QAction(QIcon::fromTheme("preferences-other"), "Other", toolBarBottom);
+    settingsAction = new QAction(QIcon::fromTheme("preferences-system"), "Settings", toolBarBottom);
+
+    connect(otherAction, &QAction::triggered, this, &MainWindow::otherSlot);
+    connect(settingsAction, &QAction::triggered, this, &MainWindow::settingsSlot);
+
+    toolBarBottom->addAction(otherAction);
+    toolBarBottom->addAction(settingsAction);
 }
 
 void MainWindow::testSlot() {
     QMessageBox::information(nullptr, "Message", "Not implemented");
+}
+
+void MainWindow::addSlot() {
+    switch (tabWidget->currentIndex()) {
+        case 0: // files tab
+            addFile();
+            break;
+        case 1: // packages tab
+            addPkg();
+            break;
+        default:
+            break;
+    }
+}
+
+void MainWindow::removeSlot() {
+    switch (tabWidget->currentIndex()) {
+        case 0: // files tab
+            removeFile();
+            break;
+        case 1: // packages tab
+            removePkg();
+            break;
+        default:
+            break;
+    }
+}
+
+void MainWindow::refreshSlot() {
+    switch (tabWidget->currentIndex()) {
+        case 0: // files tab
+            updateFiles();
+            break;
+        case 1: // packages tab
+            updatePackages();
+            break;
+        default:
+            break;
+    }
+}
+
+void MainWindow::addFile() {
+    testSlot(); // TODO: implement
+}
+
+void MainWindow::addPkg() {
+    testSlot(); // TODO: implement
+}
+
+void MainWindow::removeFile() {
+    testSlot(); // TODO: implement
+}
+
+void MainWindow::removePkg() {
+    testSlot(); // TODO: implement
+}
+
+void MainWindow::otherSlot() {
+    testSlot(); // TODO: implement
+}
+
+void MainWindow::settingsSlot() {
+    testSlot(); // TODO: implement
 }
