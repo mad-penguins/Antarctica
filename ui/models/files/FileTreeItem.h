@@ -3,7 +3,7 @@
 
 
 #include <api/models/File.h>
-#include "TreeItem.h"
+#include "ui/models/TreeItem.h"
 
 class FileTreeItem : public TreeItem {
 public:

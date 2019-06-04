@@ -5,7 +5,7 @@
 #include <QtCore/QAbstractItemModel>
 #include <api/models/File.h>
 
-#include "TreeModel.h"
+#include "ui/models/TreeModel.h"
 #include "FileTreeItem.h"
 
 class FileTreeModel : public TreeModel {

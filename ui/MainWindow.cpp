@@ -37,8 +37,8 @@
 #include <api/Wrapper.h>
 
 #include "MainWindow.h"
-#include "ui/models/FileTreeModel.h"
-#include "ui/models/PackageTreeModel.h"
+#include "ui/models/files/FileTreeModel.h"
+#include "ui/models/packages/PackageTreeModel.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 

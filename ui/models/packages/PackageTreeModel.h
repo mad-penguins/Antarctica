@@ -4,7 +4,7 @@
 
 #include <QtCore/QAbstractItemModel>
 
-#include "TreeModel.h"
+#include "ui/models/TreeModel.h"
 #include "PackageTreeItem.h"
 
 class PackageTreeModel : public TreeModel {

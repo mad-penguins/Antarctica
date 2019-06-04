@@ -5,7 +5,7 @@
 #include <QtCore/QVariant>
 #include <api/models/Package.h>
 
-#include "TreeItem.h"
+#include "ui/models/TreeItem.h"
 
 class PackageTreeItem : public TreeItem {
 public:
