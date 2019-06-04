@@ -1,5 +1,5 @@
 # Antarctica
-![screenshot of sample](http://mad-penguins.tk/img/Antarctica_logo_mini_200.png)
+![screenshot of sample](screenshots/mainscreen.png)
 
 Antarctica is an open-source project aiming to perform comfortable in-cloud backup of user files, installed packages list and dotfiles.
 
