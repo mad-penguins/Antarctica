@@ -44,13 +44,13 @@ public:
     LoginWindow();
 
 private:
-    QLabel *logoLabel;
+    QLabel *logoLabel{};
 
-    QLineEdit *loginField;
-    QLineEdit *passwordField;
+    QLineEdit *loginField{};
+    QLineEdit *passwordField{};
 
-    QPushButton *registerButton;
-    QPushButton *logInButton;
+    QPushButton *registerButton{};
+    QPushButton *logInButton{};
 
     void initUI();
 
@@ -68,7 +68,7 @@ public slots:
 
     void logInClicked();
 
-    void registerClicked();
+    static void registerClicked();
 
 };
 

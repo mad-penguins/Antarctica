@@ -9,7 +9,7 @@
 
 class TreeModel : public QAbstractItemModel {
 public:
-    TreeModel(QObject *parent = nullptr);
+    explicit TreeModel(QObject *parent = nullptr);
 
     ~TreeModel() override;
 
@@ -47,7 +47,7 @@ protected:
 
     TreeItem *getItem(const QModelIndex &index) const;
 
-    TreeItem *rootItem;
+    TreeItem *rootItem{};
 
 };
 

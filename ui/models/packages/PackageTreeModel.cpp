@@ -27,7 +27,7 @@ void PackageTreeModel::setupModelData(const QList<Entity *> &packages, TreeItem 
     QCollator collator; // TODO: implement server-side sorting?
     QList<Package *> sortedPackages;
     for (auto &&pkg : packages) {
-        sortedPackages.append(static_cast<Package *>(pkg));
+        sortedPackages.append(const_cast<Package *>(reinterpret_cast<const Package *>(pkg)));
     }
     std::sort(sortedPackages.begin(), sortedPackages.end(), [&collator](Package *pkg1, Package *pkg2) {
         return collator.compare(

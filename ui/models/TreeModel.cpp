@@ -27,7 +27,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const {
 
 Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const {
     if (!index.isValid()) {
-        return 0;
+        return nullptr;
     }
 
     return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
@@ -125,10 +125,9 @@ bool TreeModel::removeColumns(int position, int columns, const QModelIndex &pare
 
 bool TreeModel::removeRows(int position, int rows, const QModelIndex &parent) {
     TreeItem *parentItem = getItem(parent);
-    bool success = true;
 
     beginRemoveRows(parent, position, position + rows - 1);
-    success = parentItem->removeChildren(position, rows);
+    bool success = parentItem->removeChildren(position, rows);
     endRemoveRows();
 
     return success;

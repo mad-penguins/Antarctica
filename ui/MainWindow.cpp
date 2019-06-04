@@ -64,16 +64,21 @@ void MainWindow::initUI() {
 
 void MainWindow::updateFiles() {
     QStringList headers;
-    headers << tr("Name");
-    FileTreeModel *model = new FileTreeModel(headers, Wrapper::Files::getAll());
+    headers << tr("Name") << tr("Created") << tr("Modified");
+    auto model = new FileTreeModel(headers, Wrapper::Files::getAll());
     filesTree->setModel(model);
+    connect(filesTree, &QTreeView::expanded, [=]() {
+        filesTree->resizeColumnToContents(0);
+    });
+    filesTree->expandToDepth(1);
 }
 
 void MainWindow::updatePackages() {
     QStringList headers;
     headers << tr("Name");
-    PackageTreeModel *model = new PackageTreeModel(headers, Wrapper::Packages::getAll());
+    auto model = new PackageTreeModel(headers, Wrapper::Packages::getAll());
     packagesTree->setModel(model);
+    packagesTree->expandAll();
 }
 
 void MainWindow::showUser(User usr) {
