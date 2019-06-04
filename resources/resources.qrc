@@ -4,5 +4,10 @@
         <file>certs/cert.pem</file>
         <file>img/logo.png</file>
         <file>img/icon.png</file>
+        <file>img/menu_green.png</file>
+        <file>img/add_green.png</file>
+        <file>img/settings_green.png</file>
+        <file>img/update_green.png</file>
+        <file>img/remove_green.png</file>
     </qresource>
 </RCC>

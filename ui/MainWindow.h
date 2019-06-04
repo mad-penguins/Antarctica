@@ -35,6 +35,9 @@
 #include <QtGui/QCloseEvent>
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QTableView>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QToolBar>
+
 #include <api/models/User.h>
 
 
@@ -46,7 +49,11 @@ public:
 
 private:
     User user;
+
+    QHBoxLayout *hBoxLayout{};
     QTabWidget *tabWidget{};
+    QToolBar *toolBarUp{};
+    QToolBar *toolBarDown{};
 
     void initUI();
 
@@ -60,9 +67,13 @@ private:
 
     void updatePackages();
 
+    void createToolbars();
+
 public slots:
 
     void showUser(User usr);
+
+    static void testSlot();
 
 };
 
