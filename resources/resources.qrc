@@ -4,10 +4,40 @@
         <file>certs/cert.pem</file>
         <file>img/logo.png</file>
         <file>img/icon.png</file>
-        <file>img/menu_green.png</file>
-        <file>img/add_green.png</file>
-        <file>img/settings_green.png</file>
-        <file>img/update_green.png</file>
-        <file>img/remove_green.png</file>
+
+        <!--        Green icons-->
+        <file>main_icons/green/menu.png</file>
+        <file>main_icons/green/add.png</file>
+        <file>main_icons/green/settings.png</file>
+        <file>main_icons/green/refresh.png</file>
+        <file>main_icons/green/remove.png</file>
+
+        <!--        Red icons-->
+        <file>main_icons/red/menu.png</file>
+        <file>main_icons/red/add.png</file>
+        <file>main_icons/red/settings.png</file>
+        <file>main_icons/red/refresh.png</file>
+        <file>main_icons/red/remove.png</file>
+
+        <!--        Orange icons-->
+        <file>main_icons/orange/menu.png</file>
+        <file>main_icons/orange/add.png</file>
+        <file>main_icons/orange/settings.png</file>
+        <file>main_icons/orange/refresh.png</file>
+        <file>main_icons/orange/remove.png</file>
+
+        <!--        Blue icons-->
+        <file>main_icons/blue/menu.png</file>
+        <file>main_icons/blue/add.png</file>
+        <file>main_icons/blue/settings.png</file>
+        <file>main_icons/blue/refresh.png</file>
+        <file>main_icons/blue/remove.png</file>
+
+        <!--        Light icons-->
+        <file>main_icons/light/menu.png</file>
+        <file>main_icons/light/add.png</file>
+        <file>main_icons/light/settings.png</file>
+        <file>main_icons/light/refresh.png</file>
+        <file>main_icons/light/remove.png</file>
     </qresource>
 </RCC>
