@@ -4,172 +4,28 @@
 #include <QtCore/QCollator>
 
 #include "FileTreeModel.h"
+#include "FileTreeItem.h"
 
-FileTreeModel::FileTreeModel(const QStringList &headers, const QList<File *> &data, QObject *parent)
-        : QAbstractItemModel(parent) {
+FileTreeModel::FileTreeModel(const QStringList &headers, const QList<File *> &data, QObject *parent) : TreeModel(
+        parent) {
     QVector<QVariant> rootData;
     for (auto &&header : headers) {
         rootData << header;
     }
 
-    rootItem = new FileTreeItem(rootData);
-    lastDir = rootItem;
-    setupModelData(data, rootItem);
+    rootItem = new TreeItem(rootData);
+    QList<Entity *> files;
+    for (auto &&file : data) {
+        files.append(file);
+    }
+    setupModelData(files, rootItem);
 }
 
 FileTreeModel::~FileTreeModel() {
     delete rootItem;
 }
 
-QVariant FileTreeModel::data(const QModelIndex &index, int role) const {
-    if (!index.isValid()) {
-        return QVariant();
-    }
-
-    if (role != Qt::DisplayRole && role != Qt::EditRole) {
-        return QVariant();
-    }
-
-    FileTreeItem *item = getItem(index);
-    return item->data(index.column());
-}
-
-Qt::ItemFlags FileTreeModel::flags(const QModelIndex &index) const {
-    if (!index.isValid()) {
-        return 0;
-    }
-
-    return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
-}
-
-FileTreeItem *FileTreeModel::getItem(const QModelIndex &index) const {
-    if (index.isValid()) {
-        auto *item = static_cast<FileTreeItem *>(index.internalPointer());
-        if (item) {
-            return item;
-        }
-    }
-    return rootItem;
-}
-
-QVariant FileTreeModel::headerData(int section, Qt::Orientation orientation, int role) const {
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        return rootItem->data(section);
-    }
-
-    return QVariant();
-}
-
-QModelIndex FileTreeModel::index(int row, int column, const QModelIndex &parent) const {
-    if (parent.isValid() && parent.column() != 0)
-        return {};
-
-    FileTreeItem *parentItem = getItem(parent);
-
-    FileTreeItem *childItem = (FileTreeItem *) parentItem->child(row);
-    if (childItem) {
-        return createIndex(row, column, childItem);
-    } else {
-        return {};
-    }
-}
-
-bool FileTreeModel::insertColumns(int position, int columns, const QModelIndex &parent) {
-    bool success;
-
-    beginInsertColumns(parent, position, position + columns - 1);
-    success = rootItem->insertColumns(position, columns);
-    endInsertColumns();
-
-    return success;
-}
-
-bool FileTreeModel::insertRows(int position, int rows, const QModelIndex &parent) {
-    FileTreeItem *parentItem = getItem(parent);
-    bool success;
-
-    beginInsertRows(parent, position, position + rows - 1);
-    success = parentItem->insertChildren(position, rows, rootItem->columnCount());
-    endInsertRows();
-
-    return success;
-}
-
-QModelIndex FileTreeModel::parent(const QModelIndex &index) const {
-    if (!index.isValid()) {
-        return {};
-    }
-
-    FileTreeItem *childItem = getItem(index);
-    FileTreeItem *parentItem = (FileTreeItem *) childItem->parent();
-
-    if (parentItem == rootItem) {
-        return {};
-    }
-
-    return createIndex(parentItem->childNumber(), 0, parentItem);
-}
-
-bool FileTreeModel::removeColumns(int position, int columns, const QModelIndex &parent) {
-    bool success;
-
-    beginRemoveColumns(parent, position, position + columns - 1);
-    success = rootItem->removeColumns(position, columns);
-    endRemoveColumns();
-
-    if (rootItem->columnCount() == 0) {
-        removeRows(0, rowCount());
-    }
-
-    return success;
-}
-
-bool FileTreeModel::removeRows(int position, int rows, const QModelIndex &parent) {
-    FileTreeItem *parentItem = getItem(parent);
-    bool success = true;
-
-    beginRemoveRows(parent, position, position + rows - 1);
-    success = parentItem->removeChildren(position, rows);
-    endRemoveRows();
-
-    return success;
-}
-
-int FileTreeModel::rowCount(const QModelIndex &parent) const {
-    FileTreeItem *parentItem = getItem(parent);
-    return parentItem->childCount();
-}
-
-bool FileTreeModel::setData(const QModelIndex &index, const QVariant &value, int role) {
-    if (role != Qt::EditRole) {
-        return false;
-    }
-
-    FileTreeItem *item = getItem(index);
-    bool result = item->setData(index.column(), value);
-
-    if (result) {
-        emit dataChanged(index, index, {role});
-    }
-
-    return result;
-}
-
-bool FileTreeModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role) {
-    if (role != Qt::EditRole || orientation != Qt::Horizontal) {
-        return false;
-    }
-
-    bool result = rootItem->setData(section, value);
-
-    if (result) {
-        emit headerDataChanged(orientation, section, section);
-    }
-
-    return result;
-}
-
-void FileTreeModel::createDirs(QStringList dirsList, FileTreeItem *parent) {
+void FileTreeModel::createDirs(QStringList dirsList, TreeItem *parent) {
     if (dirsList.isEmpty()) {
         return;
     }
@@ -178,18 +34,21 @@ void FileTreeModel::createDirs(QStringList dirsList, FileTreeItem *parent) {
     dirsList.pop_front();
 
     if (auto searchResult = parent->findName(dir)) {
-        lastDir = (FileTreeItem *) searchResult;
+        lastDir = searchResult;
     } else {
         parent->appendChild(QVector<QVariant>() << dir);
-        lastDir = (FileTreeItem *) parent->child(parent->childCount() - 1);
+        lastDir = parent->child(parent->childCount() - 1);
     }
 
     createDirs(dirsList, lastDir);
 }
 
-void FileTreeModel::setupModelData(const QList<File *> &files, FileTreeItem *parent) {
+void FileTreeModel::setupModelData(const QList<Entity *> &files, TreeItem *parent) {
     QCollator collator; // TODO: implement server-side sorting?
-    QList<File *> sortedFiles(files);
+    QList<File *> sortedFiles;
+    for (auto &&file : files) {
+        sortedFiles.append(static_cast<File *>(file));
+    }
     std::sort(sortedFiles.begin(), sortedFiles.end(), [&collator](File *file1, File *file2) {
         return collator.compare(
                 file1->path + "/" + file1->name,

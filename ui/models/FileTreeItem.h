@@ -2,10 +2,7 @@
 #define ANTARCTICA_FILETREEITEM_H
 
 
-#include <QtCore/QVector>
-#include <QtCore/QVariant>
 #include <api/models/File.h>
-
 #include "TreeItem.h"
 
 class FileTreeItem : public TreeItem {

@@ -4,11 +4,10 @@
 #include "PackageTreeItem.h"
 
 PackageTreeItem::PackageTreeItem(const QVector<QVariant> &data, PackageTreeItem *parent) : TreeItem(data, parent) {
-    parentItem = parent;
-    package = nullptr;
+    pkg = nullptr;
 }
 
 PackageTreeItem::~PackageTreeItem() {
+    delete pkg;
     qDeleteAll(childItems);
-    delete package;
 }

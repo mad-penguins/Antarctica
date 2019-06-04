@@ -14,7 +14,7 @@ public:
     ~PackageTreeItem() override;
 
 private:
-    Package *package;
+    Package *pkg;
 };
 
 
