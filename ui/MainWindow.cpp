@@ -115,29 +115,21 @@ void MainWindow::moveToCenter() {
 }
 
 void MainWindow::createToolbars() {
+    const QString style = "QToolButton { height: 30px; width: 30px; }";
+
     toolBarUp = new QToolBar;
-    toolBarUp->setStyleSheet("QToolButton\n"
-                             "    {\n"
-                             "        height: 48px;\n"
-                             "        width: 48px;\n"
-                             "    }");
-    toolBarUp->setIconSize(QSize(50, 50));
+    toolBarUp->setStyleSheet(style);
     toolBarUp->setOrientation(Qt::Vertical);
-    toolBarUp->addAction(QIcon(":/img/add_green.png"), "test", this, SLOT(testSlot()));
-    toolBarUp->addAction(QIcon(":/img/remove_green.png"), "test", this, SLOT(testSlot()));
-    toolBarUp->addAction(QIcon(":/img/update_green.png"), "test", this, SLOT(testSlot()));
+    toolBarUp->addAction(QIcon::fromTheme("list-add"), "Add", this, SLOT(testSlot()));
+    toolBarUp->addAction(QIcon::fromTheme("list-remove"), "Remove", this, SLOT(testSlot()));
+    toolBarUp->addAction(QIcon::fromTheme("view-refresh"), "Refresh", this, SLOT(testSlot()));
 
     toolBarDown = new QToolBar;
-    toolBarDown->setStyleSheet("QToolButton\n"
-                               "    {\n"
-                               "        height: 48px;\n"
-                               "        width: 48px;\n"
-                               "    }");
-    toolBarDown->setIconSize(QSize(50, 50));
+    toolBarDown->setStyleSheet(style);
     toolBarDown->setOrientation(Qt::Vertical);
     toolBarDown->addSeparator();
-    toolBarDown->addAction(QIcon(":/img/menu_green.png"), "test", this, SLOT(testSlot()));
-    toolBarDown->addAction(QIcon(":/img/settings_green.png"), "test", this, SLOT(testSlot()));
+    toolBarDown->addAction(QIcon::fromTheme("preferences-other"), "Other", this, SLOT(testSlot()));
+    toolBarDown->addAction(QIcon::fromTheme("preferences-system"), "Settings", this, SLOT(testSlot()));
 }
 
 void MainWindow::testSlot() {
