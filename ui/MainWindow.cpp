@@ -35,11 +35,11 @@
 #include <QtCore/QFileInfo>
 #include <QDesktopWidget>
 #include <QMessageBox>
-
 #include <api/Wrapper.h>
 
 #include "MainWindow.h"
-#include "utils/SSL.hpp"
+#include "ui/models/files/FileTreeModel.h"
+#include "ui/models/packages/PackageTreeModel.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
@@ -50,63 +50,54 @@ void MainWindow::initUI() {
     setWindowTitle(this->user.displayName + " - Antarctica");
 
     setWindowIcon(QIcon(":/img/icon.png"));
+    moveToCenter();
 
-    setGeometry(0,0,900, 500);
-
-    QDesktopWidget dw;
-    QRect rc = dw.screenGeometry(this);
-    move((rc.width() - width()) / 2, (rc.height() - height()) / 2 - 20);
-
-    initFiles();
-    updateFiles();
-
-    initPackages();
-    updatePackages();
+    filesTree = new QTreeView;
+    packagesTree = new QTreeView;
 
     hBoxLayout = new QHBoxLayout();
-    hBoxLayout->setContentsMargins(0,0,0,0);
+    hBoxLayout->setContentsMargins(0, 0, 0, 0);
 
     createToolbars();
     auto *vBoxLayout = new QVBoxLayout;
     vBoxLayout->addWidget(toolBarUp);
     vBoxLayout->addStretch();
     vBoxLayout->addWidget(toolBarDown);
-    vBoxLayout->setContentsMargins(0,0,0,0);
+    vBoxLayout->setContentsMargins(0, 0, 0, 0);
     hBoxLayout->addLayout(vBoxLayout);
 
     tabWidget = new QTabWidget;
     tabWidget->addTab(filesTree, "Files");
     tabWidget->addTab(packagesTree, "Packages");
-    hBoxLayout->addWidget(tabWidget);
 
+    hBoxLayout->addWidget(tabWidget);
     hBoxLayout->setSpacing(0);
 
     auto *ui_area = new QWidget;
     ui_area->setLayout(hBoxLayout);
     this->setCentralWidget(ui_area);
 
-    for (auto &&file : Wrapper::Files::getAll()) {
-        qDebug() << file->path + "/" + file->name + " from " + file->package->repository->name + "@" +
-                    file->package->name;
-        file->name += "____";
-        Wrapper::Files::update(file);
-    }
-}
-
-void MainWindow::initFiles() {
-
+    updateFiles();
+    updatePackages();
 }
 
 void MainWindow::updateFiles() {
-    filesTree = new QTableView;
-}
-
-void MainWindow::initPackages() {
-
+    QStringList headers;
+    headers << tr("Name") << tr("Created") << tr("Modified");
+    auto model = new FileTreeModel(headers, Wrapper::Files::getAll());
+    filesTree->setModel(model);
+    connect(filesTree, &QTreeView::expanded, [=]() {
+        filesTree->resizeColumnToContents(0);
+    });
+    filesTree->expandToDepth(1);
 }
 
 void MainWindow::updatePackages() {
-    packagesTree = new QTableView;
+    QStringList headers;
+    headers << tr("Name");
+    auto model = new PackageTreeModel(headers, Wrapper::Packages::getAll());
+    packagesTree->setModel(model);
+    packagesTree->expandAll();
 }
 
 void MainWindow::showUser(User usr) {
@@ -115,14 +106,22 @@ void MainWindow::showUser(User usr) {
     this->show();
 }
 
+void MainWindow::moveToCenter() {
+    setGeometry(0, 0, 900, 500);
+
+    QDesktopWidget dw;
+    QRect rc = dw.screenGeometry(this);
+    move((rc.width() - width()) / 2, (rc.height() - height()) / 2 - 20);
+}
+
 void MainWindow::createToolbars() {
     toolBarUp = new QToolBar;
     toolBarUp->setStyleSheet("QToolButton\n"
-                           "    {\n"
-                           "        height: 48px;\n"
-                           "        width: 48px;\n"
-                           "    }");
-    toolBarUp->setIconSize(QSize(50,50));
+                             "    {\n"
+                             "        height: 48px;\n"
+                             "        width: 48px;\n"
+                             "    }");
+    toolBarUp->setIconSize(QSize(50, 50));
     toolBarUp->setOrientation(Qt::Vertical);
     toolBarUp->addAction(QIcon(":/img/add_green.png"), "test", this, SLOT(testSlot()));
     toolBarUp->addAction(QIcon(":/img/remove_green.png"), "test", this, SLOT(testSlot()));
@@ -130,11 +129,11 @@ void MainWindow::createToolbars() {
 
     toolBarDown = new QToolBar;
     toolBarDown->setStyleSheet("QToolButton\n"
-                             "    {\n"
-                             "        height: 48px;\n"
-                             "        width: 48px;\n"
-                             "    }");
-    toolBarDown->setIconSize(QSize(50,50));
+                               "    {\n"
+                               "        height: 48px;\n"
+                               "        width: 48px;\n"
+                               "    }");
+    toolBarDown->setIconSize(QSize(50, 50));
     toolBarDown->setOrientation(Qt::Vertical);
     toolBarDown->addSeparator();
     toolBarDown->addAction(QIcon(":/img/menu_green.png"), "test", this, SLOT(testSlot()));
@@ -142,5 +141,5 @@ void MainWindow::createToolbars() {
 }
 
 void MainWindow::testSlot() {
-    QMessageBox::information(0, "Message", "Not implemented");
+    QMessageBox::information(nullptr, "Message", "Not implemented");
 }

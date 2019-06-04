@@ -49,22 +49,21 @@ public:
 
 private:
     User user;
-    QHBoxLayout *hBoxLayout;
-    QTabWidget *tabWidget;
-    QToolBar *toolBarUp;
-    QToolBar *toolBarDown;
+
+    QHBoxLayout *hBoxLayout{};
+    QTabWidget *tabWidget{};
+    QToolBar *toolBarUp{};
+    QToolBar *toolBarDown{};
 
     void initUI();
 
-    QTableView *filesTree;
+    void moveToCenter();
 
-    void initFiles();
+    QTreeView *filesTree{};
 
     void updateFiles();
 
-    QTableView *packagesTree;
-
-    void initPackages();
+    QTreeView *packagesTree{};
 
     void updatePackages();
 
@@ -73,7 +72,8 @@ private:
 public slots:
 
     void showUser(User usr);
-    void testSlot();
+
+    static void testSlot();
 
 };
 

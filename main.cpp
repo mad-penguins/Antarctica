@@ -40,6 +40,6 @@ int main(int argc, char **argv) {
     QObject::connect(loginWindow, &LoginWindow::loggedIn, mainWindow, &MainWindow::showUser);
 
     loginWindow->show();
-    
+
     return QApplication::exec();
 }
