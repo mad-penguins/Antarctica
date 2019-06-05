@@ -13,6 +13,10 @@ public:
 
     ~PackageTreeItem() override;
 
+    void setPackage(Package *p);
+
+    Package *getPackage() const;
+
 private:
     Package *pkg;
 };

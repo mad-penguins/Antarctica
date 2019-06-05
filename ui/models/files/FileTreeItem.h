@@ -11,6 +11,10 @@ public:
 
     ~FileTreeItem() override;
 
+    void setFile(File *f);
+
+    File *getFile() const;
+
 private:
     File *file;
 };

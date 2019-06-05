@@ -21,7 +21,7 @@ private:
 
     void createDirs(QStringList dirsList, TreeItem *parent);
 
-    TreeItem *lastDir{};
+    FileTreeItem *lastDir{};
 };
 
 

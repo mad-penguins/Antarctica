@@ -51,5 +51,8 @@ void PackageTreeModel::setupModelData(const QList<Entity *> &packages, TreeItem 
             repos.insert(pkg->repository->name, (PackageTreeItem *) parent->child(parent->childCount() - 1));
         }
         repos[pkg->repository->name]->appendChild(QVector<QVariant>() << pkg->name);
+        reinterpret_cast<PackageTreeItem*>(
+                repos[pkg->repository->name]->child(repos[pkg->repository->name]->childCount()-1)
+                )->setPackage(pkg);
     }
 }

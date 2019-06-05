@@ -11,3 +11,11 @@ PackageTreeItem::~PackageTreeItem() {
     delete pkg;
     qDeleteAll(childItems);
 }
+
+void PackageTreeItem::setPackage(Package *p) {
+    pkg = p;
+}
+
+Package *PackageTreeItem::getPackage() const {
+    return pkg;
+}

@@ -232,11 +232,33 @@ void MainWindow::addPkg() {
 }
 
 void MainWindow::removeFile() {
-    testSlot(); // TODO: implement
+    QModelIndexList indexes = filesTree->selectionModel()->selectedIndexes();
+    if (!indexes.empty()) {
+        int lastRow = -1;
+        for (auto &&index : indexes) {
+            if (lastRow != index.row()) {
+                auto item = reinterpret_cast<FileTreeItem*>(reinterpret_cast<FileTreeModel*>(filesTree->model())->getItem(index));
+                Wrapper::Files::remove(item->getFile()->id);
+            }
+            lastRow = index.row();
+        }
+    };
+    updateFiles();
 }
 
 void MainWindow::removePkg() {
-    testSlot(); // TODO: implement
+    QModelIndexList indexes = packagesTree->selectionModel()->selectedIndexes();
+    if (!indexes.empty()) {
+        int lastRow = -1;
+        for (auto &&index : indexes) {
+            if (lastRow != index.row()) {
+                auto item = reinterpret_cast<PackageTreeItem*>(reinterpret_cast<PackageTreeModel*>(packagesTree->model())->getItem(index));
+                Wrapper::Packages::remove(item->getPackage()->id);
+            }
+            lastRow = index.row();
+        }
+    };
+    updatePackages();
 }
 
 void MainWindow::otherSlot() {
