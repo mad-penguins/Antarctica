@@ -3,7 +3,7 @@ project(antarctica)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCE_FILES main.cpp ui/MainWindow.cpp ui/MainWindow.h ui/LoginWindow.cpp ui/LoginWindow.h utils/SSL.hpp ui/models/files/FileTreeModel.cpp ui/models/files/FileTreeModel.h ui/models/packages/PackageTreeItem.cpp ui/models/packages/PackageTreeItem.h ui/models/packages/PackageTreeModel.cpp ui/models/packages/PackageTreeModel.h ui/models/TreeItem.cpp ui/models/TreeItem.h ui/models/TreeModel.cpp ui/models/TreeModel.h ui/models/files/FileTreeItem.cpp ui/models/files/FileTreeItem.h)
+set(SOURCE_FILES main.cpp ui/MainWindow.cpp ui/MainWindow.h ui/LoginWindow.cpp ui/LoginWindow.h utils/SSL.hpp ui/models/files/FileTreeModel.cpp ui/models/files/FileTreeModel.h ui/models/packages/PackageTreeItem.cpp ui/models/packages/PackageTreeItem.h ui/models/packages/PackageTreeModel.cpp ui/models/packages/PackageTreeModel.h ui/models/TreeItem.cpp ui/models/TreeItem.h ui/models/TreeModel.cpp ui/models/TreeModel.h ui/models/files/FileTreeItem.cpp ui/models/files/FileTreeItem.h utils/Files.hpp)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(Qt5Core REQUIRED)

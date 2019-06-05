@@ -42,7 +42,7 @@
 
 
 LoginWindow::LoginWindow() {
-    Wrapper::init(SSL::getConfig());
+    Wrapper::init(Utils::SSL::getConfig());
     initUI();
 }
 

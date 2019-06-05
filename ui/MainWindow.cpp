@@ -33,15 +33,17 @@
 #include <QtCore/QUrl>
 #include <QtCore/QDebug>
 #include <QtCore/QFileInfo>
-#include <QDesktopWidget>
-#include <QMessageBox>
-
-#include <QMenu>
+#include <QtWidgets/QDesktopWidget>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QMenu>
 #include <api/Wrapper.h>
+#include <QtWidgets/QFileDialog>
+#include <QtCore/QStandardPaths>
 
 #include "MainWindow.h"
 #include "ui/models/files/FileTreeModel.h"
 #include "ui/models/packages/PackageTreeModel.h"
+#include "utils/Files.hpp"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
@@ -207,7 +209,22 @@ void MainWindow::refreshSlot() {
 }
 
 void MainWindow::addFile() {
-    testSlot(); // TODO: implement
+    QFileDialog dialog(this);
+    dialog.setFileMode(QFileDialog::ExistingFiles);
+    dialog.setViewMode(QFileDialog::Detail);
+    QStringList filenames;
+    if (dialog.exec()) {
+        filenames = dialog.selectedFiles();
+    }
+    for (auto &&filename : filenames) {
+        QFileInfo info(filename);
+        if (info.isFile()) {
+            Utils::Files::uploadFile(filename);
+        } else if (info.isDir()) {
+            Utils::Files::uploadDir(filename);
+        }
+    }
+    updateFiles();
 }
 
 void MainWindow::addPkg() {
