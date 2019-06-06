@@ -60,6 +60,7 @@ private:
 
     QAction *addAction{};
     QAction *removeAction{};
+    QAction *downloadAction{};
     QAction *refreshAction{};
     QAction *otherAction{};
     QAction *settingsAction{};
@@ -86,6 +87,10 @@ private:
 
     void removePkg();
 
+    void downloadFile();
+
+    void installPkg();
+
 public slots:
 
     void showUser(User usr);
@@ -95,6 +100,8 @@ private slots:
     void addSlot();
 
     void removeSlot();
+
+    void downloadSlot();
 
     void refreshSlot();
 

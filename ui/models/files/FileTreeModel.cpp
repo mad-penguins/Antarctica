@@ -2,6 +2,7 @@
 #include <QtCore/QStack>
 #include <QtCore/QDebug>
 #include <QtCore/QCollator>
+#include <utils/Files.hpp>
 
 #include "FileTreeModel.h"
 #include "FileTreeItem.h"
@@ -69,7 +70,7 @@ void FileTreeModel::setupModelData(const QList<Entity *> &files, TreeItem *paren
         createDirs(dirsList, (FileTreeItem *) root);
 
         QVector<QVariant> fileData;
-        fileData << file->name << file->created << file->modified;
+        fileData << file->name << file->created << file->modified << QVariant(Utils::Files::isFileDownloaded(file));
         lastDir->appendChild(fileData);
         reinterpret_cast<FileTreeItem*>(lastDir->child(lastDir->childCount()-1))->setFile(file);
     }

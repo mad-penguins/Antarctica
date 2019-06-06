@@ -86,7 +86,7 @@ void MainWindow::initUI() {
 
 void MainWindow::updateFiles() {
     QStringList headers;
-    headers << tr("Name") << tr("Created") << tr("Modified");
+    headers << tr("Name") << tr("Created") << tr("Modified") << tr("Downloaded");
     auto model = new FileTreeModel(headers, Wrapper::Files::getAll());
     filesTree->setModel(model);
     connect(filesTree, &QTreeView::expanded, [=]() {
@@ -126,14 +126,17 @@ void MainWindow::createToolBars() {
 
     addAction = new QAction(QIcon(":/main_icons/orange/add.png"), "Add", toolBarTop);
     removeAction = new QAction(QIcon(":/main_icons/orange/remove.png"), "Remove", toolBarTop);
+    downloadAction = new QAction("Download", toolBarTop);
     refreshAction = new QAction(QIcon(":/main_icons/orange/refresh.png"), "Refresh", toolBarTop);
 
     connect(addAction, &QAction::triggered, this, &MainWindow::addSlot);
     connect(removeAction, &QAction::triggered, this, &MainWindow::removeSlot);
+    connect(downloadAction, &QAction::triggered, this, &MainWindow::downloadSlot);
     connect(refreshAction, &QAction::triggered, this, &MainWindow::refreshSlot);
 
     toolBarTop->addAction(addAction);
     toolBarTop->addAction(removeAction);
+    toolBarTop->addAction(downloadAction);
     toolBarTop->addAction(refreshAction);
 
 
@@ -189,6 +192,19 @@ void MainWindow::removeSlot() {
             break;
         case 1: // packages tab
             removePkg();
+            break;
+        default:
+            break;
+    }
+}
+
+void MainWindow::downloadSlot() {
+    switch (tabWidget->currentIndex()) {
+        case 0: // files tab
+            downloadFile();
+            break;
+        case 1: // packages tab
+            installPkg();
             break;
         default:
             break;
@@ -266,5 +282,25 @@ void MainWindow::otherSlot() {
 }
 
 void MainWindow::settingsSlot() {
+    testSlot(); // TODO: implement
+}
+
+void MainWindow::downloadFile() {
+    QModelIndexList indexes = filesTree->selectionModel()->selectedIndexes();
+    if (!indexes.empty()) {
+        int lastRow = -1;
+        for (auto &&index : indexes) {
+            if (lastRow != index.row()) {
+                auto item = reinterpret_cast<FileTreeItem *>(reinterpret_cast<FileTreeModel *>(filesTree->model())->getItem(
+                        index));
+                Utils::Files::createFile(item->getFile());
+            }
+            lastRow = index.row();
+        }
+    };
+    updateFiles();
+}
+
+void MainWindow::installPkg() {
     testSlot(); // TODO: implement
 }

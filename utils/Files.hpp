@@ -3,8 +3,13 @@
 
 
 #include <QtCore/QString>
+#include <api/Wrapper.h>
+#include <QtCore/QDir>
 #include <api/models/Package.h>
 #include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+#include <utime.h>
+#include <fcntl.h>
 
 namespace Utils {
     class Files {
@@ -33,6 +38,29 @@ namespace Utils {
                     uploadFile(info.absoluteFilePath(), pkg);
                 } else if (info.isDir()) {
                     uploadDir(info.absoluteFilePath(), pkg);
+                }
+            }
+        }
+
+        inline static bool isFileDownloaded(const File *f) {
+            return QFileInfo::exists(QString(f->path + "/" + f->name).replace('~', QDir::homePath()));
+        }
+
+        static void createFile(const File *f) {
+            QDir dir;
+            if (!dir.exists(QString(f->path).replace('~', QDir::homePath()))) {
+                dir.mkpath(QString(f->path).replace('~', QDir::homePath()));
+            }
+            QFile file(QString(f->path + "/" + f->name).replace('~', QDir::homePath()));
+            if (file.open(QIODevice::WriteOnly)) {
+                file.write(f->content);
+                file.close();
+
+                struct utimbuf timeBuffer{};
+                timeBuffer.modtime = f->modified.toTime_t();
+                const char *fileName = QString(f->path + "/" + f->name).replace('~', QDir::homePath()).toUtf8().data();
+                if (utime(fileName, &timeBuffer) < 0) {
+                    qDebug() << "Error changing time";
                 }
             }
         }
