@@ -11,6 +11,8 @@
 #include <utime.h>
 #include <fcntl.h>
 
+#include "ui/models/files/FileTreeItem.h"
+
 namespace Utils {
     class Files {
     public:
@@ -61,6 +63,23 @@ namespace Utils {
                 const char *fileName = QString(f->path + "/" + f->name).replace('~', QDir::homePath()).toUtf8().data();
                 if (utime(fileName, &timeBuffer) < 0) {
                     qDebug() << "Error changing time";
+                }
+            }
+        }
+
+        static inline void downloadFile(FileTreeItem *item) {
+            if (!isFileDownloaded(item->getFile())) {
+                createFile(item->getFile());
+            }
+        }
+
+        static void downloadDir(FileTreeItem *item) {
+            for (int i = 0; i < item->childCount(); ++i) {
+                auto child = reinterpret_cast<FileTreeItem *>(item->child(i));
+                if (child->childCount() == 0) {
+                    Utils::Files::createFile(child->getFile());
+                } else {
+                    downloadDir(child);
                 }
             }
         }

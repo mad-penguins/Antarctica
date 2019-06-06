@@ -201,7 +201,7 @@ void MainWindow::removeSlot() {
 void MainWindow::downloadSlot() {
     switch (tabWidget->currentIndex()) {
         case 0: // files tab
-            downloadFile();
+            download();
             break;
         case 1: // packages tab
             installPkg();
@@ -285,7 +285,7 @@ void MainWindow::settingsSlot() {
     testSlot(); // TODO: implement
 }
 
-void MainWindow::downloadFile() {
+void MainWindow::download() {
     QModelIndexList indexes = filesTree->selectionModel()->selectedIndexes();
     if (!indexes.empty()) {
         int lastRow = -1;
@@ -293,10 +293,17 @@ void MainWindow::downloadFile() {
             if (lastRow != index.row()) {
                 auto item = reinterpret_cast<FileTreeItem *>(reinterpret_cast<FileTreeModel *>(filesTree->model())->getItem(
                         index));
-                Utils::Files::createFile(item->getFile());
+                if (item->childCount() == 0) {
+                    Utils::Files::downloadFile(item);
+                } else {
+                    Utils::Files::downloadDir(item);
+                }
             }
             lastRow = index.row();
         }
+    } else {
+        auto model = reinterpret_cast<FileTreeModel *>(filesTree->model());
+        Utils::Files::downloadDir(reinterpret_cast<FileTreeItem *>(model->getItem(model->index(0, 0))));
     };
     updateFiles();
 }

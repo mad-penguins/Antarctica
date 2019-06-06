@@ -38,8 +38,10 @@
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QToolButton>
-
 #include <api/models/User.h>
+
+#include "ui/models/files/FileTreeItem.h"
+#include "utils/Files.hpp"
 
 
 class MainWindow : public QMainWindow {
@@ -87,7 +89,9 @@ private:
 
     void removePkg();
 
-    void downloadFile();
+    void downloadDir(FileTreeItem *item);
+
+    void download();
 
     void installPkg();
 
