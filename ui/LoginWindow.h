@@ -41,7 +41,7 @@ class LoginWindow : public QWidget {
 Q_OBJECT
 
 public:
-    LoginWindow();
+    LoginWindow(bool local);
 
 private:
     QLabel *logoLabel{};

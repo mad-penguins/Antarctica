@@ -33,7 +33,7 @@
 int main(int argc, char **argv) {
     QApplication app(argc, argv);
 
-    auto loginWindow = new LoginWindow;
+    auto loginWindow = new LoginWindow(app.arguments().contains("-local"));
     auto mainWindow = new MainWindow;
     loginWindow->setAttribute(Qt::WA_DeleteOnClose);
 

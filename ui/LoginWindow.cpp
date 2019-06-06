@@ -41,8 +41,8 @@
 #include "MainWindow.h"
 
 
-LoginWindow::LoginWindow() {
-    Wrapper::init(Utils::SSL::getConfig());
+LoginWindow::LoginWindow(bool local) {
+    Wrapper::init(Utils::SSL::getConfig(), local);
     initUI();
 }
 
@@ -113,6 +113,7 @@ void LoginWindow::logInClicked() {
             case Response::Error::WrongLogin:
                 text = "Wrong login or password";
                 break;
+            case Response::Error::NoResponse:
             case Response::Error::MissingFields:
                 text = "Wrong server response";
                 break;
