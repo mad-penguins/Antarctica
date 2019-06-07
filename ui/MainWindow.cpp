@@ -44,6 +44,7 @@
 #include "ui/models/files/FileTreeModel.h"
 #include "ui/models/packages/PackageTreeModel.h"
 #include "utils/Files.hpp"
+#include "AddPackageDialog.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
@@ -225,13 +226,7 @@ void MainWindow::refreshSlot() {
 }
 
 void MainWindow::addFile() {
-    QFileDialog dialog(this);
-    dialog.setFileMode(QFileDialog::ExistingFiles);
-    dialog.setViewMode(QFileDialog::Detail);
-    QStringList filenames;
-    if (dialog.exec()) {
-        filenames = dialog.selectedFiles();
-    }
+    QStringList filenames = Utils::Files::openFiles(this);
     for (auto &&filename : filenames) {
         QFileInfo info(filename);
         if (info.isFile()) {
@@ -244,7 +239,10 @@ void MainWindow::addFile() {
 }
 
 void MainWindow::addPkg() {
-    testSlot(); // TODO: implement
+    auto addPackageDialog = new AddPackageDialog(this);
+    addPackageDialog->exec();
+    updatePackages();
+    updateFiles();
 }
 
 void MainWindow::removeFile() {
@@ -275,6 +273,7 @@ void MainWindow::removePkg() {
         }
     };
     updatePackages();
+    updateFiles();
 }
 
 void MainWindow::otherSlot() {

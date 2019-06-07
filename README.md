@@ -9,23 +9,23 @@ Mostly it's caused by unavailability of Java SE 8 or OpenFX for Java 9 or newer.
 
 Features (work still in progress):
 - [ ] Files management
-    - [ ] Uploading into server
-    - [ ] Downloading from server
+    - [x] Uploading into server
+    - [x] Downloading from server
     - [ ] Deleting from disk
-    - [ ] Deleting from server
+    - [x] Deleting from server
 - [ ] Packages management (zypper only now)
-    - [ ] Uploading into server (by one, not full list)
-    - [ ] Binding of package and dotfiles
+    - [x] Uploading into server (by one, not full list)
+    - [x] Binding of package and dotfiles
     - [ ] Installing into system
     - [ ] Removing from system
-    - [ ] Removing from server
+    - [x] Removing from server
 - [ ] Repositories management (zypper only now)
     - [ ] Reading list of added repositories
     - [ ] Adding into system
     - [ ] Removing from system
 - [ ] User interface
-    - [ ] Files management tab
-    - [ ] Packages management tab
+    - [x] Files management tab
+    - [x] Packages management tab
     - [ ] Repositories management tab
     - [ ] Settings
     - [ ] Custom design

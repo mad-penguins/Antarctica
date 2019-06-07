@@ -89,8 +89,6 @@ private:
 
     void removePkg();
 
-    void downloadDir(FileTreeItem *item);
-
     void download();
 
     void installPkg();

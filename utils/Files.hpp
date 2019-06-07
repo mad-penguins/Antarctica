@@ -10,6 +10,8 @@
 #include <QtCore/QFileInfo>
 #include <utime.h>
 #include <fcntl.h>
+#include <QtWidgets/QFileDialog>
+#include <QtCore/QList>
 
 #include "ui/models/files/FileTreeItem.h"
 
@@ -30,6 +32,32 @@ namespace Utils {
                         info.fileTime(QFile::FileTime::FileModificationTime),
                         content.toBase64()
                 ));
+            }
+        }
+
+        static File *parseFile(const QString &filename) {
+            QFile file(filename);
+            if (file.open(QIODevice::ReadOnly)) {
+                QFileInfo info(filename);
+                auto name = info.fileName();
+                auto path = info.absolutePath();
+                auto created = info.created();
+                auto modified = info.lastModified();
+                auto content = file.readAll();
+                return new File(name, path.replace(QDir::homePath(), "~"), created, modified, content);
+            } else {
+                return nullptr;
+            }
+        }
+
+        static void parseDir(const QString &dirname, QList<File *> &files) {
+            auto dir = QDir(dirname);
+            for (auto &&info : dir.entryInfoList(QDir::NoDotAndDotDot | QDir::Files | QDir::Dirs)) {
+                if (info.isFile()) {
+                    files.append(parseFile(info.absoluteFilePath()));
+                } else if (info.isDir()) {
+                    parseDir(info.absoluteFilePath(), files);
+                }
             }
         }
 
@@ -82,6 +110,17 @@ namespace Utils {
                     downloadDir(child);
                 }
             }
+        }
+
+        inline static QStringList openFiles(QWidget *parent, Package *pkg = Package::Default) {
+            QFileDialog dialog(parent);
+            dialog.setFileMode(QFileDialog::ExistingFiles);
+            dialog.setViewMode(QFileDialog::Detail);
+            QStringList filenames;
+            if (dialog.exec()) {
+                return dialog.selectedFiles();
+            }
+            return QStringList();
         }
     };
 }
