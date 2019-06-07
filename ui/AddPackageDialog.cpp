@@ -2,6 +2,7 @@
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QLabel>
 #include <utils/Files.hpp>
+#include <QtWidgets/QMessageBox>
 
 #include "AddPackageDialog.h"
 #include "ui/models/files/FileTreeModel.h"
@@ -12,39 +13,37 @@ AddPackageDialog::AddPackageDialog(QWidget *parent) : QDialog(parent) {
 
 void AddPackageDialog::initUI() {
     setWindowTitle("Add a package");
-    auto mainLay = new QGridLayout();
+    auto mainLay = new QGridLayout(this);
 
     nameInput = new QLineEdit(this);
     mainLay->addWidget(new QLabel(tr("Name"), this), 1, 1);
-    mainLay->addWidget(nameInput, 1, 2, 1, 5);
+    mainLay->addWidget(nameInput, 1, 2, 1, 4);
 
     repoSelector = new QComboBox(this);
     repoSelector->addItem("Default"); // TODO: implement system repositories scanning
-    mainLay->addWidget(new QLabel(tr("Repository"), this), 2, 1, 1, 2);
-    mainLay->addWidget(repoSelector, 2, 5, 1, 2);
+    mainLay->addWidget(new QLabel(tr("Repository"), this), 2, 1);
+    mainLay->addWidget(repoSelector, 2, 2, 1, 4);
 
-    mainLay->addWidget(new QLabel(tr("Configuration files:"), this), 3, 1, 1, 2);
-    filesTree = new QTreeView();
+    mainLay->addWidget(new QLabel(tr("Configuration files:"), this), 3, 1);
+    filesTree = new QTreeView(this);
     updateFiles();
 
-    mainLay->addWidget(filesTree, 4, 1, 4, 5);
-    addFileButton = new QPushButton(tr("Add"));
-    removeFileButton = new QPushButton(tr("Remove"));
+    mainLay->addWidget(filesTree, 4, 1, 5, 5);
+    addFileButton = new QPushButton(tr("Add"), this);
+    removeFileButton = new QPushButton(tr("Remove"), this);
 
     connect(addFileButton, &QPushButton::clicked, this, &AddPackageDialog::addFileClicked);
     connect(removeFileButton, &QPushButton::clicked, this, &AddPackageDialog::removeFileClicked);
-    mainLay->addWidget(addFileButton, 4, 6);
-    mainLay->addWidget(removeFileButton, 5, 6);
+    mainLay->addWidget(addFileButton, 3, 2);
+    mainLay->addWidget(removeFileButton, 3, 3);
 
-    okButton = new QPushButton("OK");
+    okButton = new QPushButton("OK", this);
     okButton->setDefault(true);
-    cancelButton = new QPushButton(tr("Cancel"));
+    cancelButton = new QPushButton(tr("Cancel"), this);
     connect(okButton, &QPushButton::clicked, this, &AddPackageDialog::okClicked);
     connect(cancelButton, &QPushButton::clicked, this, &AddPackageDialog::cancelClicked);
-    mainLay->addWidget(okButton, 9, 5);
-    mainLay->addWidget(cancelButton, 9, 4);
-
-    setLayout(mainLay);
+    mainLay->addWidget(okButton, 10, 5);
+    mainLay->addWidget(cancelButton, 10, 4);
 }
 
 void AddPackageDialog::updateFiles() {
@@ -82,14 +81,20 @@ void AddPackageDialog::removeFileClicked() {
             }
             lastRow = index.row();
         }
-    };
-    updateFiles();
+        updateFiles();
+    } else {
+        QMessageBox::information(this, "Package selector", "Please select a file to remove");
+    }
 }
 
 void AddPackageDialog::okClicked() {
+    if (nameInput->text().isEmpty()) {
+        close();
+        return;
+    }
+
     int createdID = Wrapper::Packages::upload(new Package(nameInput->text().trimmed(), Repository::Default));
     if (createdID == -1) {
-        setResult(QDialog::Rejected);
         close();
         return;
     }
@@ -99,14 +104,11 @@ void AddPackageDialog::okClicked() {
         config->package = newPackage;
         if (!Wrapper::Files::upload(config)) {
             if (!Wrapper::Files::update(config)) {
-                setResult(QDialog::Rejected);
                 close();
                 return;
             }
         }
     }
-
-    setResult(QDialog::Accepted);
     close();
 }
 

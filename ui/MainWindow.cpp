@@ -52,17 +52,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
 
 void MainWindow::initUI() {
-    setWindowTitle(this->user.displayName + " - Antarctica");
+    setWindowTitle(user.displayName + " - Antarctica");
     setWindowIcon(QIcon(":/img/icon.png"));
     moveToCenter();
 
-    mainLay = new QHBoxLayout;
+    // display all the widgets
+    auto centralWidget = new QWidget(this);
+
+    mainLay = new QHBoxLayout(centralWidget);
     mainLay->setContentsMargins(0, 0, 0, 0);
     mainLay->setSpacing(0);
 
     // init toolbars
     createToolBars();
-    auto *toolBarLay = new QVBoxLayout;
+    auto *toolBarLay = new QVBoxLayout();
     toolBarLay->addWidget(toolBarTop);
     toolBarLay->addStretch();
     toolBarLay->addWidget(toolBarBottom);
@@ -70,7 +73,7 @@ void MainWindow::initUI() {
     mainLay->addLayout(toolBarLay);
 
     // init tabs
-    tabWidget = new QTabWidget(this);
+    tabWidget = new QTabWidget(centralWidget);
     filesTree = new QTreeView(tabWidget);
     packagesTree = new QTreeView(tabWidget);
     tabWidget->addTab(filesTree, "Files");
@@ -79,10 +82,7 @@ void MainWindow::initUI() {
     updatePackages();
     mainLay->addWidget(tabWidget);
 
-    // display all the widgets
-    auto ui_area = new QWidget(this);
-    ui_area->setLayout(mainLay);
-    this->setCentralWidget(ui_area);
+    setCentralWidget(centralWidget);
 }
 
 void MainWindow::updateFiles() {
@@ -105,9 +105,9 @@ void MainWindow::updatePackages() {
 }
 
 void MainWindow::showUser(User usr) {
-    this->user = std::move(usr);
-    this->initUI();
-    this->show();
+    user = std::move(usr);
+    initUI();
+    show();
 }
 
 void MainWindow::moveToCenter() {
@@ -146,12 +146,12 @@ void MainWindow::createToolBars() {
     toolBarBottom->setOrientation(Qt::Vertical);
     toolBarBottom->addSeparator();
 
-    toolButtonOther = new QToolButton;
+    toolButtonOther = new QToolButton(toolBarBottom);
     toolButtonOther->setPopupMode(QToolButton::InstantPopup);
     toolButtonOther->setIcon(QIcon(":/main_icons/orange/menu.png"));
     toolButtonOther->setFocusPolicy(Qt::NoFocus);
 
-    auto *menuOther = new QMenu;
+    auto *menuOther = new QMenu(toolBarBottom);
     menuOther->addAction("Not implemented");
     menuOther->addAction("Not implemented");
     menuOther->addAction("Not implemented");
@@ -243,6 +243,7 @@ void MainWindow::addPkg() {
     addPackageDialog->exec();
     updatePackages();
     updateFiles();
+    delete addPackageDialog;
 }
 
 void MainWindow::removeFile() {

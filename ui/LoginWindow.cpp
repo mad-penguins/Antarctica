@@ -47,9 +47,8 @@ LoginWindow::LoginWindow(bool local) {
 }
 
 void LoginWindow::initUI() {
-    this->setWindowTitle("Antarctica login");
-
-    this->setWindowIcon(QIcon(":/img/icon.png"));
+    setWindowTitle("Antarctica login");
+    setWindowIcon(QIcon(":/img/icon.png"));
 
     setGeometry(0, 0, 320, 500);
 
@@ -57,28 +56,29 @@ void LoginWindow::initUI() {
     QRect rc = dw.screenGeometry(this);
     move((rc.width() - width()) / 2, (rc.height() - height()) / 2 - 20);
 
-    auto layout = new QGridLayout;
+    auto layout = new QGridLayout(this);
 
-    logoLabel = new QLabel();
+    logoLabel = new QLabel(this);
     logoLabel->setAlignment(Qt::AlignCenter);
-    logoLabel->setPixmap(QPixmap(":/img/logo.png").scaledToHeight(static_cast<int>(this->height() / 1.5), Qt::SmoothTransformation));
+    logoLabel->setPixmap(
+            QPixmap(":/img/logo.png").scaledToHeight(static_cast<int>(height() / 1.5), Qt::SmoothTransformation));
     layout->addWidget(logoLabel, 1, 1, 1, 2);
 
-    auto loginLabel = new QLabel("Username");
-    auto passwordLabel = new QLabel("Password");
+    auto loginLabel = new QLabel("Username", this);
+    auto passwordLabel = new QLabel("Password", this);
     layout->addWidget(loginLabel, 3, 1);
     layout->addWidget(passwordLabel, 4, 1);
     layout->setAlignment(loginLabel, Qt::AlignHCenter);
     layout->setAlignment(passwordLabel, Qt::AlignHCenter);
 
-    loginField = new QLineEdit;
-    passwordField = new QLineEdit;
+    loginField = new QLineEdit(this);
+    passwordField = new QLineEdit(this);
     passwordField->setEchoMode(QLineEdit::Password);
     layout->addWidget(loginField, 3, 2);
     layout->addWidget(passwordField, 4, 2);
 
-    registerButton = new QPushButton("Register");
-    logInButton = new QPushButton("Log in");
+    registerButton = new QPushButton("Register", this);
+    logInButton = new QPushButton("Log in", this);
     logInButton->setDefault(true);
     layout->addWidget(registerButton, 5, 1);
     layout->addWidget(logInButton, 5, 2);
@@ -95,7 +95,7 @@ void LoginWindow::initUI() {
     layout->setColumnStretch(2, 2);
     layout->setColumnStretch(3, 1);
 
-    this->setLayout(layout);
+    setLayout(layout);
 }
 
 void LoginWindow::registerClicked() {
@@ -106,7 +106,7 @@ void LoginWindow::logInClicked() {
     try {
         auto user = Wrapper::authorize(loginField->text(), passwordField->text());
         emit loggedIn(user);
-        this->close();
+        close();
     } catch (Response::Exception &e) {
         QString text;
         switch (e.code) {
@@ -125,7 +125,8 @@ void LoginWindow::logInClicked() {
 }
 
 void LoginWindow::resizeEvent(QResizeEvent *e) {
-    this->logoLabel->setPixmap(QPixmap(":/img/logo.png").scaledToHeight(static_cast<int>(e->size().height() / 1.5), Qt::SmoothTransformation));
+    logoLabel->setPixmap(QPixmap(":/img/logo.png").scaledToHeight(static_cast<int>(e->size().height() / 1.5),
+                                                                  Qt::SmoothTransformation));
 }
 
 void LoginWindow::keyReleaseEvent(QKeyEvent *e) {
