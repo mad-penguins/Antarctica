@@ -1,5 +1,5 @@
 #include <api/Wrapper.h>
-#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QLabel>
 #include <utils/Files.hpp>
 
@@ -12,47 +12,37 @@ AddPackageDialog::AddPackageDialog(QWidget *parent) : QDialog(parent) {
 
 void AddPackageDialog::initUI() {
     setWindowTitle("Add a package");
-    auto mainLay = new QVBoxLayout();
+    auto mainLay = new QGridLayout();
 
-    auto nameLay = new QHBoxLayout();
     nameInput = new QLineEdit(this);
-    nameLay->addWidget(new QLabel(tr("Name"), this));
-    nameLay->addWidget(nameInput);
-    mainLay->addLayout(nameLay);
+    mainLay->addWidget(new QLabel(tr("Name"), this), 1, 1);
+    mainLay->addWidget(nameInput, 1, 2, 1, 5);
 
-    auto repoLay = new QHBoxLayout();
     repoSelector = new QComboBox(this);
     repoSelector->addItem("Default"); // TODO: implement system repositories scanning
-    repoLay->addWidget(new QLabel(tr("Repository"), this));
-    repoLay->addWidget(repoSelector);
-    mainLay->addLayout(repoLay);
+    mainLay->addWidget(new QLabel(tr("Repository"), this), 2, 1, 1, 2);
+    mainLay->addWidget(repoSelector, 2, 5, 1, 2);
 
-    mainLay->addWidget(new QLabel(tr("Configuration files:"), this));
-    auto filesLay = new QHBoxLayout();
-    filesTree = new QTreeView(this);
+    mainLay->addWidget(new QLabel(tr("Configuration files:"), this), 3, 1, 1, 2);
+    filesTree = new QTreeView();
     updateFiles();
-    filesLay->addWidget(filesTree);
-    auto filesButtonLay = new QVBoxLayout();
+
+    mainLay->addWidget(filesTree, 4, 1, 4, 5);
     addFileButton = new QPushButton(tr("Add"));
     removeFileButton = new QPushButton(tr("Remove"));
+
     connect(addFileButton, &QPushButton::clicked, this, &AddPackageDialog::addFileClicked);
     connect(removeFileButton, &QPushButton::clicked, this, &AddPackageDialog::removeFileClicked);
-    filesButtonLay->addWidget(addFileButton);
-    filesButtonLay->addWidget(removeFileButton);
-    filesButtonLay->addStretch();
-    filesLay->addLayout(filesButtonLay);
-    mainLay->addLayout(filesLay);
+    mainLay->addWidget(addFileButton, 4, 6);
+    mainLay->addWidget(removeFileButton, 5, 6);
 
-    auto buttonsLay = new QHBoxLayout();
     okButton = new QPushButton("OK");
     okButton->setDefault(true);
     cancelButton = new QPushButton(tr("Cancel"));
     connect(okButton, &QPushButton::clicked, this, &AddPackageDialog::okClicked);
     connect(cancelButton, &QPushButton::clicked, this, &AddPackageDialog::cancelClicked);
-    buttonsLay->addStretch();
-    buttonsLay->addWidget(okButton);
-    buttonsLay->addWidget(cancelButton);
-    mainLay->addLayout(buttonsLay);
+    mainLay->addWidget(okButton, 9, 5);
+    mainLay->addWidget(cancelButton, 9, 4);
 
     setLayout(mainLay);
 }
