@@ -22,7 +22,7 @@ Features (work still in progress):
 - [ ] Repositories management (zypper only now)
     - [ ] Reading list of added repositories
     - [ ] Adding into system
-    - [ ] Removing from system
+    - [x] Removing from system
 - [ ] User interface
     - [x] Files management tab
     - [x] Packages management tab

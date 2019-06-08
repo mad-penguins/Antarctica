@@ -47,7 +47,11 @@ void PackageConfigurator::removeFileClicked() {
             if (lastRow != index.row()) {
                 auto item = reinterpret_cast<FileTreeItem *>(reinterpret_cast<FileTreeModel *>(filesTree->model())->getItem(
                         index));
-                configs.removeOne(item->getFile());
+                if (item->childCount() == 0) {
+                    configs.removeOne(item->getFile());
+                } else {
+                    Utils::Files::removeTempDir(item, configs);
+                }
             }
             lastRow = index.row();
         }

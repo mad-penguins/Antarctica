@@ -35,10 +35,10 @@ void FileTreeModel::createDirs(QStringList dirsList, TreeItem *parent) {
     dirsList.pop_front();
 
     if (auto searchResult = parent->findName(dir)) {
-        lastDir = reinterpret_cast<FileTreeItem*>(searchResult);
+        lastDir = reinterpret_cast<FileTreeItem *>(searchResult);
     } else {
         parent->appendChild(QVector<QVariant>() << dir);
-        lastDir = reinterpret_cast<FileTreeItem*>(parent->child(parent->childCount() - 1));
+        lastDir = reinterpret_cast<FileTreeItem *>(parent->child(parent->childCount() - 1));
     }
 
     createDirs(dirsList, lastDir);
@@ -72,6 +72,6 @@ void FileTreeModel::setupModelData(const QList<Entity *> &files, TreeItem *paren
         QVector<QVariant> fileData;
         fileData << file->name << file->created << file->modified << QVariant(Utils::Files::isFileDownloaded(file));
         lastDir->appendChild(fileData);
-        reinterpret_cast<FileTreeItem*>(lastDir->child(lastDir->childCount()-1))->setFile(file);
+        reinterpret_cast<FileTreeItem *>(lastDir->child(lastDir->childCount() - 1))->setFile(file);
     }
 }

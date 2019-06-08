@@ -253,8 +253,13 @@ void MainWindow::removeFile() {
         int lastRow = -1;
         for (auto &&index : indexes) {
             if (lastRow != index.row()) {
-                auto item = reinterpret_cast<FileTreeItem*>(reinterpret_cast<FileTreeModel*>(filesTree->model())->getItem(index));
-                Wrapper::Files::remove(item->getFile()->id);
+                auto item = reinterpret_cast<FileTreeItem *>(reinterpret_cast<FileTreeModel *>(filesTree->model())->getItem(
+                        index));
+                if (item->childCount() == 0) {
+                    Wrapper::Files::remove(item->getFile()->id);
+                } else {
+                    Utils::Files::removeServerDir(item);
+                }
             }
             lastRow = index.row();
         }
@@ -268,8 +273,14 @@ void MainWindow::removePkg() {
         int lastRow = -1;
         for (auto &&index : indexes) {
             if (lastRow != index.row()) {
-                auto item = reinterpret_cast<PackageTreeItem*>(reinterpret_cast<PackageTreeModel*>(packagesTree->model())->getItem(index));
-                Wrapper::Packages::remove(item->getPackage()->id);
+                auto item = reinterpret_cast<PackageTreeItem *>(reinterpret_cast<PackageTreeModel *>(packagesTree->model())->getItem(
+                        index));
+                if (item->childCount() == 0) {
+                    Wrapper::Packages::remove(item->getPackage()->id);
+                } else {
+                    Wrapper::Repositories::remove(
+                            reinterpret_cast<PackageTreeItem *>(item->child(0))->getPackage()->repository->id);
+                }
             }
             lastRow = index.row();
         }

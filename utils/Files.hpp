@@ -122,6 +122,28 @@ namespace Utils {
             }
             return QStringList();
         }
+
+        static void removeTempDir(FileTreeItem *item, QList<File *> &files) {
+            for (int i = 0; i < item->childCount(); ++i) {
+                auto child = reinterpret_cast<FileTreeItem *>(item->child(i));
+                if (child->childCount() == 0) {
+                    files.removeOne(child->getFile());
+                } else {
+                    removeTempDir(child, files);
+                }
+            }
+        }
+
+        static void removeServerDir(FileTreeItem *item) {
+            for (int i = 0; i < item->childCount(); ++i) {
+                auto child = reinterpret_cast<FileTreeItem *>(item->child(i));
+                if (child->childCount() == 0) {
+                    Wrapper::Files::remove(child->getFile()->id);
+                } else {
+                    removeServerDir(child);
+                }
+            }
+        }
     };
 }
 

@@ -63,7 +63,7 @@ void AddPackageDialog::okClicked() {
     }
 
     auto newPackage = Wrapper::Packages::get(createdID);
-    for (auto & config : configs) {
+    for (auto &config : configs) {
         config->package = newPackage;
         if (!Wrapper::Files::upload(config)) {
             if (!Wrapper::Files::update(config)) {
