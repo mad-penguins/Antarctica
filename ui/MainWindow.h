@@ -113,6 +113,7 @@ private slots:
 
     static void testSlot();
 
+    void managePackage(const QModelIndex &idx);
 };
 
 

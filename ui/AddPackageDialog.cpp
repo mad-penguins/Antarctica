@@ -7,13 +7,17 @@
 #include "AddPackageDialog.h"
 #include "ui/models/files/FileTreeModel.h"
 
-AddPackageDialog::AddPackageDialog(QWidget *parent) : QDialog(parent) {
+AddPackageDialog::AddPackageDialog(QWidget *parent) : PackageConfigurator(parent) {
     initUI();
 }
 
 void AddPackageDialog::initUI() {
-    setWindowTitle("Add a package");
+    setWindowTitle(tr("New package"));
     auto mainLay = new QGridLayout(this);
+
+    auto label = new QLabel(tr("Add a package"), this);
+    label->setStyleSheet("font-size: 20pt;");
+    mainLay->addWidget(label, 0, 1, 1, 5);
 
     nameInput = new QLineEdit(this);
     mainLay->addWidget(new QLabel(tr("Name"), this), 1, 1);
@@ -46,47 +50,6 @@ void AddPackageDialog::initUI() {
     mainLay->addWidget(cancelButton, 10, 4);
 }
 
-void AddPackageDialog::updateFiles() {
-    QStringList headers;
-    headers << tr("Name") << tr("Created") << tr("Modified") << tr("Downloaded");
-    auto model = new FileTreeModel(headers, configs);
-    filesTree->setModel(model);
-    connect(filesTree, &QTreeView::expanded, [=]() {
-        filesTree->resizeColumnToContents(0);
-    });
-    filesTree->expandToDepth(1);
-}
-
-void AddPackageDialog::addFileClicked() {
-    QStringList filenames = Utils::Files::openFiles(this);
-    for (auto &&filename : filenames) {
-        QFileInfo info(filename);
-        if (info.isFile()) {
-            configs.append(Utils::Files::parseFile(filename));
-        } else if (info.isDir()) {
-            Utils::Files::parseDir(filename, configs);
-        }
-    }
-    updateFiles();
-}
-
-void AddPackageDialog::removeFileClicked() {
-    QModelIndexList indexes = filesTree->selectionModel()->selectedIndexes();
-    if (!indexes.empty()) {
-        int lastRow = -1;
-        for (auto &&index : indexes) {
-            if (lastRow != index.row()) {
-                auto item = reinterpret_cast<FileTreeItem*>(reinterpret_cast<FileTreeModel*>(filesTree->model())->getItem(index));
-                configs.removeOne(item->getFile());
-            }
-            lastRow = index.row();
-        }
-        updateFiles();
-    } else {
-        QMessageBox::information(this, "Package selector", "Please select a file to remove");
-    }
-}
-
 void AddPackageDialog::okClicked() {
     if (nameInput->text().isEmpty()) {
         close();
@@ -109,10 +72,5 @@ void AddPackageDialog::okClicked() {
             }
         }
     }
-    close();
-}
-
-void AddPackageDialog::cancelClicked() {
-    setResult(QDialog::Accepted);
     close();
 }

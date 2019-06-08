@@ -76,6 +76,7 @@ void MainWindow::initUI() {
     tabWidget = new QTabWidget(centralWidget);
     filesTree = new QTreeView(tabWidget);
     packagesTree = new QTreeView(tabWidget);
+    connect(packagesTree, &QTreeView::doubleClicked, this, &MainWindow::managePackage);
     tabWidget->addTab(filesTree, "Files");
     tabWidget->addTab(packagesTree, "Packages");
     updateFiles();
@@ -272,7 +273,7 @@ void MainWindow::removePkg() {
             }
             lastRow = index.row();
         }
-    };
+    }
     updatePackages();
     updateFiles();
 }
@@ -310,4 +311,26 @@ void MainWindow::download() {
 
 void MainWindow::installPkg() {
     testSlot(); // TODO: implement
+}
+
+void MainWindow::managePackage(const QModelIndex &idx) {
+    QModelIndexList indexes = packagesTree->selectionModel()->selectedIndexes();
+    if (!indexes.empty()) {
+        int lastRow = -1;
+        for (auto &&index : indexes) {
+            if (lastRow != index.row()) {
+                auto item = reinterpret_cast<PackageTreeItem *>(reinterpret_cast<PackageTreeModel *>(packagesTree->model())->getItem(
+                        index));
+
+                if (item->childCount() == 0) {
+                    auto packageConfigurator = new PackageConfigurator(item->getPackage(), this);
+                    packageConfigurator->exec();
+                    updatePackages();
+                    updateFiles();
+                    delete packageConfigurator;
+                }
+            }
+            lastRow = index.row();
+        }
+    }
 }
