@@ -20,7 +20,7 @@ Features (work still in progress):
     - [ ] Removing from system
     - [x] Removing from server
 - [ ] Repositories management (zypper only now)
-    - [ ] Reading list of added repositories
+    - [x] Reading list of added repositories
     - [ ] Adding into system
     - [x] Removing from system
 - [ ] User interface
@@ -37,8 +37,43 @@ Features (work still in progress):
 Roadmap ~~can~~ will be extended in the future.
 
 Antarctica server is at the moment under development too. Code of server is closed and it's now unstable.
-Public remote server is being tested now. Open API will be ~~opened~~ documented in the future. There's already present an early preview of [Qt API wrapper](https://github.com/mad-penguins/IcebreakerQt).
+Public remote server is being tested now. Open API will be ~~opened~~ documented in the future.
+There's already present an early preview of [Qt API wrapper](https://github.com/mad-penguins/IcebreakerQt).
 
+## Build
+Antarctica is build with Qt framework and based on CMake build system.
+So, you need to install cmake binary, C++ compiler with C++17 standard support and Qt5 runtime and development packages.
+If you want to build an RPM package (Debian packages will be supported in the near future), you also need to install the rpmbuild.
+
+##### Needed packages
+1. `git`
+2. `cmake`
+3. `clang` or `g++`(Debian-based) / `gcc-g++`(openSUSE)
+4.  Qt Packages (or just install Qt from official website and specify it to CMake with `-DCMAKE_PREFIX_PATH` flag)
+    - Ubuntu
+        - `libqt5core5a`
+        - `libqt5widgets5`
+        - `libqt5network5`
+    - openSUSE
+        - `libQt5Core-devel`
+        - `libQt5Widgets-devel`
+        - `libQt5Network-devel`
+
+##### Build process:
+1. `git clone https://github.com/mad-penguins/Antarctica`
+2. `cd Antarctica`
+3. `git submodules update --init`
+4. `mkdir build && cd build`
+5. `cmake .. && make` (you can specify number of cores used for compilation with flag `-j`, e.g. `-j 4`)
+6. (Optional) make an RPM: `make package`
+
+##### Troubleshooting
+If step 3 won't  work for you, you can clone API wrapper repository manually and put it to the `api` directory:
+`git clone https://github.com/mad-penguins/IcebreakerQt && mv IcebreakerQt/ api/`
+
+There's also some [prebuilt binaries](https://github.com/mad-penguins/Antarctica/releases).
+
+## Support
 You can help us to rent a server and also support the development:
 - WebMoney: R710781308549
 - [Yandex Money](https://money.yandex.ru/to/410015281707280)
