@@ -39,6 +39,7 @@
 #include <api/Wrapper.h>
 #include <QtWidgets/QFileDialog>
 #include <QtCore/QStandardPaths>
+#include <utils/Repositories.hpp>
 
 #include "MainWindow.h"
 #include "ui/models/files/FileTreeModel.h"
@@ -84,6 +85,8 @@ void MainWindow::initUI() {
     mainLay->addWidget(tabWidget);
 
     setCentralWidget(centralWidget);
+
+    Utils::Repositories::syncRepos();
 }
 
 void MainWindow::updateFiles() {

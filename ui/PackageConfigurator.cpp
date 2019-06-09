@@ -5,6 +5,7 @@
 #include "PackageConfigurator.h"
 #include "models/files/FileTreeModel.h"
 #include "utils/Files.hpp"
+#include "utils/Repositories.hpp"
 
 PackageConfigurator::PackageConfigurator(QWidget *parent) : QDialog(parent) {
 }
@@ -74,7 +75,8 @@ void PackageConfigurator::initUI() {
     mainLay->addWidget(label, 1, 1, 1, 5);
 
     repoSelector = new QComboBox(this);
-    repoSelector->addItem("Default"); // TODO: implement system repositories scanning
+    repoSelector->addItems(Utils::Repositories::getSystemRepos()->keys());
+    repoSelector->setCurrentIndex(repoSelector->findText(package->repository->name));
     mainLay->addWidget(new QLabel(tr("Repository"), this), 2, 1);
     mainLay->addWidget(repoSelector, 2, 2, 1, 4);
 
@@ -101,7 +103,14 @@ void PackageConfigurator::initUI() {
 }
 
 void PackageConfigurator::okClicked() {
-    // implement repository changing
+    if (package->repository->id != Utils::Repositories::getSystemRepos()->value(repoSelector->currentText())->id) {
+        if (!Wrapper::Repositories::getAllMapped().keys().contains(repoSelector->currentText())) {
+            Wrapper::Repositories::upload(Utils::Repositories::getSystemRepos()->value(repoSelector->currentText()));
+            Utils::Repositories::syncRepos();
+        }
+        package->repository = Utils::Repositories::getSystemRepos()->value(repoSelector->currentText());
+    }
+
     for (auto &&config : Wrapper::Packages::getConfigs(package->id)) {
         if (!configs.contains(config)) {
             Wrapper::Files::remove(config->id);
