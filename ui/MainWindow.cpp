@@ -39,11 +39,11 @@
 #include <api/Wrapper.h>
 #include <QtWidgets/QFileDialog>
 #include <QtCore/QStandardPaths>
-#include <utils/Repositories.hpp>
 
 #include "MainWindow.h"
 #include "ui/models/files/FileTreeModel.h"
 #include "ui/models/packages/PackageTreeModel.h"
+#include "utils/Repositories.hpp"
 #include "utils/Files.hpp"
 #include "utils/UI.hpp"
 #include "AddPackageDialog.h"

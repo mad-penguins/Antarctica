@@ -6,6 +6,8 @@
 #include <api/models/Repository.h>
 #include <QtCore/QDir>
 
+#include "Packages.hpp"
+
 namespace Utils {
     class Repositories {
         inline static QMap<QString, Repository *> *systemRepos;
@@ -32,7 +34,7 @@ namespace Utils {
                                 }
                             }
                             if (!(name.isEmpty() && url.isEmpty())) {
-                                systemRepos->insert(name, new Repository(name, url, "zypper"));
+                                systemRepos->insert(name, new Repository(name, url, Packages::getManagerName()));
                             }
                         }
                     }
