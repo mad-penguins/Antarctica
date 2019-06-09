@@ -16,5 +16,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 add_executable(antarctica ${SOURCE_FILES} resources/resources.qrc)
-
 target_link_libraries(antarctica icebreaker Qt5::Core Qt5::Widgets Qt5::Network)
+
+include(GenerateRPM.cmake)
