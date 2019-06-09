@@ -34,7 +34,7 @@ void FileTreeModel::createDirs(QStringList dirsList, TreeItem *parent) {
     auto dir = dirsList.front();
     dirsList.pop_front();
 
-    if (auto searchResult = parent->findName(dir)) {
+    if (const auto searchResult = parent->findName(dir); searchResult) {
         lastDir = reinterpret_cast<FileTreeItem *>(searchResult);
     } else {
         parent->appendChild(QVector<QVariant>() << dir);

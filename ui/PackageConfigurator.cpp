@@ -6,6 +6,7 @@
 #include "models/files/FileTreeModel.h"
 #include "utils/Files.hpp"
 #include "utils/Repositories.hpp"
+#include "utils/UI.hpp"
 
 PackageConfigurator::PackageConfigurator(QWidget *parent) : QDialog(parent) {
 }
@@ -28,8 +29,7 @@ void PackageConfigurator::updateFiles() {
 }
 
 void PackageConfigurator::addFileClicked() {
-    QStringList filenames = Utils::Files::openFiles(this);
-    for (auto &&filename : filenames) {
+    for (auto &&filename : Utils::Files::openFiles(this)) {
         QFileInfo info(filename);
         if (info.isFile()) {
             configs.append(Utils::Files::parseFile(filename));
@@ -41,14 +41,12 @@ void PackageConfigurator::addFileClicked() {
 }
 
 void PackageConfigurator::removeFileClicked() {
-    QModelIndexList indexes = filesTree->selectionModel()->selectedIndexes();
-    if (!indexes.empty()) {
+    if (auto indexes = filesTree->selectionModel()->selectedIndexes(); !indexes.empty()) {
         int lastRow = -1;
         for (auto &&index : indexes) {
             if (lastRow != index.row()) {
-                auto item = reinterpret_cast<FileTreeItem *>(reinterpret_cast<FileTreeModel *>(filesTree->model())->getItem(
-                        index));
-                if (item->childCount() == 0) {
+                if (auto item = Utils::UI::getCurrentItem<FileTreeItem, FileTreeModel>(filesTree->model(), index);
+                        item->childCount() == 0) {
                     configs.removeOne(item->getFile());
                 } else {
                     Utils::Files::removeTempDir(item, configs);

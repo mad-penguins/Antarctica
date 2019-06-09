@@ -32,8 +32,7 @@ void PackageTreeModel::setupModelData(const QList<Entity *> &packages, TreeItem 
     QCollator collator; // TODO: implement server-side sorting?
     QList<Package *> sortedPackages;
     for (auto &&pkg : packages) {
-        auto casted = const_cast<Package *>(reinterpret_cast<const Package *>(pkg));
-        if (casted->id != 1) {
+        if (const auto casted = const_cast<Package *>(reinterpret_cast<const Package *>(pkg)); casted->id != 1) {
             sortedPackages.append(casted);
         }
     }

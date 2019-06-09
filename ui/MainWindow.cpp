@@ -45,6 +45,7 @@
 #include "ui/models/files/FileTreeModel.h"
 #include "ui/models/packages/PackageTreeModel.h"
 #include "utils/Files.hpp"
+#include "utils/UI.hpp"
 #include "AddPackageDialog.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
@@ -230,10 +231,8 @@ void MainWindow::refreshSlot() {
 }
 
 void MainWindow::addFile() {
-    QStringList filenames = Utils::Files::openFiles(this);
-    for (auto &&filename : filenames) {
-        QFileInfo info(filename);
-        if (info.isFile()) {
+    for (auto &&filename : Utils::Files::openFiles(this)) {
+        if (QFileInfo info(filename); info.isFile()) {
             Utils::Files::uploadFile(filename);
         } else if (info.isDir()) {
             Utils::Files::uploadDir(filename);
@@ -251,14 +250,12 @@ void MainWindow::addPkg() {
 }
 
 void MainWindow::removeFile() {
-    QModelIndexList indexes = filesTree->selectionModel()->selectedIndexes();
-    if (!indexes.empty()) {
+    if (auto indexes = filesTree->selectionModel()->selectedIndexes(); !indexes.empty()) {
         int lastRow = -1;
         for (auto &&index : indexes) {
             if (lastRow != index.row()) {
-                auto item = reinterpret_cast<FileTreeItem *>(reinterpret_cast<FileTreeModel *>(filesTree->model())->getItem(
-                        index));
-                if (item->childCount() == 0) {
+                if (auto item = Utils::UI::getCurrentItem<FileTreeItem, FileTreeModel>(filesTree->model(), index);
+                        item->childCount() == 0) {
                     Wrapper::Files::remove(item->getFile()->id);
                 } else {
                     Utils::Files::removeServerDir(item);
@@ -271,14 +268,13 @@ void MainWindow::removeFile() {
 }
 
 void MainWindow::removePkg() {
-    QModelIndexList indexes = packagesTree->selectionModel()->selectedIndexes();
-    if (!indexes.empty()) {
+    if (auto indexes = packagesTree->selectionModel()->selectedIndexes(); !indexes.empty()) {
         int lastRow = -1;
         for (auto &&index : indexes) {
             if (lastRow != index.row()) {
-                auto item = reinterpret_cast<PackageTreeItem *>(reinterpret_cast<PackageTreeModel *>(packagesTree->model())->getItem(
-                        index));
-                if (item->childCount() == 0) {
+                if (auto item = Utils::UI::getCurrentItem<PackageTreeItem, PackageTreeModel>(packagesTree->model(),
+                                                                                             index);
+                        item->childCount() == 0) {
                     Wrapper::Packages::remove(item->getPackage()->id);
                 } else {
                     Wrapper::Repositories::remove(
@@ -301,14 +297,12 @@ void MainWindow::settingsSlot() {
 }
 
 void MainWindow::download() {
-    QModelIndexList indexes = filesTree->selectionModel()->selectedIndexes();
-    if (!indexes.empty()) {
+    if (auto indexes = filesTree->selectionModel()->selectedIndexes(); !indexes.empty()) {
         int lastRow = -1;
         for (auto &&index : indexes) {
             if (lastRow != index.row()) {
-                auto item = reinterpret_cast<FileTreeItem *>(reinterpret_cast<FileTreeModel *>(filesTree->model())->getItem(
-                        index));
-                if (item->childCount() == 0) {
+                if (auto item = Utils::UI::getCurrentItem<FileTreeItem, FileTreeModel>(filesTree->model(), index);
+                        item->childCount() == 0) {
                     Utils::Files::downloadFile(item);
                 } else {
                     Utils::Files::downloadDir(item);
@@ -328,15 +322,13 @@ void MainWindow::installPkg() {
 }
 
 void MainWindow::managePackage(const QModelIndex &idx) {
-    QModelIndexList indexes = packagesTree->selectionModel()->selectedIndexes();
-    if (!indexes.empty()) {
+    if (auto indexes = packagesTree->selectionModel()->selectedIndexes(); !indexes.empty()) {
         int lastRow = -1;
         for (auto &&index : indexes) {
             if (lastRow != index.row()) {
-                auto item = reinterpret_cast<PackageTreeItem *>(reinterpret_cast<PackageTreeModel *>(packagesTree->model())->getItem(
-                        index));
-
-                if (item->childCount() == 0) {
+                if (auto item = Utils::UI::getCurrentItem<PackageTreeItem, PackageTreeModel>(packagesTree->model(),
+                                                                                             index);
+                        item->childCount() == 0) {
                     auto packageConfigurator = new PackageConfigurator(item->getPackage(), this);
                     packageConfigurator->exec();
                     updatePackages();
