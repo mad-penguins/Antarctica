@@ -1,5 +1,5 @@
 /*!
- * \file ui/MainWindow.cpp
+ * \file
  * \author Nikita Mironov <nickfrom22nd@gmail.com>
  * \brief The main window implementation
  *
@@ -286,10 +286,6 @@ void MainWindow::removePkg() {
     }
     updatePackages();
     updateFiles();
-}
-
-void MainWindow::otherSlot() {
-    testSlot(); // TODO: implement
 }
 
 void MainWindow::settingsSlot() {

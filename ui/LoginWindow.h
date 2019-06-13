@@ -1,5 +1,5 @@
 /*!
- * \file ui/LoginWindow.h
+ * \file
  * \author Nikita Mironov <nickfrom22nd@gmail.com>
  * \brief The login window class
  *

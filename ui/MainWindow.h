@@ -1,5 +1,5 @@
 /*!
- * \file ui/MainWindow.h
+ * \file
  * \author Nikita Mironov <nickfrom22nd@gmail.com>
  * \brief The main window class
  *
@@ -64,7 +64,6 @@ private:
     QAction *removeAction{};
     QAction *downloadAction{};
     QAction *refreshAction{};
-    QAction *otherAction{};
     QAction *settingsAction{};
 
     void initUI();
@@ -106,8 +105,6 @@ private slots:
     void downloadSlot();
 
     void refreshSlot();
-
-    void otherSlot();
 
     void settingsSlot();
 

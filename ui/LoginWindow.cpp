@@ -1,5 +1,5 @@
 /*!
- * \file ui/LoginWindow.cpp
+ * \file
  * \author Nikita Mironov <nickfrom22nd@gmail.com>
  * \brief The login window implementation
  *
@@ -110,11 +110,11 @@ void LoginWindow::logInClicked() {
     } catch (Response::Exception &e) {
         QString text;
         switch (e.code) {
-            case Response::Error::WrongLogin:
+            case Response::Error::Code::WrongLogin:
                 text = "Wrong login or password";
                 break;
-            case Response::Error::NoResponse:
-            case Response::Error::MissingFields:
+            case Response::Error::Code::NoResponse:
+            case Response::Error::Code::MissingFields:
                 text = "Wrong server response";
                 break;
             default:

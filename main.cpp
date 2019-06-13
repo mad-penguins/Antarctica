@@ -1,6 +1,6 @@
 /*!
- * \file main.cpp
- * \author  Nikita Mironov <nickfrom22nd@gmail.com>
+ * \file
+ * \author Nikita Mironov <nickfrom22nd@gmail.com>
  *
  * \section LICENSE
  *
@@ -33,7 +33,7 @@
 int main(int argc, char **argv) {
     QApplication app(argc, argv);
 
-    auto loginWindow = new LoginWindow(app.arguments().contains("-local"));
+    auto loginWindow = new LoginWindow(QApplication::arguments().contains("-local"));
     auto mainWindow = new MainWindow;
     loginWindow->setAttribute(Qt::WA_DeleteOnClose);
 

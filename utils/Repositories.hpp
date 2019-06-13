@@ -1,3 +1,31 @@
+/*!
+ * \file
+ * \author Nikita Mironov <nickfrom22nd@gmail.com>
+ * \brief Some SSL utilities
+ *
+ * \section LICENSE
+ *
+ * Copyright (c) 2019 Penguins of Madagascar
+
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 #ifndef ANTARCTICA_REPOSITORIES_HPP
 #define ANTARCTICA_REPOSITORIES_HPP
 
@@ -8,10 +36,23 @@
 
 #include "Packages.hpp"
 
+/*!
+ * \namespace Utils
+ * \brief Namespace which contains some utilities classes with static methods
+ */
 namespace Utils {
+    /*!
+     * \class Utils::Repositories
+     * \brief Class with repositories utilities
+     */
     class Repositories {
         inline static QMap<QString, Repository *> *systemRepos;
     public:
+        /*!
+         * \brief Get system repositories list
+         * \param forced Force parse system repositories
+         * \return Map of system repositories objects by name
+         */
         static const QMap<QString, Repository *> *getSystemRepos(bool forced = false) { // only zypper now :(
             if (!systemRepos || forced) {
                 systemRepos = new QMap<QString, Repository *>;
@@ -44,6 +85,10 @@ namespace Utils {
             return systemRepos;
         }
 
+        /*!
+         * \brief Update ids of system repositories objects according to server repositories
+         * \param forced Force parse system repositories
+         */
         static void syncRepos(bool forced = false) {
             auto system = getSystemRepos(forced);
             auto server = Wrapper::Repositories::getAllMapped();
