@@ -40,7 +40,7 @@
 #include <QtWidgets/QToolButton>
 #include <api/models/User.h>
 
-#include "ui/models/files/FileTreeItem.h"
+#include "ui/models/files/FileTreeModel.h"
 #include "utils/Files.hpp"
 
 
@@ -90,7 +90,7 @@ private:
 
     void download();
 
-    void installPkg();
+    static void installPkg();
 
 public slots:
 
@@ -106,7 +106,7 @@ private slots:
 
     void refreshSlot();
 
-    void settingsSlot();
+    static void settingsSlot();
 
     static void testSlot();
 

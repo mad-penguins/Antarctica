@@ -171,12 +171,12 @@ namespace Utils {
         }
 
         /*!
-         * \brief Download a whole sirectory from files tree row
+         * \brief Download a whole directory from files tree row
          * \param item Files tree row
          */
         static void downloadDir(FileTreeItem *item) {
             for (int i = 0; i < item->childCount(); ++i) {
-                auto child = reinterpret_cast<FileTreeItem *>(item->child(i));
+                auto child = item->child(i);
                 if (child->childCount() == 0) {
                     Utils::Files::createFile(child->getFile());
                 } else {
@@ -205,16 +205,17 @@ namespace Utils {
         /*!
          * \brief Remove files with specific directory from temporary file entity objects container
          * \param item Files tree row to delete
-         * \param files File entity objects cocntainer
+         * \param files File entity objects container
          */
         static void removeTempDir(FileTreeItem *item, QList<File *> &files) {
             for (int i = 0; i < item->childCount(); ++i) {
-                auto child = reinterpret_cast<FileTreeItem *>(item->child(i));
+                auto child = item->child(i);
                 if (child->childCount() == 0) {
                     files.removeOne(child->getFile());
                 } else {
                     removeTempDir(child, files);
                 }
+                delete child;
             }
         }
 
@@ -224,7 +225,7 @@ namespace Utils {
          */
         static void removeServerDir(FileTreeItem *item) {
             for (int i = 0; i < item->childCount(); ++i) {
-                auto child = reinterpret_cast<FileTreeItem *>(item->child(i));
+                auto child = item->child(i);
                 if (child->childCount() == 0) {
                     Wrapper::Files::remove(child->getFile()->id);
                 } else {

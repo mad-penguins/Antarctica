@@ -41,6 +41,14 @@ public:
 
     ~PackageTreeItem() override;
 
+    inline PackageTreeItem *child(int id) override {
+        return dynamic_cast<PackageTreeItem *>(childItems.value(id));
+    }
+
+    PackageTreeItem *findName(const QString &name) override;
+
+    bool insertChildren(int position, int count, int columns) override;
+
     void setPackage(Package *p);
 
     Package *getPackage() const;

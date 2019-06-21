@@ -40,7 +40,7 @@ PackageTreeModel::PackageTreeModel(const QStringList &headers, const QList<Packa
         rootData << header;
     }
 
-    rootItem = new TreeItem(rootData);
+    rootItem = new PackageTreeItem(rootData);
     QList<Entity *> pkgs;
     for (auto &&pkg : data) {
         pkgs.append(pkg);
@@ -61,7 +61,7 @@ void PackageTreeModel::setupModelData(const QList<Entity *> &packages, TreeItem 
     QCollator collator; // TODO: implement server-side sorting?
     QList<Package *> sortedPackages;
     for (auto &&pkg : packages) {
-        if (const auto casted = const_cast<Package *>(reinterpret_cast<const Package *>(pkg)); casted->id != 1) {
+        if (const auto casted = dynamic_cast<Package *>(pkg); casted->id != 1) {
             sortedPackages.append(casted);
         }
     }
@@ -76,11 +76,10 @@ void PackageTreeModel::setupModelData(const QList<Entity *> &packages, TreeItem 
     for (auto &&pkg : sortedPackages) {
         if (!repos.keys().contains(pkg->repository->name)) {
             parent->appendChild(QVector<QVariant>() << pkg->repository->name);
-            repos.insert(pkg->repository->name, (PackageTreeItem *) parent->child(parent->childCount() - 1));
+            repos.insert(pkg->repository->name,
+                         dynamic_cast<PackageTreeItem *>(parent->child(parent->childCount() - 1)));
         }
-        repos[pkg->repository->name]->appendChild(QVector<QVariant>() << pkg->name);
-        reinterpret_cast<PackageTreeItem *>(
-                repos[pkg->repository->name]->child(repos[pkg->repository->name]->childCount() - 1)
-        )->setPackage(pkg);
+        auto repo = repos[pkg->repository->name];
+        dynamic_cast<PackageTreeItem *>(repo->appendChild(QVector<QVariant>() << pkg->name))->setPackage(pkg);
     }
 }

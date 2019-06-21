@@ -37,11 +37,9 @@ class TreeItem {
 public:
     explicit TreeItem(const QVector<QVariant> &data, TreeItem *parent = nullptr);
 
-    virtual ~TreeItem();
+    virtual ~TreeItem() = 0;
 
-    inline TreeItem *child(int number) {
-        return childItems.value(number);
-    }
+    virtual inline TreeItem *child(int number) = 0;
 
     inline int childCount() const {
         return childItems.count();
@@ -55,9 +53,9 @@ public:
         return itemData.value(column);
     }
 
-    bool insertChildren(int position, int count, int columns);
+    virtual bool insertChildren(int position, int count, int columns) = 0;
 
-    bool appendChild(const QVector<QVariant> &data);
+    TreeItem *appendChild(const QVector<QVariant> &data);
 
     bool insertColumns(int position, int columns);
 
@@ -73,14 +71,15 @@ public:
 
     bool setData(int column, const QVariant &value);
 
-    TreeItem *findName(const QString &name);
+    virtual TreeItem *findName(const QString &name) = 0;
 
 protected:
     QList<TreeItem *> childItems;
     QVector<QVariant> itemData;
     TreeItem *parentItem;
-
 };
+
+inline TreeItem::~TreeItem() = default;
 
 
 #endif //ANTARCTICA_TREEITEM_H

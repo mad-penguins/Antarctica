@@ -43,7 +43,7 @@ FileTreeModel::FileTreeModel(const QStringList &headers, const QList<File *> &da
         rootData << header;
     }
 
-    rootItem = new TreeItem(rootData);
+    rootItem = new FileTreeItem(rootData);
     QList<Entity *> files;
     for (auto &&file : data) {
         files.append(file);
@@ -64,10 +64,10 @@ void FileTreeModel::createDirs(QStringList dirsList, TreeItem *parent) {
     dirsList.pop_front();
 
     if (const auto searchResult = parent->findName(dir); searchResult) {
-        lastDir = reinterpret_cast<FileTreeItem *>(searchResult);
+        lastDir = dynamic_cast<FileTreeItem *>(searchResult);
     } else {
         parent->appendChild(QVector<QVariant>() << dir);
-        lastDir = reinterpret_cast<FileTreeItem *>(parent->child(parent->childCount() - 1));
+        lastDir = dynamic_cast<FileTreeItem *>(parent->child(parent->childCount() - 1));
     }
 
     createDirs(dirsList, lastDir);
@@ -82,7 +82,7 @@ void FileTreeModel::setupModelData(const QList<Entity *> &files, TreeItem *paren
     QCollator collator; // TODO: implement server-side sorting?
     QList<File *> sortedFiles;
     for (auto &&file : files) {
-        sortedFiles.append(const_cast<File *>(reinterpret_cast<const File *>(file)));
+        sortedFiles.append(dynamic_cast<File *>(file));
     }
     std::sort(sortedFiles.begin(), sortedFiles.end(), [&collator](File *file1, File *file2) {
         return collator.compare(
@@ -96,11 +96,11 @@ void FileTreeModel::setupModelData(const QList<Entity *> &files, TreeItem *paren
 
     for (auto &&file : sortedFiles) {
         QStringList dirsList = file->path.split('/');
-        createDirs(dirsList, (FileTreeItem *) root);
+        createDirs(dirsList, dynamic_cast<FileTreeItem *>(root));
 
         QVector<QVariant> fileData;
         fileData << file->name << file->created << file->modified << QVariant(Utils::Files::isFileDownloaded(file));
         lastDir->appendChild(fileData);
-        reinterpret_cast<FileTreeItem *>(lastDir->child(lastDir->childCount() - 1))->setFile(file);
+        lastDir->child(lastDir->childCount() - 1)->setFile(file);
     }
 }

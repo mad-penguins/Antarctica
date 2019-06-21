@@ -254,16 +254,17 @@ void MainWindow::removeFile() {
         int lastRow = -1;
         for (auto &&index : indexes) {
             if (lastRow != index.row()) {
-                if (auto item = Utils::UI::getCurrentItem<FileTreeItem, FileTreeModel>(filesTree->model(), index);
-                        item->childCount() == 0) {
+                auto item = Utils::UI::getCurrentItem<FileTreeItem, FileTreeModel>(filesTree->model(), index);
+                if (item->childCount() == 0) {
                     Wrapper::Files::remove(item->getFile()->id);
                 } else {
                     Utils::Files::removeServerDir(item);
                 }
+                delete item;
             }
             lastRow = index.row();
         }
-    };
+    }
     updateFiles();
 }
 
@@ -272,14 +273,14 @@ void MainWindow::removePkg() {
         int lastRow = -1;
         for (auto &&index : indexes) {
             if (lastRow != index.row()) {
-                if (auto item = Utils::UI::getCurrentItem<PackageTreeItem, PackageTreeModel>(packagesTree->model(),
-                                                                                             index);
-                        item->childCount() == 0) {
+                auto item = Utils::UI::getCurrentItem<PackageTreeItem, PackageTreeModel>(packagesTree->model(), index);
+                if (item->childCount() == 0) {
                     Wrapper::Packages::remove(item->getPackage()->id);
                 } else {
                     Wrapper::Repositories::remove(
-                            reinterpret_cast<PackageTreeItem *>(item->child(0))->getPackage()->repository->id);
+                            item->child(0)->getPackage()->repository->id);
                 }
+                delete item;
             }
             lastRow = index.row();
         }
@@ -307,9 +308,9 @@ void MainWindow::download() {
             lastRow = index.row();
         }
     } else {
-        auto model = reinterpret_cast<FileTreeModel *>(filesTree->model());
-        Utils::Files::downloadDir(reinterpret_cast<FileTreeItem *>(model->getItem(model->index(0, 0))));
-    };
+        auto model = dynamic_cast<FileTreeModel *>(filesTree->model());
+        Utils::Files::downloadDir(dynamic_cast<FileTreeItem *>(model->getItem(model->index(0, 0))));
+    }
     updateFiles();
 }
 
@@ -325,11 +326,10 @@ void MainWindow::managePackage(const QModelIndex &idx) {
                 if (auto item = Utils::UI::getCurrentItem<PackageTreeItem, PackageTreeModel>(packagesTree->model(),
                                                                                              index);
                         item->childCount() == 0) {
-                    auto packageConfigurator = new PackageConfigurator(item->getPackage(), this);
-                    packageConfigurator->exec();
+                    PackageConfigurator packageConfigurator(item->getPackage(), this);
+                    packageConfigurator.exec();
                     updatePackages();
                     updateFiles();
-                    delete packageConfigurator;
                 }
             }
             lastRow = index.row();

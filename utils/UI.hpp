@@ -53,7 +53,7 @@ namespace Utils {
          */
         template<class ItemType, class ModelType>
         inline static ItemType *getCurrentItem(QAbstractItemModel *model, QModelIndex index) {
-            return reinterpret_cast<ItemType *>(reinterpret_cast<ModelType *>(model)->getItem(index));
+            return dynamic_cast<ItemType *>(dynamic_cast<ModelType *>(model)->getItem(index));
         }
     };
 }

@@ -39,10 +39,18 @@ public:
 
     ~FileTreeItem() override;
 
+    inline FileTreeItem *child(int id) override {
+        return dynamic_cast<FileTreeItem *>(childItems.value(id));
+    }
+
+    bool insertChildren(int position, int count, int columns) override;
+
+    FileTreeItem *findName(const QString &name) override;
+
     void setFile(File *f);
 
     File *getFile() const;
-
+    
 private:
     File *file;
 };

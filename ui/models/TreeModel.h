@@ -39,7 +39,7 @@ class TreeModel : public QAbstractItemModel {
 public:
     explicit TreeModel(QObject *parent = nullptr);
 
-    ~TreeModel() override;
+    ~TreeModel() override = 0;
 
     QVariant data(const QModelIndex &index, int role) const override;
 
@@ -78,6 +78,8 @@ protected:
     TreeItem *rootItem{};
 
 };
+
+inline TreeModel::~TreeModel() = default;
 
 
 #endif //ANTARCTICA_TREEMODEL_H

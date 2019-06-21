@@ -37,8 +37,8 @@ PackageTreeItem::PackageTreeItem(const QVector<QVariant> &data, PackageTreeItem 
 }
 
 PackageTreeItem::~PackageTreeItem() {
-    delete pkg;
     qDeleteAll(childItems);
+    delete pkg;
 }
 
 void PackageTreeItem::setPackage(Package *p) {
@@ -47,4 +47,30 @@ void PackageTreeItem::setPackage(Package *p) {
 
 Package *PackageTreeItem::getPackage() const {
     return pkg;
+}
+
+bool PackageTreeItem::insertChildren(int position, int count, int columns) {
+    if (position < 0 || position > childItems.size()) {
+        return false;
+    }
+
+    for (int row = 0; row < count; ++row) {
+        QVector<QVariant> data(columns);
+        auto *item = new PackageTreeItem(data, this);
+        childItems.insert(position, item);
+    }
+
+    return true;
+}
+
+PackageTreeItem *PackageTreeItem::findName(const QString &name) {
+    QCollator collator;
+    auto iter = std::lower_bound(
+            childItems.begin(),
+            childItems.end(),
+            PackageTreeItem(QVector<QVariant>() << name),
+            [&collator](TreeItem *f, const TreeItem &n) {
+                return collator.compare(f->data(0).toString(), n.data(0).toString()) < 0;
+            });
+    return reinterpret_cast<PackageTreeItem *>(iter == childItems.end() ? nullptr : *iter);
 }

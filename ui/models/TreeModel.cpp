@@ -29,16 +29,9 @@
 
 #include "TreeModel.h"
 
-
 TreeModel::TreeModel(QObject *parent) : QAbstractItemModel(parent) {
 
 }
-
-
-TreeModel::~TreeModel() {
-    delete rootItem;
-}
-
 
 QVariant TreeModel::data(const QModelIndex &index, int role) const {
     if (!index.isValid()) {

@@ -54,14 +54,15 @@ void PackageConfigurator::updateFiles() {
     connect(filesTree, &QTreeView::expanded, [=]() {
         filesTree->resizeColumnToContents(0);
     });
-    filesTree->expandToDepth(1);
+    filesTree->expandAll();
 }
 
 void PackageConfigurator::addFileClicked() {
     for (auto &&filename : Utils::Files::openFiles(this)) {
-        QFileInfo info(filename);
-        if (info.isFile()) {
-            configs.append(Utils::Files::parseFile(filename));
+        if (QFileInfo info(filename); info.isFile()) {
+            if (auto file = Utils::Files::parseFile(filename); file) {
+                configs.append(file);
+            }
         } else if (info.isDir()) {
             Utils::Files::parseDir(filename, configs);
         }
@@ -74,12 +75,13 @@ void PackageConfigurator::removeFileClicked() {
         int lastRow = -1;
         for (auto &&index : indexes) {
             if (lastRow != index.row()) {
-                if (auto item = Utils::UI::getCurrentItem<FileTreeItem, FileTreeModel>(filesTree->model(), index);
-                        item->childCount() == 0) {
+                auto item = Utils::UI::getCurrentItem<FileTreeItem, FileTreeModel>(filesTree->model(), index);
+                if (item->childCount() == 0) {
                     configs.removeOne(item->getFile());
                 } else {
                     Utils::Files::removeTempDir(item, configs);
                 }
+                delete item;
             }
             lastRow = index.row();
         }

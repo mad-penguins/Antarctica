@@ -27,6 +27,7 @@
  */
 
 
+#include <QtCore/QCollator>
 #include "FileTreeItem.h"
 
 FileTreeItem::FileTreeItem(const QVector<QVariant> &data, FileTreeItem *parent) : TreeItem(data, parent) {
@@ -34,8 +35,8 @@ FileTreeItem::FileTreeItem(const QVector<QVariant> &data, FileTreeItem *parent) 
 }
 
 FileTreeItem::~FileTreeItem() {
-    delete file;
     qDeleteAll(childItems);
+    delete file;
 }
 
 File *FileTreeItem::getFile() const {
@@ -44,4 +45,30 @@ File *FileTreeItem::getFile() const {
 
 void FileTreeItem::setFile(File *f) {
     file = f;
+}
+
+bool FileTreeItem::insertChildren(int position, int count, int columns) {
+    if (position < 0 || position > childItems.size()) {
+        return false;
+    }
+
+    for (int row = 0; row < count; ++row) {
+        QVector<QVariant> data(columns);
+        auto *item = new FileTreeItem(data, this);
+        childItems.insert(position, item);
+    }
+
+    return true;
+}
+
+FileTreeItem *FileTreeItem::findName(const QString &name) {
+    QCollator collator;
+    auto iter = std::lower_bound(
+            childItems.begin(),
+            childItems.end(),
+            FileTreeItem(QVector<QVariant>() << name),
+            [&collator](TreeItem *f, const TreeItem &n) {
+                return collator.compare(f->data(0).toString(), n.data(0).toString()) < 0;
+            });
+    return reinterpret_cast<FileTreeItem *>(iter == childItems.end() ? nullptr : *iter);
 }
