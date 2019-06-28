@@ -68,7 +68,8 @@ namespace Utils {
                 auto created = info.created();
                 auto modified = info.lastModified();
                 auto content = file.readAll();
-                return new File(name, path.replace(QDir::homePath(), "~"), created, modified, content);
+                auto checksum = QCryptographicHash::hash((content), QCryptographicHash::Md5).toHex();
+                return new File(name, path.replace(QDir::homePath(), "~"), checksum, created, modified, content);
             } else {
                 return nullptr;
             }
@@ -96,15 +97,15 @@ namespace Utils {
          * \param pkg Package to associate with
          */
         static void uploadFile(const QString &filename, const Package *pkg = Package::Default) {
-            auto file = new QFile(filename);
-            if (file->open(QFile::ReadOnly)) {
-                auto content = file->readAll();
-                file->close();
-                delete file;
+            QFile file(filename);
+            if (file.open(QFile::ReadOnly)) {
+                auto content = file.readAll();
+                file.close();
                 QFileInfo info(filename);
                 Wrapper::Files::upload(new File(
                         info.fileName(),
                         info.absoluteDir().absolutePath().replace(QDir::homePath(), "~"),
+                        QCryptographicHash::hash((content), QCryptographicHash::Md5).toHex(),
                         info.fileTime(QFile::FileTime::FileBirthTime),
                         info.fileTime(QFile::FileTime::FileModificationTime),
                         content.toBase64()
@@ -133,7 +134,7 @@ namespace Utils {
          * \param f File entity object to check
          * \return true or false
          */
-        inline static bool isFileDownloaded(const File *f) {
+        inline static bool downloaded(const File *f) {
             return QFileInfo::exists(QString(f->path + "/" + f->name).replace('~', QDir::homePath()));
         }
 
@@ -141,14 +142,14 @@ namespace Utils {
          * \brief Create a file on a local machine
          * \param f File entity object
          */
-        static void createFile(const File *f) {
+        static void createLocal(const File *f) {
             QDir dir;
             if (!dir.exists(QString(f->path).replace('~', QDir::homePath()))) {
                 dir.mkpath(QString(f->path).replace('~', QDir::homePath()));
             }
             QFile file(QString(f->path + "/" + f->name).replace('~', QDir::homePath()));
             if (file.open(QIODevice::WriteOnly)) {
-                file.write(f->content);
+                file.write(Wrapper::Files::getContent(f->id));
                 file.close();
 
                 struct utimbuf timeBuffer{};
@@ -165,8 +166,8 @@ namespace Utils {
          * \param item Files tree row
          */
         static inline void downloadFile(FileTreeItem *item) {
-            if (!isFileDownloaded(item->getFile())) {
-                createFile(item->getFile());
+            if (!downloaded(item->getFile())) {
+                createLocal(item->getFile());
             }
         }
 
@@ -178,11 +179,31 @@ namespace Utils {
             for (int i = 0; i < item->childCount(); ++i) {
                 auto child = item->child(i);
                 if (child->childCount() == 0) {
-                    Utils::Files::createFile(child->getFile());
+                    Utils::Files::createLocal(child->getFile());
                 } else {
                     downloadDir(child);
                 }
             }
+        }
+
+        /*!
+         * \brief Check if file is up-to-date with server
+         * \param f File entity object
+         * \return Is file up-to-date or not
+         */
+        static bool actual(const File *f) {
+            if (downloaded(f)) {
+                QFile file(QString(f->path + "/" + f->name).replace('~', QDir::homePath()));
+                if (file.open(QIODevice::ReadOnly)) {
+                    auto local = file.readAll();
+                    file.close();
+
+                    auto localSum = QCryptographicHash::hash((local), QCryptographicHash::Md5).toHex();
+                    return f->checksum == localSum;
+                }
+                return false;
+            }
+            return false;
         }
 
         /*!

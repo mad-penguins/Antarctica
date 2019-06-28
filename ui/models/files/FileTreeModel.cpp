@@ -99,7 +99,8 @@ void FileTreeModel::setupModelData(const QList<Entity *> &files, TreeItem *paren
         createDirs(dirsList, dynamic_cast<FileTreeItem *>(root));
 
         QVector<QVariant> fileData;
-        fileData << file->name << file->created << file->modified << QVariant(Utils::Files::isFileDownloaded(file));
+        fileData << file->name << file->created << file->modified
+            << QVariant(Utils::Files::downloaded(file)) << QVariant(Utils::Files::actual(file));
         lastDir->appendChild(fileData);
         lastDir->child(lastDir->childCount() - 1)->setFile(file);
     }

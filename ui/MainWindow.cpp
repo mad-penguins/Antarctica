@@ -92,7 +92,7 @@ void MainWindow::initUI() {
 
 void MainWindow::updateFiles() {
     QStringList headers;
-    headers << tr("Name") << tr("Created") << tr("Modified") << tr("Downloaded");
+    headers << tr("Name") << tr("Created") << tr("Modified") << tr("Downloaded") << tr("Up to date");
     auto model = new FileTreeModel(headers, Wrapper::Files::getAll());
     filesTree->setModel(model);
     connect(filesTree, &QTreeView::expanded, [=]() {
