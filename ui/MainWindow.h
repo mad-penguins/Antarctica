@@ -42,6 +42,7 @@
 
 #include "ui/models/files/FileTreeModel.h"
 #include "utils/Files.hpp"
+#include "ui/SettingsWindow.h"
 
 
 class MainWindow : public QMainWindow {
@@ -52,6 +53,8 @@ public:
 
 private:
     User user;
+
+    SettingsWindow *settingsWindow;
 
     QHBoxLayout *mainLay{};
     QTabWidget *tabWidget{};
@@ -106,7 +109,7 @@ private slots:
 
     void refreshSlot();
 
-    static void settingsSlot();
+    void settingsSlot();
 
     static void testSlot();
 

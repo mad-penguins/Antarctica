@@ -58,6 +58,8 @@ void MainWindow::initUI() {
     setWindowIcon(QIcon(":/img/icon.png"));
     moveToCenter();
 
+    settingsWindow = new SettingsWindow(this);
+
     // display all the widgets
     auto centralWidget = new QWidget(this);
 
@@ -290,7 +292,7 @@ void MainWindow::removePkg() {
 }
 
 void MainWindow::settingsSlot() {
-    testSlot(); // TODO: implement
+    settingsWindow->show();
 }
 
 void MainWindow::download() {
