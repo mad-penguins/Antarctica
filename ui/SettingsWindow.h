@@ -1,13 +1,14 @@
 #ifndef ANTARCTICA_SETTINGSWINDOW_H
 #define ANTARCTICA_SETTINGSWINDOW_H
 
+#include <QDialog>
 #include <QWidget>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QToolBar>
 #include <QTabWidget>
 
-class SettingsWindow : public QWidget {
+class SettingsWindow : public QDialog {
     Q_OBJECT
 
 public:
@@ -17,31 +18,32 @@ private:
     QHBoxLayout *mainLay{};
 
     QToolBar *toolBar{};
-    QAction *test1Action{};
-    QAction *test2Action{};
+    QAction *uiAction{};
+    QAction *connectionAction{};
+    QAction *securityAction{};
 
     QTabWidget *tabWidget{};
 
-    QWidget *test1_1;
-    QWidget *test1_2;
-    QWidget *test2_1;
-    QWidget *test2_2;
+    QWidget *themeTab{};
+    QWidget *layoutTab{};
+    QWidget *proxyTab{};
+    QWidget *signatureTab{};
 
     void initUI();
 
     void moveToCenter();
 
     void createToolBar();
-    void createTabWidget();
 
-    void createTest1_1();
-    void createTest1_2();
-    void createTest2_1();
-    void createTest2_2();
+    void createThemeTab();
+    void createLayoutTab();
+    void createProxyTab();
+    void createSignatureTab();
 
 private slots:
-    void test1Slot();
-    void test2Slot();
+    void ShowUiTab();
+    void showConnectionTab();
+    void showSecurityTab();
 };
 
 

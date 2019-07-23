@@ -3,12 +3,12 @@
 
 #include "SettingsWindow.h"
 
-SettingsWindow::SettingsWindow(QWidget *parent) {
+SettingsWindow::SettingsWindow(QWidget *parent) : QDialog(parent) {
     initUI();
 }
 
 void SettingsWindow::initUI() {
-    setWindowTitle("Antarctica login");
+    setWindowTitle("Settings");
     setWindowIcon(QIcon(":/img/icon.png"));
     moveToCenter();
 
@@ -16,13 +16,13 @@ void SettingsWindow::initUI() {
     mainLay->setContentsMargins(0, 0, 0, 0);
     mainLay->setSpacing(0);
 
-    createTest1_1();
-    createTest1_2();
-    createTest2_1();
-    createTest2_2();
+    createThemeTab();
+    createLayoutTab();
+    createProxyTab();
+    createSignatureTab();
 
     createToolBar();
-    createTabWidget();
+    tabWidget = new QTabWidget(this);
 
     mainLay->addWidget(toolBar);
     mainLay->addWidget(tabWidget);
@@ -43,70 +43,70 @@ void SettingsWindow::createToolBar() {
     //toolBarTop->setStyleSheet(style);
     toolBar->setOrientation(Qt::Vertical);
 
-    test1Action = new QAction("Test1", toolBar);
-    test2Action = new QAction("Test2", toolBar);
+    uiAction = new QAction("Interface", toolBar);
+    connectionAction = new QAction("Connection", toolBar);
+    securityAction = new QAction("Security", toolBar);
 
-    connect(test1Action, &QAction::triggered, this, &SettingsWindow::test1Slot);
-    connect(test2Action, &QAction::triggered, this, &SettingsWindow::test2Slot);
+    connect(uiAction, &QAction::triggered, this, &SettingsWindow::ShowUiTab);
+    connect(connectionAction, &QAction::triggered, this, &SettingsWindow::showConnectionTab);
+    connect(securityAction, &QAction::triggered, this, &SettingsWindow::showSecurityTab);
 
-    toolBar->addAction(test1Action);
-    toolBar->addAction(test2Action);
+    toolBar->addAction(uiAction);
+    toolBar->addAction(connectionAction);
+    toolBar->addAction(securityAction);
 }
 
-void SettingsWindow::createTabWidget() {
-    tabWidget = new QTabWidget();
-    tabWidget->addTab(test1_1, "Test 1");
-    tabWidget->addTab(test1_2, "Test 2");
-}
-
-void SettingsWindow::test1Slot() {
+void SettingsWindow::ShowUiTab() {
+    tabWidget->clear();
+    tabWidget->addTab(themeTab, "Theme");
+    tabWidget->addTab(layoutTab, "Layout");
     tabWidget->setCurrentIndex(0);
-    tabWidget->removeTab(1);
-    tabWidget->removeTab(0);
-    tabWidget->addTab(test1_1, "Test 1-1");
-    tabWidget->addTab(test1_2, "Test 1-2");
 }
 
-void SettingsWindow::test2Slot() {
+void SettingsWindow::showConnectionTab() {
+    tabWidget->clear();
+    tabWidget->addTab(proxyTab, "Proxy");
     tabWidget->setCurrentIndex(0);
-    tabWidget->removeTab(1);
-    tabWidget->removeTab(0);
-    tabWidget->addTab(test2_1, "Test 2-1");
-    tabWidget->addTab(test2_2, "Test 2-2");
 }
 
-void SettingsWindow::createTest1_1() {
-    auto la = new QLabel("Button Test1 - 1");
+void SettingsWindow::showSecurityTab() {
+    tabWidget->clear();
+    tabWidget->addTab(signatureTab, "Digital Signature");
+    tabWidget->setCurrentIndex(0);
+}
+
+void SettingsWindow::createThemeTab() {
+    auto la = new QLabel("Theme settings");
     auto l = new QVBoxLayout();
     l->addWidget(la);
 
-    test1_1 = new QWidget();
-    test1_1->setLayout(l);
+    themeTab = new QWidget();
+    themeTab->setLayout(l);
 }
 
-void SettingsWindow::createTest1_2() {
-    auto la = new QLabel("Button Test1 - 2");
+void SettingsWindow::createLayoutTab() {
+    auto la = new QLabel("Layout settings");
     auto l = new QVBoxLayout();
     l->addWidget(la);
 
-    test1_2 = new QWidget();
-    test1_2->setLayout(l);
+    layoutTab = new QWidget();
+    layoutTab->setLayout(l);
 }
 
-void SettingsWindow::createTest2_1() {
-    auto la = new QLabel("Button Test2 - 1");
+void SettingsWindow::createProxyTab() {
+    auto la = new QLabel("Proxy settings");
     auto l = new QVBoxLayout();
     l->addWidget(la);
 
-    test2_1 = new QWidget();
-    test2_1->setLayout(l);
+    proxyTab = new QWidget();
+    proxyTab->setLayout(l);
 }
 
-void SettingsWindow::createTest2_2() {
-    auto la = new QLabel("Button Test2 - 2");
+void SettingsWindow::createSignatureTab() {
+    auto la = new QLabel("Signature settings");
     auto l = new QVBoxLayout();
     l->addWidget(la);
 
-    test2_2 = new QWidget();
-    test2_2->setLayout(l);
+    signatureTab = new QWidget();
+    signatureTab->setLayout(l);
 }

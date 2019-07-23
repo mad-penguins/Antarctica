@@ -54,8 +54,6 @@ public:
 private:
     User user;
 
-    SettingsWindow *settingsWindow;
-
     QHBoxLayout *mainLay{};
     QTabWidget *tabWidget{};
     QToolBar *toolBarTop{};
@@ -109,7 +107,7 @@ private slots:
 
     void refreshSlot();
 
-    void settingsSlot();
+    static void settingsSlot();
 
     static void testSlot();
 

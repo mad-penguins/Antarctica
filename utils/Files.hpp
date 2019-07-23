@@ -65,7 +65,7 @@ namespace Utils {
                 QFileInfo info(filename);
                 auto name = info.fileName();
                 auto path = info.absolutePath();
-                auto created = info.created();
+                auto created = info.birthTime();
                 auto modified = info.lastModified();
                 auto content = file.readAll();
                 auto checksum = QCryptographicHash::hash((content), QCryptographicHash::Md5).toHex();
