@@ -46,7 +46,7 @@
 #include "utils/Repositories.hpp"
 #include "utils/Files.hpp"
 #include "utils/UI.hpp"
-#include "AddPackageDialog.h"
+#include "ui/packages/AddPackageDialog.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 

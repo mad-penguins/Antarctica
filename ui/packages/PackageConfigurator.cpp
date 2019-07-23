@@ -32,7 +32,7 @@
 #include <QtWidgets/QLabel>
 
 #include "PackageConfigurator.h"
-#include "models/files/FileTreeModel.h"
+#include "ui/models/files/FileTreeModel.h"
 #include "utils/Files.hpp"
 #include "utils/Repositories.hpp"
 #include "utils/UI.hpp"

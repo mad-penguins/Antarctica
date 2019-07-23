@@ -7,6 +7,9 @@
 #include <QVBoxLayout>
 #include <QToolBar>
 #include <QTabWidget>
+#include <QPushButton>
+
+#include "ProxyConfigurator.h"
 
 class SettingsWindow : public QDialog {
     Q_OBJECT
@@ -15,8 +18,6 @@ public:
     explicit SettingsWindow(QWidget *parent = nullptr);
 
 private:
-    QHBoxLayout *mainLay{};
-
     QToolBar *toolBar{};
     QAction *uiAction{};
     QAction *connectionAction{};
@@ -26,8 +27,12 @@ private:
 
     QWidget *themeTab{};
     QWidget *layoutTab{};
-    QWidget *proxyTab{};
+    ProxyConfigurator *proxyTab{};
     QWidget *signatureTab{};
+
+    QPushButton *ok{};
+    QPushButton *apply{};
+    QPushButton *cancel{};
 
     void initUI();
 
@@ -37,11 +42,13 @@ private:
 
     void createThemeTab();
     void createLayoutTab();
-    void createProxyTab();
     void createSignatureTab();
 
 private slots:
-    void ShowUiTab();
+    void okClicked();
+    void applyClicked();
+
+    void showUiTab();
     void showConnectionTab();
     void showSecurityTab();
 };

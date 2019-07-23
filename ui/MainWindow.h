@@ -42,7 +42,7 @@
 
 #include "ui/models/files/FileTreeModel.h"
 #include "utils/Files.hpp"
-#include "ui/SettingsWindow.h"
+#include "ui/settings/SettingsWindow.h"
 
 
 class MainWindow : public QMainWindow {
