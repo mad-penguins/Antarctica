@@ -57,7 +57,7 @@ void ProxyConfigurator::apply() {
         QNetworkProxy proxy;
         proxy.setType(QNetworkProxy::Socks5Proxy);
         proxy.setHostName(hostname->text().trimmed());
-        proxy.setPort(port->value());
+        proxy.setPort(static_cast<quint16>(port->value()));
         proxy.setUser(username->text().trimmed());
         proxy.setPassword(password->text().trimmed());
         QNetworkProxy::setApplicationProxy(proxy);

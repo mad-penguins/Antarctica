@@ -43,6 +43,7 @@
 #include "ui/models/files/FileTreeModel.h"
 #include "utils/Files.hpp"
 #include "ui/settings/SettingsWindow.h"
+#include "utils/FilesMonitor.h"
 
 
 class MainWindow : public QMainWindow {
@@ -74,6 +75,8 @@ private:
     QTreeView *filesTree{};
 
     void updateFiles();
+
+    Utils::FilesMonitor *monitor{};
 
     QTreeView *packagesTree{};
 

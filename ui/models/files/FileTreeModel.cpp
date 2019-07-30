@@ -100,8 +100,20 @@ void FileTreeModel::setupModelData(const QList<Entity *> &files, TreeItem *paren
 
         QVector<QVariant> fileData;
         fileData << file->name << file->created << file->modified
-            << QVariant(Utils::Files::downloaded(file)) << QVariant(Utils::Files::actual(file));
+            << Utils::Files::downloaded(file) << Utils::Files::actual(file);
         lastDir->appendChild(fileData);
         lastDir->child(lastDir->childCount() - 1)->setFile(file);
+    }
+}
+
+void FileTreeModel::handleChanges(const QList<File *> &changes) {
+    qDebug() << "These files were changed:";
+    for (auto &&file : changes) {
+        qDebug() << "\t" << file->path + "/" + file->name;
+        auto parent = rootItem->child(0);
+        for (auto &&dir : file->path.split('/')) {
+            parent = parent->findName(dir);
+        }
+        parent->findName(file->name)->setData(4, Utils::Files::actual(file));
     }
 }

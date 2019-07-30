@@ -39,7 +39,9 @@ public:
 
     virtual ~TreeItem() = 0;
 
-    virtual inline TreeItem *child(int number) = 0;
+    virtual inline TreeItem *child(int number) {
+        return childItems.value(number);
+    };
 
     inline int childCount() const {
         return childItems.count();

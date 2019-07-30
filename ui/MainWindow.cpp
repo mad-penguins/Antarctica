@@ -52,7 +52,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
 }
 
-
 void MainWindow::initUI() {
     setWindowTitle(user.displayName + " - Antarctica");
     setWindowIcon(QIcon(":/img/icon.png"));
@@ -93,12 +92,18 @@ void MainWindow::initUI() {
 void MainWindow::updateFiles() {
     QStringList headers;
     headers << tr("Name") << tr("Created") << tr("Modified") << tr("Downloaded") << tr("Up to date");
-    auto model = new FileTreeModel(headers, Wrapper::Files::getAll());
+    auto files = Wrapper::Files::getAll();
+
+    monitor = new Utils::FilesMonitor{files};
+    auto model = new FileTreeModel(headers, files);
+    connect(monitor, &Utils::FilesMonitor::filesChanged, model, &FileTreeModel::handleChanges);
+
     filesTree->setModel(model);
     connect(filesTree, &QTreeView::expanded, [=]() {
         filesTree->resizeColumnToContents(0);
     });
     filesTree->expandToDepth(1);
+
 }
 
 void MainWindow::updatePackages() {
