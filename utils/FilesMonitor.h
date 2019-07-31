@@ -12,9 +12,20 @@ namespace Utils {
     class Checker : public QObject {
     Q_OBJECT
         QMap<File *, QByteArray> checksums{};
+    public:
+        enum class State {
+            Background, Active
+        } state;
+
+        explicit Checker(State s) : state(s) {}
+
     public slots:
 
         void watch(const QList<File *> &fs);
+
+        inline void goBackground() {
+            state = State::Background;
+        }
 
     signals:
 
@@ -23,11 +34,24 @@ namespace Utils {
 
     class FilesMonitor : public QObject {
     Q_OBJECT
-        QThread monitorThread;
     public:
-        explicit FilesMonitor(const QList<File *> &fs);
+        explicit FilesMonitor(const QList<File *> &fs, Checker::State state);
 
         ~FilesMonitor() override;
+
+    private:
+        QThread monitorThread;
+        Checker *checker{};
+
+        QList<File *> files{};
+
+        void startChecker(Checker::State state);
+
+    public slots:
+
+        void goActive();
+
+        void goBackground();
 
     signals:
 

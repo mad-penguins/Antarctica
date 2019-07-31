@@ -39,6 +39,7 @@
 #include <api/Wrapper.h>
 #include <QtWidgets/QFileDialog>
 #include <QtCore/QStandardPaths>
+#include <QApplication>
 
 #include "MainWindow.h"
 #include "ui/models/files/FileTreeModel.h"
@@ -63,6 +64,8 @@ void MainWindow::initUI() {
     mainLay = new QHBoxLayout(centralWidget);
     mainLay->setContentsMargins(0, 0, 0, 0);
     mainLay->setSpacing(0);
+
+    createTrayIcon();
 
     // init toolbars
     createToolBars();
@@ -94,7 +97,7 @@ void MainWindow::updateFiles() {
     headers << tr("Name") << tr("Created") << tr("Modified") << tr("Downloaded") << tr("Up to date");
     auto files = Wrapper::Files::getAll();
 
-    monitor = new Utils::FilesMonitor{files};
+    monitor = new Utils::FilesMonitor(files, Utils::Checker::State::Active);
     auto model = new FileTreeModel(headers, files);
     connect(monitor, &Utils::FilesMonitor::filesChanged, model, &FileTreeModel::handleChanges);
 
@@ -126,6 +129,31 @@ void MainWindow::moveToCenter() {
     QDesktopWidget dw;
     QRect rc = dw.screenGeometry(this);
     move((rc.width() - width()) / 2, (rc.height() - height()) / 2 - 20);
+}
+
+void MainWindow::createTrayIcon() {
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setIcon(QIcon(":/img/icon.png"));
+    trayIcon->setToolTip("Antarctica\n"
+                         "Cloud sync of your files, preferences and packages");
+
+    auto menu = new QMenu(this);
+    auto showAction = new QAction("Show Antarctica", this);
+    auto quitAction = new QAction("Quit", this);
+
+    connect(showAction, &QAction::triggered, [this]() {
+        this->show();
+        monitor->goActive();
+    });
+    connect(quitAction, &QAction::triggered, &QApplication::quit);
+
+    menu->addAction(showAction);
+    menu->addAction(quitAction);
+
+    trayIcon->setContextMenu(menu);
+    trayIcon->show();
+
+    connect(trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::iconActivated);
 }
 
 void MainWindow::createToolBars() {
@@ -340,5 +368,36 @@ void MainWindow::managePackage(const QModelIndex &idx) {
             }
             lastRow = index.row();
         }
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+    if (this->isVisible()) {
+        event->ignore();
+        this->hide();
+        monitor->goBackground();
+
+        auto icon = QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information);
+        trayIcon->showMessage("Antarctica",
+                              "Antarctica is still syncing your files",
+                              icon,
+                              2000);
+    }
+}
+
+void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason) {
+    switch (reason) {
+        case QSystemTrayIcon::Trigger:
+            if (!this->isVisible()) {
+                this->show();
+                monitor->goActive();
+            } else {
+                this->hide();
+                monitor->goBackground();
+            }
+            break;
+        default:
+            break;
+
     }
 }

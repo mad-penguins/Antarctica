@@ -1,58 +1,82 @@
-#include <QtCore/QMutexLocker>
+#include <QtCore/QTimer>
 #include "FilesMonitor.h"
 #include "Files.hpp"
 
 using namespace Utils;
 
-void Checker::watch(const QList<File *> &fs) {
 #pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmissing-noreturn"
-    while (true) {
-        if (!fs.empty()) {
-            bool changedNow = false;
-            for (auto &&file : fs) {
-                if (!Files::actual(file)) {
-                    auto _tempFile = Files::parseFile(
-                            QString(file->path + "/" + file->name).replace("~", QDir::homePath()));
-                    auto actualChecksum = move(_tempFile->checksum);
-                    delete _tempFile;
+#pragma ide diagnostic ignored "InfiniteRecursion"
 
-                    if (!checksums.contains(file)) {
-                        changedNow = true;
-                        checksums.insert(file, actualChecksum);
-                    }
-                    if (actualChecksum != checksums[file]) {
-                        changedNow = true;
-                        checksums[file] = actualChecksum;
-                    }
-                } else {
-                    if (checksums.contains(file)) {
-                        changedNow = true;
-                        checksums.remove(file);
-                    }
+void Checker::watch(const QList<File *> &fs) {
+    if (!fs.empty()) {
+        bool changedNow = false;
+        for (auto &&file : fs) {
+            if (!Files::actual(file)) {
+                auto _tempFile = Files::parseFile(
+                        QString(file->path + "/" + file->name).replace("~", QDir::homePath()));
+                auto actualChecksum = move(_tempFile->checksum);
+                delete _tempFile;
+
+                if (!checksums.contains(file)) {
+                    changedNow = true;
+                    checksums.insert(file, actualChecksum);
+                }
+                if (actualChecksum != checksums[file]) {
+                    changedNow = true;
+                    checksums[file] = actualChecksum;
+                }
+            } else {
+                if (checksums.contains(file)) {
+                    changedNow = true;
+                    checksums.remove(file);
                 }
             }
-            if (changedNow) {
-                emit changed(checksums.keys());
-            }
+        }
+        if (changedNow) {
+            emit changed(checksums.keys());
         }
     }
-#pragma clang diagnostic pop
+
+    switch (state) {
+        case State::Active:
+            QTimer::singleShot(1000, [=]() { watch(fs); });
+            break;
+        case State::Background:
+            QTimer::singleShot(60'000, [=]() { watch(fs); });
+            break;
+    }
 }
 
-FilesMonitor::FilesMonitor(const QList<File *> &fs) {
-    auto checker = new Checker;
-    checker->moveToThread(&monitorThread);
-    connect(&monitorThread, &QThread::finished, checker, &QObject::deleteLater);
-    connect(this, &FilesMonitor::operate, checker, &Checker::watch);
-    connect(checker, &Checker::changed, this, &FilesMonitor::filesChanged);
+#pragma clang diagnostic pop
 
-    qRegisterMetaType<QList<File *>>("QList<File*>");
-    emit operate(fs);
-    monitorThread.start();
+FilesMonitor::FilesMonitor(const QList<File *> &fs, Checker::State state) {
+    files = fs;
+    startChecker(state);
 }
 
 FilesMonitor::~FilesMonitor() {
     monitorThread.quit();
     monitorThread.wait();
+}
+
+void FilesMonitor::startChecker(Checker::State state) {
+    checker = new Checker{state};
+    checker->moveToThread(&monitorThread);
+
+    connect(&monitorThread, &QThread::finished, checker, &QObject::deleteLater);
+    connect(this, &FilesMonitor::operate, checker, &Checker::watch);
+    connect(checker, &Checker::changed, this, &FilesMonitor::filesChanged);
+
+    qRegisterMetaType<QList<File *>>("QList<File*>");
+    emit operate(files);
+    monitorThread.start();
+}
+
+void FilesMonitor::goActive() {
+    monitorThread.quit();
+    startChecker(Checker::State::Active);
+}
+
+void FilesMonitor::goBackground() {
+    checker->goBackground();
 }
