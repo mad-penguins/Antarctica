@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(UTILS_SOURCES
         utils/Files.hpp utils/Packages.hpp utils/Repositories.hpp utils/UI.hpp utils/SSL.hpp
-        utils/FilesMonitor.cpp utils/FilesMonitor.h)
+        utils/FilesMonitor.cpp utils/FilesMonitor.h utils/Settings.hpp)
 
 set(UI_SOURCES
         ui/MainWindow.cpp ui/MainWindow.h
@@ -20,7 +20,8 @@ set(UI_SOURCES
         ui/packages/AddPackageDialog.cpp ui/packages/AddPackageDialog.h
         ui/packages/PackageConfigurator.cpp ui/packages/PackageConfigurator.h
         ui/settings/ProxyConfigurator.cpp ui/settings/ProxyConfigurator.h
-        ui/settings/SectionConfigurator.h)
+        ui/settings/SectionConfigurator.h
+        ui/settings/BackgroundConfigurator.cpp ui/settings/BackgroundConfigurator.h)
 
 set(SOURCE_FILES main.cpp ${UTILS_SOURCES} ${UI_SOURCES})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})

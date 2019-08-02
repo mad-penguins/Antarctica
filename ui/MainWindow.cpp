@@ -48,6 +48,7 @@
 #include "utils/Files.hpp"
 #include "utils/UI.hpp"
 #include "ui/packages/AddPackageDialog.h"
+#include "utils/Settings.hpp"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
@@ -372,7 +373,7 @@ void MainWindow::managePackage(const QModelIndex &idx) {
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
-    if (this->isVisible()) {
+    if (this->isVisible() && Utils::Settings::readProperty("background", "enabled").toBool()) {
         event->ignore();
         this->hide();
         monitor->goBackground();
@@ -382,22 +383,19 @@ void MainWindow::closeEvent(QCloseEvent *event) {
                               "Antarctica is still syncing your files",
                               icon,
                               2000);
+    } else {
+        QApplication::quit();
     }
 }
 
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason) {
-    switch (reason) {
-        case QSystemTrayIcon::Trigger:
-            if (!this->isVisible()) {
-                this->show();
-                monitor->goActive();
-            } else {
-                this->hide();
-                monitor->goBackground();
-            }
-            break;
-        default:
-            break;
-
+    if (reason == QSystemTrayIcon::Trigger) {
+        if (!this->isVisible()) {
+            this->show();
+            monitor->goActive();
+        } else {
+            this->hide();
+            monitor->goBackground();
+        }
     }
 }

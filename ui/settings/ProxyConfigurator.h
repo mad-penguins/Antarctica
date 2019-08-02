@@ -10,7 +10,7 @@
 
 #include "SectionConfigurator.h"
 
-class ProxyConfigurator : public SectionConfigurator {
+class ProxyConfigurator : public OptionalSection {
 public:
     explicit ProxyConfigurator(QWidget *parent = nullptr);
 
@@ -32,7 +32,8 @@ private:
     QLineEdit *password{};
 
 private slots:
-    void proxyStateChanged(int state);
+
+    void stateChanged(int state) override;
 
 };
 

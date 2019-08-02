@@ -4,7 +4,7 @@
 #include <QtCore/QSettings>
 #include "ProxyConfigurator.h"
 
-ProxyConfigurator::ProxyConfigurator(QWidget *parent) : SectionConfigurator(parent) {
+ProxyConfigurator::ProxyConfigurator(QWidget *parent) : OptionalSection(parent) {
     initUI();
 }
 
@@ -13,7 +13,7 @@ void ProxyConfigurator::initUI() {
     lay->addWidget(new QLabel("Enable proxy", this), 0, 0, 1, 1);
     lay->setColumnStretch(2, 1);
     proxyChecker = new QCheckBox(this);
-    connect(proxyChecker, &QCheckBox::stateChanged, this, &ProxyConfigurator::proxyStateChanged);
+    connect(proxyChecker, &QCheckBox::stateChanged, this, &ProxyConfigurator::stateChanged);
     lay->addWidget(proxyChecker, 0, 2, 1, 1);
 
     socks5Settings = new QGroupBox("SOCKS5 settings", this);
@@ -33,13 +33,15 @@ void ProxyConfigurator::initUI() {
     socksLay->addWidget(username, 1, 2, 1, 3);
     socksLay->addWidget(password, 1, 5, 1, 3);
 
+    socksLay->setColumnStretch(2, 1);
+
     lay->addWidget(socks5Settings, 1, 0, 2, 8);
     lay->setRowStretch(3, 1);
 
     loadSettings();
 }
 
-void ProxyConfigurator::proxyStateChanged(int state) {
+void ProxyConfigurator::stateChanged(int state) {
     switch (state) {
         case Qt::CheckState::Checked:
             socks5Settings->setDisabled(false);

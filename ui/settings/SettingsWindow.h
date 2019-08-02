@@ -10,6 +10,7 @@
 #include <QPushButton>
 
 #include "ProxyConfigurator.h"
+#include "BackgroundConfigurator.h"
 
 class SettingsWindow : public QDialog {
     Q_OBJECT
@@ -18,6 +19,8 @@ public:
     explicit SettingsWindow(QWidget *parent = nullptr);
 
 private:
+    QVBoxLayout *mainLay{};
+
     QToolBar *toolBar{};
     QAction *uiAction{};
     QAction *connectionAction{};
@@ -27,6 +30,7 @@ private:
 
     QWidget *themeTab{};
     QWidget *layoutTab{};
+    BackgroundConfigurator *backgroundConnTab{};
     ProxyConfigurator *proxyTab{};
     QWidget *signatureTab{};
 
@@ -40,17 +44,22 @@ private:
 
     void createToolBar();
 
+    void createTabs();
     void createThemeTab();
     void createLayoutTab();
     void createSignatureTab();
+
+    void createButtons();
 
 private slots:
     void okClicked();
     void applyClicked();
 
-    void showUiTab();
-    void showConnectionTab();
-    void showSecurityTab();
+    void showUiSection();
+
+    void showConnectionSection();
+
+    void showSecuritySection();
 };
 
 

@@ -1,6 +1,7 @@
 #include <QtCore/QTimer>
 #include "FilesMonitor.h"
 #include "Files.hpp"
+#include "Settings.hpp"
 
 using namespace Utils;
 
@@ -42,7 +43,11 @@ void Checker::watch(const QList<File *> &fs) {
             QTimer::singleShot(1000, [=]() { watch(fs); });
             break;
         case State::Background:
-            QTimer::singleShot(60'000, [=]() { watch(fs); });
+            int backgroundFreq = 60'000;
+            if (auto _f = Settings::readProperty("background", "freq").toInt(); _f != 0) {
+                backgroundFreq *= _f;
+            }
+            QTimer::singleShot(backgroundFreq, [=]() { watch(fs); });
             break;
     }
 }
@@ -60,10 +65,11 @@ FilesMonitor::~FilesMonitor() {
 }
 
 void FilesMonitor::startChecker(Checker::State state) {
+    delete checker;
+
     checker = new Checker{state};
     checker->moveToThread(&monitorThread);
 
-    connect(&monitorThread, &QThread::finished, checker, &QObject::deleteLater);
     connect(this, &FilesMonitor::operate, checker, &Checker::watch);
     connect(checker, &Checker::changed, this, &FilesMonitor::filesChanged);
 

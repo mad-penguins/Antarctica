@@ -18,4 +18,14 @@ protected:
     virtual void loadSettings() = 0;
 };
 
+class OptionalSection : public SectionConfigurator {
+Q_OBJECT
+public:
+    explicit OptionalSection(QWidget *parent = nullptr) : SectionConfigurator(parent) {}
+
+protected slots:
+
+    virtual void stateChanged(int state) = 0;
+};
+
 #endif //ANTARCTICA_SECTIONCONFIGURATOR_H

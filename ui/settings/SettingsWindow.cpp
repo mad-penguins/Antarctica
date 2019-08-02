@@ -13,39 +13,21 @@ void SettingsWindow::initUI() {
     setWindowIcon(QIcon(":/img/icon.png"));
     moveToCenter();
 
-    auto mainLay = new QVBoxLayout(this);
+    mainLay = new QVBoxLayout(this);
 
     auto controlsLay = new QHBoxLayout(this);
     createToolBar();
-    tabWidget = new QTabWidget(this);
 
-    createThemeTab();
-    createLayoutTab();
-    proxyTab = new ProxyConfigurator;
-    createSignatureTab();
+    createTabs();
 
     controlsLay->addWidget(toolBar);
     controlsLay->addWidget(tabWidget);
     mainLay->addLayout(controlsLay);
 
-    auto buttons = new QHBoxLayout(this);
-    ok = new QPushButton("OK", this);
-    ok->setDefault(true);
-    apply = new QPushButton("Apply", this);
-    cancel = new QPushButton("Cancel", this);
-
-    connect(ok, &QPushButton::clicked, this, &SettingsWindow::okClicked);
-    connect(apply, &QPushButton::clicked, this, &SettingsWindow::applyClicked);
-    connect(cancel, &QPushButton::clicked, this, &SettingsWindow::close);
-
-    buttons->addStretch();
-    buttons->addWidget(ok);
-    buttons->addWidget(apply);
-    buttons->addWidget(cancel);
-    mainLay->addLayout(buttons);
+    createButtons();
 
     setLayout(mainLay);
-    showUiTab();
+    showUiSection();
 }
 
 void SettingsWindow::moveToCenter() {
@@ -65,32 +47,43 @@ void SettingsWindow::createToolBar() {
     connectionAction = new QAction("Connection", toolBar);
     securityAction = new QAction("Security", toolBar);
 
-    connect(uiAction, &QAction::triggered, this, &SettingsWindow::showUiTab);
-    connect(connectionAction, &QAction::triggered, this, &SettingsWindow::showConnectionTab);
-    connect(securityAction, &QAction::triggered, this, &SettingsWindow::showSecurityTab);
+    connect(uiAction, &QAction::triggered, this, &SettingsWindow::showUiSection);
+    connect(connectionAction, &QAction::triggered, this, &SettingsWindow::showConnectionSection);
+    connect(securityAction, &QAction::triggered, this, &SettingsWindow::showSecuritySection);
 
     toolBar->addAction(uiAction);
     toolBar->addAction(connectionAction);
     toolBar->addAction(securityAction);
 }
 
-void SettingsWindow::showUiTab() {
+void SettingsWindow::showUiSection() {
     tabWidget->clear();
     tabWidget->addTab(themeTab, "Theme");
     tabWidget->addTab(layoutTab, "Layout");
     tabWidget->setCurrentIndex(0);
 }
 
-void SettingsWindow::showConnectionTab() {
+void SettingsWindow::showConnectionSection() {
     tabWidget->clear();
+    tabWidget->addTab(backgroundConnTab, "Background connection");
     tabWidget->addTab(proxyTab, "Proxy");
     tabWidget->setCurrentIndex(0);
 }
 
-void SettingsWindow::showSecurityTab() {
+void SettingsWindow::showSecuritySection() {
     tabWidget->clear();
     tabWidget->addTab(signatureTab, "Digital Signature");
     tabWidget->setCurrentIndex(0);
+}
+
+void SettingsWindow::createTabs() {
+    tabWidget = new QTabWidget(this);
+
+    createThemeTab();
+    createLayoutTab();
+    backgroundConnTab = new BackgroundConfigurator;
+    proxyTab = new ProxyConfigurator;
+    createSignatureTab();
 }
 
 void SettingsWindow::createThemeTab() {
@@ -118,6 +111,24 @@ void SettingsWindow::createSignatureTab() {
 
     signatureTab = new QWidget();
     signatureTab->setLayout(l);
+}
+
+void SettingsWindow::createButtons() {
+    auto buttons = new QHBoxLayout(this);
+    ok = new QPushButton("OK", this);
+    ok->setDefault(true);
+    apply = new QPushButton("Apply", this);
+    cancel = new QPushButton("Cancel", this);
+
+    connect(ok, &QPushButton::clicked, this, &SettingsWindow::okClicked);
+    connect(apply, &QPushButton::clicked, this, &SettingsWindow::applyClicked);
+    connect(cancel, &QPushButton::clicked, this, &SettingsWindow::close);
+
+    buttons->addStretch();
+    buttons->addWidget(ok);
+    buttons->addWidget(apply);
+    buttons->addWidget(cancel);
+    mainLay->addLayout(buttons);
 }
 
 void SettingsWindow::okClicked() {
