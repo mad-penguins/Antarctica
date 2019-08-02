@@ -50,6 +50,10 @@ private:
     void createDirs(QStringList dirsList, TreeItem *parent);
 
     FileTreeItem *lastDir{};
+
+public slots:
+
+    void handleChanges(const QList<File *> &changes);
 };
 
 

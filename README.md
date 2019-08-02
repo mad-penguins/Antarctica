@@ -27,12 +27,12 @@ Features (work still in progress):
     - [x] Files management tab
     - [x] Packages management tab
     - [ ] Repositories management tab
-    - [ ] Settings
+    - [x] Settings
     - [ ] Custom design
  - [ ] Under the hood
     - [x] Security
         - [x] Connection through HTTPS
-    - [ ] Real-time files' states changes monitoring
+    - [x] Real-time files' states changes monitoring
 
 Roadmap ~~can~~ will be extended in the future.
 

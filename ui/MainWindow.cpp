@@ -39,6 +39,7 @@
 #include <api/Wrapper.h>
 #include <QtWidgets/QFileDialog>
 #include <QtCore/QStandardPaths>
+#include <QApplication>
 
 #include "MainWindow.h"
 #include "ui/models/files/FileTreeModel.h"
@@ -47,11 +48,11 @@
 #include "utils/Files.hpp"
 #include "utils/UI.hpp"
 #include "ui/packages/AddPackageDialog.h"
+#include "utils/Settings.hpp"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
 }
-
 
 void MainWindow::initUI() {
     setWindowTitle(user.displayName + " - Antarctica");
@@ -64,6 +65,8 @@ void MainWindow::initUI() {
     mainLay = new QHBoxLayout(centralWidget);
     mainLay->setContentsMargins(0, 0, 0, 0);
     mainLay->setSpacing(0);
+
+    createTrayIcon();
 
     // init toolbars
     createToolBars();
@@ -93,12 +96,18 @@ void MainWindow::initUI() {
 void MainWindow::updateFiles() {
     QStringList headers;
     headers << tr("Name") << tr("Created") << tr("Modified") << tr("Downloaded") << tr("Up to date");
-    auto model = new FileTreeModel(headers, Wrapper::Files::getAll());
+    auto files = Wrapper::Files::getAll();
+
+    monitor = new Utils::FilesMonitor(files, Utils::Checker::State::Active);
+    auto model = new FileTreeModel(headers, files);
+    connect(monitor, &Utils::FilesMonitor::filesChanged, model, &FileTreeModel::handleChanges);
+
     filesTree->setModel(model);
     connect(filesTree, &QTreeView::expanded, [=]() {
         filesTree->resizeColumnToContents(0);
     });
     filesTree->expandToDepth(1);
+
 }
 
 void MainWindow::updatePackages() {
@@ -121,6 +130,31 @@ void MainWindow::moveToCenter() {
     QDesktopWidget dw;
     QRect rc = dw.screenGeometry(this);
     move((rc.width() - width()) / 2, (rc.height() - height()) / 2 - 20);
+}
+
+void MainWindow::createTrayIcon() {
+    trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setIcon(QIcon(":/img/icon.png"));
+    trayIcon->setToolTip("Antarctica\n"
+                         "Cloud sync of your files, preferences and packages");
+
+    auto menu = new QMenu(this);
+    auto showAction = new QAction("Show Antarctica", this);
+    auto quitAction = new QAction("Quit", this);
+
+    connect(showAction, &QAction::triggered, [this]() {
+        this->show();
+        monitor->goActive();
+    });
+    connect(quitAction, &QAction::triggered, &QApplication::quit);
+
+    menu->addAction(showAction);
+    menu->addAction(quitAction);
+
+    trayIcon->setContextMenu(menu);
+    trayIcon->show();
+
+    connect(trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::iconActivated);
 }
 
 void MainWindow::createToolBars() {
@@ -334,6 +368,34 @@ void MainWindow::managePackage(const QModelIndex &idx) {
                 }
             }
             lastRow = index.row();
+        }
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+    if (this->isVisible() && Utils::Settings::readProperty("background", "enabled").toBool()) {
+        event->ignore();
+        this->hide();
+        monitor->goBackground();
+
+        auto icon = QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information);
+        trayIcon->showMessage("Antarctica",
+                              "Antarctica is still syncing your files",
+                              icon,
+                              2000);
+    } else {
+        QApplication::quit();
+    }
+}
+
+void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason) {
+    if (reason == QSystemTrayIcon::Trigger) {
+        if (!this->isVisible()) {
+            this->show();
+            monitor->goActive();
+        } else {
+            this->hide();
+            monitor->goBackground();
         }
     }
 }

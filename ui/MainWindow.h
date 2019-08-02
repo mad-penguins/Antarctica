@@ -39,10 +39,12 @@
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QToolButton>
 #include <api/models/User.h>
+#include <QtWidgets/QSystemTrayIcon>
 
 #include "ui/models/files/FileTreeModel.h"
 #include "utils/Files.hpp"
 #include "ui/settings/SettingsWindow.h"
+#include "utils/FilesMonitor.h"
 
 
 class MainWindow : public QMainWindow {
@@ -50,6 +52,9 @@ Q_OBJECT
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
 
 private:
     User user;
@@ -75,9 +80,15 @@ private:
 
     void updateFiles();
 
+    Utils::FilesMonitor *monitor{};
+
     QTreeView *packagesTree{};
 
     void updatePackages();
+
+    QSystemTrayIcon *trayIcon{};
+
+    void createTrayIcon();
 
     void createToolBars();
 
@@ -98,6 +109,8 @@ public slots:
     void showUser(User usr);
 
 private slots:
+
+    void iconActivated(QSystemTrayIcon::ActivationReason reason);
 
     void addSlot();
 

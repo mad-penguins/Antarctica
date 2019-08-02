@@ -93,6 +93,29 @@ namespace Utils {
 
         /*!
          * \brief Upload a file into server
+         * \param file File entity object
+         * \param pkg Package to associate with
+         */
+        static bool updateFileContent(File *f) {
+            QFile file(f->getAbsoluteName());
+            if (file.open(QFile::ReadOnly)) {
+                auto content = file.readAll();
+                file.close();
+
+                f->content = move(content.toBase64());
+                f->checksum = QCryptographicHash::hash(content, QCryptographicHash::Md5).toHex();
+
+                auto ok = Wrapper::Files::update(f);
+                f->content.clear();
+                return ok;
+            }
+            else {
+                return false;
+            }
+        }
+
+        /*!
+         * \brief Upload a file into server
          * \param filename Full filepath
          * \param pkg Package to associate with
          */
@@ -135,7 +158,7 @@ namespace Utils {
          * \return true or false
          */
         inline static bool downloaded(const File *f) {
-            return QFileInfo::exists(QString(f->path + "/" + f->name).replace('~', QDir::homePath()));
+            return QFileInfo::exists(f->getAbsoluteName());
         }
 
         /*!
@@ -144,17 +167,17 @@ namespace Utils {
          */
         static void createLocal(const File *f) {
             QDir dir;
-            if (!dir.exists(QString(f->path).replace('~', QDir::homePath()))) {
-                dir.mkpath(QString(f->path).replace('~', QDir::homePath()));
+            if (!dir.exists(f->getAbsolutePath())) {
+                dir.mkpath(f->getAbsolutePath());
             }
-            QFile file(QString(f->path + "/" + f->name).replace('~', QDir::homePath()));
+            QFile file(f->getAbsoluteName());
             if (file.open(QIODevice::WriteOnly)) {
                 file.write(Wrapper::Files::getContent(f->id));
                 file.close();
 
                 struct utimbuf timeBuffer{};
                 timeBuffer.modtime = f->modified.toTime_t();
-                const char *fileName = QString(f->path + "/" + f->name).replace('~', QDir::homePath()).toUtf8().data();
+                const char *fileName = f->getAbsoluteName().toUtf8().data();
                 if (utime(fileName, &timeBuffer) < 0) {
                     qDebug() << "Error changing time";
                 }
@@ -193,7 +216,7 @@ namespace Utils {
          */
         static bool actual(const File *f) {
             if (downloaded(f)) {
-                QFile file(QString(f->path + "/" + f->name).replace('~', QDir::homePath()));
+                QFile file(f->getAbsoluteName());
                 if (file.open(QIODevice::ReadOnly)) {
                     auto local = file.readAll();
                     file.close();
