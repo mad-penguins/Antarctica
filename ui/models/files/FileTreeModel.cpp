@@ -86,8 +86,8 @@ void FileTreeModel::setupModelData(const QList<Entity *> &files, TreeItem *paren
     }
     std::sort(sortedFiles.begin(), sortedFiles.end(), [&collator](File *file1, File *file2) {
         return collator.compare(
-                file1->path + "/" + file1->name,
-                file2->path + "/" + file2->name
+                file1->getRelativeName(),
+                file2->getRelativeName()
         ) < 0;
     });
 
@@ -109,7 +109,7 @@ void FileTreeModel::setupModelData(const QList<Entity *> &files, TreeItem *paren
 void FileTreeModel::handleChanges(const QList<File *> &changes) {
     qDebug() << "These files were changed:";
     for (auto &&file : changes) {
-        qDebug() << "\t" << file->path + "/" + file->name;
+        qDebug() << "\t" << file->getRelativeName();
         auto parent = rootItem->child(0);
         for (auto &&dir : file->path.split('/')) {
             parent = parent->findName(dir);

@@ -13,8 +13,7 @@ void Checker::watch(const QList<File *> &fs) {
         bool changedNow = false;
         for (auto &&file : fs) {
             if (!Files::actual(file)) {
-                auto _tempFile = Files::parseFile(
-                        QString(file->path + "/" + file->name).replace("~", QDir::homePath()));
+                auto _tempFile = Files::parseFile(file->getAbsoluteName());
                 auto actualChecksum = move(_tempFile->checksum);
                 delete _tempFile;
 
@@ -35,6 +34,11 @@ void Checker::watch(const QList<File *> &fs) {
         }
         if (changedNow) {
             emit changed(checksums.keys());
+            for (auto &&file : checksums.keys()) {
+                if (Files::updateFileContent(file)) {
+                    qDebug() << "\tFile" << file->getRelativeName() << "updated successfully";
+                }
+            }
         }
     }
 
