@@ -49,7 +49,11 @@ private:
 
     void createDirs(QStringList dirsList, TreeItem *parent);
 
+    void mergeDirs(FileTreeItem *parent);
+
     FileTreeItem *lastDir{};
+
+    QMap<File *, FileTreeItem *> items;
 
 public slots:
 

@@ -43,6 +43,15 @@ public:
         return dynamic_cast<FileTreeItem *>(childItems.value(id));
     }
 
+    void setChild(int n, FileTreeItem *child) {
+        child->parentItem = this;
+        childItems.replace(n, child);
+    }
+
+    void removeChild(int n) {
+        childItems.removeAt(n);
+    }
+
     bool insertChildren(int position, int count, int columns) override;
 
     FileTreeItem *findName(const QString &name) override;
@@ -50,6 +59,10 @@ public:
     void setFile(File *f);
 
     File *getFile() const;
+
+    inline bool isDir() const {
+        return !childItems.empty();
+    }
     
 private:
     File *file;

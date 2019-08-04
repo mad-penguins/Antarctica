@@ -294,7 +294,6 @@ void MainWindow::removeFile() {
                 } else {
                     Utils::Files::removeServerDir(item);
                 }
-                delete item;
             }
             lastRow = index.row();
         }
@@ -314,7 +313,6 @@ void MainWindow::removePkg() {
                     Wrapper::Repositories::remove(
                             item->child(0)->getPackage()->repository->id);
                 }
-                delete item;
             }
             lastRow = index.row();
         }

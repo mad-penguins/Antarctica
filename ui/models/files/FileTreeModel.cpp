@@ -100,20 +100,44 @@ void FileTreeModel::setupModelData(const QList<Entity *> &files, TreeItem *paren
 
         QVector<QVariant> fileData;
         fileData << file->name << file->created << file->modified
-            << Utils::Files::downloaded(file) << Utils::Files::actual(file);
+                 << Utils::Files::downloaded(file) << Utils::Files::actual(file);
         lastDir->appendChild(fileData);
         lastDir->child(lastDir->childCount() - 1)->setFile(file);
+
+        items.insert(file, lastDir->child(lastDir->childCount() - 1));
+    }
+
+    mergeDirs(dynamic_cast<FileTreeItem *>(rootItem->child(0)->findName("~")));
+}
+
+void FileTreeModel::mergeDirs(FileTreeItem *parent) {
+    if (parent->isDir()) {
+        if (parent->childCount() == 1) {
+            auto child = parent->child(0);
+            if (child->isDir()) {
+                parent->insertChildren(0, child->childCount(), rootItem->columnCount());
+                for (int j = 0; j < child->childCount(); ++j) {
+                    parent->setChild(j, child->child(j));
+                }
+                parent->setData(0, parent->data(0).toString() + "/" + child->data(0).toString());
+                parent->removeChild(parent->childCount() - 1);
+                mergeDirs(parent);
+            }
+        } else {
+            for (int i = 0; i < parent->childCount(); ++i) {
+                auto child = parent->child(i);
+                mergeDirs(child);
+            }
+        }
     }
 }
 
 void FileTreeModel::handleChanges(const QList<File *> &changes) {
-    qDebug() << "These files were changed:";
+    if (!changes.isEmpty()) {
+        qDebug() << "These files were changed:";
+    }
     for (auto &&file : changes) {
         qDebug() << "\t" << file->getRelativeName();
-        auto parent = rootItem->child(0);
-        for (auto &&dir : file->path.split('/')) {
-            parent = parent->findName(dir);
-        }
-        parent->findName(file->name)->setData(4, Utils::Files::actual(file));
+        items[file]->setData(4, Utils::Files::actual(file));
     }
 }
