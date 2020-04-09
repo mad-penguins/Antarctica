@@ -47,7 +47,7 @@ LoginWindow::LoginWindow(bool local) {
 }
 
 void LoginWindow::initUI() {
-    setWindowTitle("Antarctica login");
+    setWindowTitle("Antarctica | Sign In");
     setWindowIcon(QIcon(":/img/icon.png"));
 
     setGeometry(0, 0, 320, 500);
@@ -57,6 +57,7 @@ void LoginWindow::initUI() {
     move((rc.width() - width()) / 2, (rc.height() - height()) / 2 - 20);
 
     auto layout = new QGridLayout(this);
+    auto layoutButton = new QGridLayout(this);
 
     logoLabel = new QLabel(this);
     logoLabel->setAlignment(Qt::AlignCenter);
@@ -77,11 +78,21 @@ void LoginWindow::initUI() {
     layout->addWidget(loginField, 3, 2);
     layout->addWidget(passwordField, 4, 2);
 
-    registerButton = new QPushButton("Register", this);
-    logInButton = new QPushButton("Log in", this);
-    logInButton->setDefault(true);
-    layout->addWidget(registerButton, 5, 1);
-    layout->addWidget(logInButton, 5, 2);
+    registerButton = new QPushButton("Sign Up", this);
+    registerButton->setFlat(true);
+    registerButton->setStyleSheet("QPushButton{"
+                                  "text-decoration: underline;"
+                                  "color: #00c7be"
+                                  "}" );
+
+    logInButton = new QPushButton("Sign In", this);
+    logInButton->setStyleSheet("QPushButton{"
+                               "background-color: #004fc5;"
+                               "}" );
+
+    layoutButton->addWidget(logInButton, 1, 1);
+    layoutButton->addWidget(registerButton, 1, 2);
+    layout->addLayout(layoutButton, 5, 2);
 
     connect(registerButton, &QPushButton::clicked, this, &LoginWindow::registerClicked);
     connect(logInButton, &QPushButton::clicked, this, &LoginWindow::logInClicked);
