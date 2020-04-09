@@ -56,6 +56,7 @@ void LoginWindow::initUI() {
     QRect rc = dw.screenGeometry(this);
     move((rc.width() - width()) / 2, (rc.height() - height()) / 2 - 20);
 
+    auto mainLay = new QVBoxLayout(this);
     auto layout = new QGridLayout(this);
     auto layoutButton = new QGridLayout(this);
 
@@ -94,6 +95,19 @@ void LoginWindow::initUI() {
     layoutButton->addWidget(registerButton, 1, 2);
     layout->addLayout(layoutButton, 5, 2);
 
+    auto line = new QFrame();
+    line->setFrameShape(QFrame::HLine);
+    line->setFrameShadow(QFrame::Sunken);
+
+    auto copyrightLabel = new QLabel(this);
+    copyrightLabel->setAlignment(Qt::AlignCenter);
+    copyrightLabel->setText("<a href=\\\"http://mad-penguins.tk\\\" "
+                          "style=\"color: rgba(90, 200, 255, 50%);"
+                          "font-size: 10px;"
+                          "\">"
+                          "(C) 2020 Mad-Penguins</a>");
+
+    connect(copyrightLabel, &QLabel::linkActivated, this, &LoginWindow::openMadPenguinsSite);
     connect(registerButton, &QPushButton::clicked, this, &LoginWindow::registerClicked);
     connect(logInButton, &QPushButton::clicked, this, &LoginWindow::logInClicked);
 
@@ -106,11 +120,19 @@ void LoginWindow::initUI() {
     layout->setColumnStretch(2, 2);
     layout->setColumnStretch(3, 1);
 
-    setLayout(layout);
+    mainLay->addLayout(layout);
+    mainLay->addSpacing(10);
+    mainLay->addWidget(line);
+    mainLay->addWidget(copyrightLabel);
+    setLayout(mainLay);
 }
 
 void LoginWindow::registerClicked() {
     QDesktopServices::openUrl(QUrl("https://antarctica-server.tk/register"));
+}
+
+void LoginWindow::openMadPenguinsSite() {
+    QDesktopServices::openUrl(QUrl("http://mad-penguins.tk"));
 }
 
 void LoginWindow::logInClicked() {

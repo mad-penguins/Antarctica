@@ -70,6 +70,8 @@ public slots:
 
     static void registerClicked();
 
+    static void openMadPenguinsSite();
+
 };
 
 
