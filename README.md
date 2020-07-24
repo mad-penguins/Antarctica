@@ -36,9 +36,9 @@ Features (work still in progress):
 
 Roadmap ~~can~~ will be extended in the future.
 
-Antarctica server is at the moment under development too. Code of server is closed and it's now unstable.
+Antarctica server is at the moment under development too. Code of server is closed and may be still unstable in some behaviour cases.
 Public remote server is being tested now. Open API will be ~~opened~~ documented in the future.
-There's already present an early preview of [Qt API wrapper](https://github.com/mad-penguins/IcebreakerQt).
+There's already present a preview of [API wrapper for Qt](https://github.com/mad-penguins/IcebreakerQt). There's also the [Antarctica API reference](https://github.com/mad-penguins/IcebreakerQt/wiki), which is being filled now.
 
 ## Build
 Antarctica is build with Qt framework and based on CMake build system.
@@ -60,16 +60,17 @@ If you want to build an RPM package (Debian packages will be supported in the ne
         - `libQt5Network-devel`
 
 ##### Build process:
-1. `git clone https://github.com/mad-penguins/Antarctica`
-2. `cd Antarctica`
-3. `git submodules update --init`
-4. `mkdir build && cd build`
-5. `cmake .. && make` (you can specify number of cores used for compilation with flag `-j`, e.g. `-j 4`)
-6. (Optional) make an RPM: `make package`
+1. `$ git clone https://github.com/mad-penguins/Antarctica`
+2. `$ cd Antarctica`
+3. `$ git submodules update --init`
+4. `$ mkdir build && cd build`
+5. `$ cmake .. && make` (you can specify number of cores used for compilation with flag `-j`, e.g. `-j 4`)
+6. (Optional) make an RPM: `$ make package`
 
 ##### Troubleshooting
 If step 3 won't  work for you, you can clone API wrapper repository manually and put it to the `api` directory:
-`git clone https://github.com/mad-penguins/IcebreakerQt && mv IcebreakerQt/ api/`
+
+`$ git clone https://github.com/mad-penguins/IcebreakerQt && mv IcebreakerQt/ api/`
 
 There's also some [prebuilt binaries](https://github.com/mad-penguins/Antarctica/releases).
 
